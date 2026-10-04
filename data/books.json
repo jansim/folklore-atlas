@@ -1,0 +1,962 @@
+[
+  {
+    "id": 1,
+    "name": "Celtic Fairy Tales",
+    "author": "Jacobs Joseph",
+    "publication": "Celtic Fairy Tales, Collected by Joseph Jacobs, Illustrated by John D. Batten, London, D. Nutt, 1892",
+    "description": "This anthology of Celtic folklore tales by Joseph Jacobs is one of the best of the crop. It includes some great tales such as \"Munachar and Manachar\", the \"Brewery of Eggshells\", and \"Fair, Brown and Trembling\". Jacobs also includes an extensive Notes and References section if you want to follow up on each tale.",
+    "source": "http://www.sacred-texts.com/neu/celt/cft/index.htm",
+    "storyCount": 26,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=1"
+  },
+  {
+    "id": 2,
+    "name": "Indian Fairy Tales",
+    "author": "Jacobs Joseph",
+    "publication": "Indian Fairy Tales, Selected and Edited by Joseph Jacobs, London, New York, 1912",
+    "description": "FROM the extreme West of the Indo-European world, we go this year to the extreme East. From the soft rain and green turf of Gaeldom, we seek the garish sun and arid soil of the Hindoo. In the Land of Ire, the belief in fairies, gnomes, ogres and monsters is all but dead; in the Land of Ind it still flourishes in all the vigour of animism.",
+    "source": null,
+    "storyCount": 29,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=2"
+  },
+  {
+    "id": 3,
+    "name": "Gypsy Folk Tales",
+    "author": "Groome Francis Hindes",
+    "publication": "Gypsy Folk Tales by Francis Hindes Groome, 1899",
+    "description": "Francis Hindes Groome was one of the small group of 19th century folklorists who immersed themselves in Roma (Gypsy) life. This was in the heroic period of the study of folklore, when devoted scholars built up the field from scratch. Even then, however, it was obvious that there were universal story motifs that spanned continents and cultures. Groome hypothesized that the nomadic Roma had been a primary conduit for the transfer of a common body of stories across a broad region of Eurasia.",
+    "source": "http://www.sacred-texts.com/neu/roma/gft/",
+    "storyCount": 77,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=3"
+  },
+  {
+    "id": 4,
+    "name": "Folk Tales From the Russian",
+    "author": "Kalamatiano de Blumenthal Verra Xenophontovna",
+    "publication": "Folk Tales From the Russian, Verra Xenophontovna Kalamatiano de Blumenthal, 1903",
+    "description": "This is a short collection of Russian folklore, including the famous Tale of Baba Yaga, the witch who lives in the wood in a moveable hut with hen's feet.",
+    "source": "http://www.sacred-texts.com/neu/ftr/index.htm",
+    "storyCount": 9,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=4"
+  },
+  {
+    "id": 5,
+    "name": "Forty Four Turkish Fairy Tales",
+    "author": "Kúnos Ignácz",
+    "publication": "Forty Four Turkish Fairy Tales, Collected and translated by Dr. Ignácz Kúnos, George G. Harrap & Co. London, 1913",
+    "description": "This book draws on the rich folklore of Turkey. Forty-four Turkish Fairy Tales is long out of print, for reasons which will become clear below. For one thing, this edition had lavish production standards: it is in an oversize quarto format, with gold deckling, about ten inches in height. It has two-color printing on every page, and 16 tipped (i.e., hand-glued) four-color plates. On the used market, mint copies of this book normally run in the high three figures. We obtained a well-loved (and nicely rebound) copytext for this online edition through interlibrary loan from Northwestern University Library.",
+    "source": "http://www.sacred-texts.com/asia/ftft/",
+    "storyCount": 44,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=5"
+  },
+  {
+    "id": 6,
+    "name": "The Key of Gold: 23 Czech Folk Tales",
+    "author": "Baudis Josef",
+    "publication": "The Key of Gold: 23 Czech Folk Tales, Selected and Translated by Josef Baudis, London, 1917",
+    "description": "This is a short collection of folk tales translated from Czech sources. Aside from the character's names and a mention of a water gnome called a 'Waternick', these stories could be from just about anywhere in Europe, and several (such as 'Three at One Blow') will be familiar to readers of Lang's 'colored' fairy books. That said, this book is pleasant reading and a nice collection.",
+    "source": "http://www.sacred-texts.com/neu/kog/index.htm",
+    "storyCount": 23,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=6"
+  },
+  {
+    "id": 7,
+    "name": "Portuguese Folk-Tales",
+    "author": "Pedroso Consigliri",
+    "publication": "Portuguese Folk-Tales Collected by Consigliri Pedroso, London, 1882",
+    "description": "The thirty stories which Prof. Consiglieri Pedroso has selected from his collection of five hundred inedited Portuguese Folk-Tales have this great merit—they are evidently genuine. Just as it is easy to decide in the case of certain tales which their collectors profess to have gathered from rustic lips that they have been submitted to literary manipulation, so is there no difficulty in recognising the justice of the claim made by these Portuguese stories to be considered as \"popular\" in the technical sense of the word. Their occasional clumsiness and obscurity, their frequent forgetfulness of their original meaning, and some of their other peculiarities, may be objected to by lovers of neat and trim fairy-tales, but those characteristics will be accepted by more serious students of folk-lore as trustworthy evidence in favour of Prof. Consiglieri Pedroso's conscientiousness as a collector and a reporter.",
+    "source": "http://en.wikisource.org/wiki/Portuguese_Folk-Tales#cite_ref-3#cite_ref-3",
+    "storyCount": 30,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=7"
+  },
+  {
+    "id": 8,
+    "name": "Canadian Wonder Tales",
+    "author": "Macmillan Cyrus,",
+    "publication": "Canadian Wonder Tales, Macmillan, Cyrus, 1918",
+    "description": "This is the book of a soldier-student. Captain Macmillan interrupted his teaching work in Montreal to go overseas with one of our McGill Batteries, and from \"Somewhere in France\" he has asked me to stand sponsor for his volume.",
+    "source": "http://www.gutenberg.ca/ebooks/macmillan-wonder/macmillan-wonder-00-h-dir/macmillan-wonder-00-h.html",
+    "storyCount": 32,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=8"
+  },
+  {
+    "id": 9,
+    "name": "More Celtic Fairy Tales",
+    "author": "Jacobs Joseph",
+    "publication": "More Celtic Fairy Tales by Joseph Jacobs 1894",
+    "description": "For the last time, for the present, I give the children of the British Isles a selection of Fairy Tales once or still existing among them. The story store of Great Britain and Ireland is, I hope, now adequately represented in the four volumes which have won me so many little friends, and of which this is the last.",
+    "source": "http://www.sacred-texts.com/neu/celt/mcft/index.htm",
+    "storyCount": 20,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=9"
+  },
+  {
+    "id": 10,
+    "name": "English Fairy Tales",
+    "author": "Jacobs Joseph",
+    "publication": "English Fairy Tales, Joseph Jacobs, 1890",
+    "description": "Who says that English folk have no fairy tales of their own? The present volume contains only a selection out of some 140, of which I have found traces in this country. It is probable that many more exist.",
+    "source": "http://www.sacred-texts.com/neu/eng/eft/index.htm",
+    "storyCount": 43,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=10"
+  },
+  {
+    "id": 11,
+    "name": "More English Fairy Tales",
+    "author": "Jacobs Joseph",
+    "publication": "More English Fairy Tales, Joseph Jacobs, 1894",
+    "description": "THIS volume will come, I fancy, as a surprise both to my brother folklorists and to the public in general. It might naturally have been thought that my former volume (English Fairy Tales) had almost exhausted the scanty remains of the traditional folk-tales of England. Yet I shall be much disappointed if the present collection is not found to surpass the former in interest and vivacity, while for the most part it goes over hitherto untrodden ground, the majority of the tales in this book have either never appeared before, or have never been brought between the same boards.",
+    "source": "http://www.sacred-texts.com/neu/eng/meft/index.htm",
+    "storyCount": 44,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=11"
+  },
+  {
+    "id": 12,
+    "name": "East of the Sun and West of the Moon",
+    "author": "Asbjørnsen Peter Christen & Moe Jørgen Engebretsen",
+    "publication": "East of the Sun and West of the Moon: Old Tales from the North, Peter Christen Asbjørnsen & Jørgen Engebretsen Moe",
+    "description": "A folk-tale, in its primitive plainness of word and entire absence of complexity in thought, is peculiarly sensitive and susceptible to the touch of stranger hands; and he who has been able to acquaint himself with the Norske Folkeeventyr of Asbjörnsen and Moe (from which these stories are selected), has an advantage over the reader of an English rendering. Of this advantage Mr. Kay Nielsen has fully availed himself: and the exquisite bizarrerie of his drawings aptly expresses the innermost significance of the old-world, old-wives’ fables. For to term these legends, Nursery Tales, would be to curtail them, by nine-tenths, of their interest. They are the romances of the childhood of Nations: they are the never-failing springs of sentiment, of sensation, of heroic example, from which primeval peoples drank their fill at will.",
+    "source": "http://www.gutenberg.org/files/30973/30973-h/30973-h.htm",
+    "storyCount": 15,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=12"
+  },
+  {
+    "id": 13,
+    "name": "Stories from the Pentamerone",
+    "author": "Basile Giambattista",
+    "publication": "Basile, Giambattista. Stories from the Pentamerone. E. F. Strange, editor. Warwick Goble, illustrator. London: Macmillan & Co., 1911. The text of this book is based on John Edward Taylor's translation",
+    "description": null,
+    "source": "http://www.surlalunefairytales.com/pentamerone/index.html",
+    "storyCount": 32,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=13"
+  },
+  {
+    "id": 14,
+    "name": "Ananzi Stories",
+    "author": "Dasent George Webbe",
+    "publication": "Ananzi Stories, George Webbe Dasent, 1904 (Appendix to Popular Tales of the Norse), New York: G. P. Putnanm's Sons, Edinburgh: David Doouglas, 1904",
+    "description": "THE Negroes in the West Indies still retain the tales and traditions which their fathers and grandfathers brought with them from Africa. Some thirty years back these \"Ananzi Stories,\" as they are called, were invariably told at the Negro wakes, which lasted for nine successive nights. The reciters were always men. In those days when the slaves were still half heathen, and when the awful Obeah was universally believed in, such of the Negroes as attended church or chapel kept their children away from these funeral gatherings. The wakes are now, it is believed, almost entirely discontinued, and with them have gone the stories. The Negroes are very shy of telling them, and both the clergyman of the Church of England, and the Dissenting Minister, set their faces against them, and call them foolishness. The translator, whose early childhood was passed in those islands, remembers to have heard such stories from his nurse, who was an African born; but beyond a stray fragment here and there, the rich store which she possessed has altogether escaped his memory. The following stories have been taken down from the mouth of a West Indian nurse in his sister's house, who, born and bred in it, is rather regarded as a member of the family than as a servant. They are printed just as she told him, and both their genuineness and their affinity with the stories of other races will be self-evident. Thus we have the \"Wishing Tree\" of the Hindoos, the Kalpa Vriksha of Somadeva, and of the German Fairy Tales in the \"Pumpkin Tree,\" which throws down as many pumpkins as the poor widow wishes. In one story we have \"Boots\" to the life, while the man whom he outwits is own brother to the Norse Trolls. In another we find a \"speaking heart,\" which reminds us at once of the Egyptian story of Anessou and Satou, as well as of the \"Machandelboom,\" and the \"Milk-white Doo.\" We find here the woman who washes the dirty head rewarded and the man who refuses to wash it punished, in the very words used in \"The Bushy Bride.\" We find, too, in \"Nancy Fairy,\" the same story, both in groundwork and incident, as we have in \"The Lassie and her Godmother;\" and most surprising of all, in the story of \"Ananzi and Quanqua,\" we find the very trait about a trick played with the tail of an ox, which is met with in a variation to \"Boots who ate a match with the Troll.\" Here is the variation: \"Whilst he was with the Troll, the lad was to go out to watch the swine, so he drove them home to his father's house, but first he cut their tails off, and stuck them into the ground. Then he went home to the Troll, and begged him to come and see how his swine were going down to Hell. But when the Troll saw the swine's tails sticking out of the ground he wanted to pull them back again, so he caught hold of them and gave a great tug, and then down he fell with his heels up in the air, and the tails in his fist.\"",
+    "source": "http://www.sacred-texts.com/neu/ptn/index.htm",
+    "storyCount": 13,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=14"
+  },
+  {
+    "id": 15,
+    "name": "Popular Tales of the Norse",
+    "author": "Dasent George Webbe",
+    "publication": "Popular Tales of the Norse, George Webbe Dasent, 1904 , New York: G. P. Putnanm's Sons, Edinburgh, David Doouglas, 1904",
+    "description": "THESE translations from the Norske Folkeeventyr, collected with such freshness and faithfulness by MM. Asbjörnsen and Moe, have been made at various times and at long intervals during the last fifteen years; a fact which is mentioned only to account for any variations in style or tone – of which, however, the Translator is unconscious – that a critical eye may detect in this volume. One of them, The Master Thief, has already appeared in Blackwood's Magazine for November 1851, from the columns of which Periodical it is now reprinted, by the kind permission of the Proprietors.",
+    "source": "http://www.sacred-texts.com/neu/ptn/index.htm",
+    "storyCount": 60,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=15"
+  },
+  {
+    "id": 16,
+    "name": "Folklore of the Santal Parganas",
+    "author": "Bompas Cecil Henry",
+    "publication": "Folklore of the Santal Parganas, Translated by Cecil Henry Bompas, of the Indian Civil Service, 1909",
+    "description": "The Santals are a Munda tribe, a branch of that aboriginal element which probably entered India from the North East. At the present day they inhabit the Eastern outskirts of the Chutia Nagpore plateau.",
+    "source": "http://www.gutenberg.org/files/11938/11938-h/11938-h.htm#app#app",
+    "storyCount": 207,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=16"
+  },
+  {
+    "id": 17,
+    "name": "The Golden Mountain",
+    "author": "Levin Meyer",
+    "publication": "THE GOLDEN MOUNTAIN: MARVELLOUS TALES OF RABBI ISRAEL BAAL SHEM AND OF HIS GREAT-GRANDSON, RABBI NACHMANN RETOLD FROM HEBREW, YIDDISH AND GERMAN SOURCES BY MEYER LEVIN, NEW YORK, 1932",
+    "description": "This is a collection of tales of the Eastern European Hassidic Jews, centering on the holy men Baal Shem Tov and Rabbi Nachman of Bratzlaw. The territory and narrative elements belong to the familiar world of folk tales. However, these magical realist stories of the Hassidic rabbis are encoded with deeper levels of meaning similar to Buddhist, Sufi, Celtic, and other spiritual traditions. Lovingly recounted by master story-teller Meyer Levin, this glimpse of a now long-gone world is a wonderful anthology which can be enjoyed by all.",
+    "source": "http://www.sacred-texts.com/jud/gm/index.htm",
+    "storyCount": 38,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=17"
+  },
+  {
+    "id": 18,
+    "name": "Russian Fairy Tales",
+    "author": "Ralston W. R. S.",
+    "publication": "Russian Fairy Tales, Ralston, 1873",
+    "description": "The stories contained in the following pages are taken from the collections published by Afanasief, Khudyakof, Erlenvein, and Chudinsky. The South-Russian collections of Kulish and Rudchenko I have been able to use but little, there being no complete dictionary available of the dialect, or rather the language, in which they are written. Of these works that of Afanasief is by far the most important, extending to nearly 3,000 pages, and containing 332 distinct stories – of many of which several variants are given, sometimes as many as five. Khudyakof’s collection contains 122 skazkas – as the Russian folk-tales are called – Erlenvein’s 41, and Chudinsky’s 31. Afanasief has also published a separate volume, containing 33 “legends,” and he has inserted a great number of stories of various kinds in his “Poetic views of the Old Slavonians about Nature,” a work to which I have had constant recourse.",
+    "source": "http://www.gutenberg.org/files/22373/22373-h/22373-h.htm#Page_24",
+    "storyCount": 51,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=18"
+  },
+  {
+    "id": 19,
+    "name": "Europa's Fairy Book",
+    "author": "Jacobs Joseph",
+    "publication": "Europa's Fairy Book, Joseph Jacobs, 1916",
+    "description": "Ever since – almost exactly a hundred years ago – the Grimms produced their Fairy Tale Book, folk-lorists have been engaged in making similar collections for all the other countries of Europe, outside Germany, till there is scarcely a nook or a corner in the whole continent that has not been ransacked for these products of the popular fancy. The Grimms themselves and most of their followers have pointed out the similarity or, one might even say, the identity of plot and incident of many of these tales throughout the European Folk-Lore field. Von Hahn, when collecting the Greek and Albanian Fairy Tales in 1864, brought together these common \"formulæ\" of the European Folk-Tale. These were supplemented by Mr. S. Baring-Gould in 1868, and I myself in 1892 contributed an even fuller list to the Hand Book of Folk-Lore. Most, if not all of these formulæ, have been found in all the countries of Europe where folk-tales have been collected. In 1893 Miss M. Roalfe Cox brought together, in a volume of the Folk-Lore Society, no less than 345 variants of \"Cinderella\" and kindred stories showing how widespread this particular formula was throughout Europe and how substantially identical the various incidents as reproduced in each particular country.",
+    "source": "http://www.gutenberg.org/files/26019/26019-h/26019-h.htm",
+    "storyCount": 25,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=19"
+  },
+  {
+    "id": 20,
+    "name": "Italian Popular Tales",
+    "author": "Crane, Thomas Frederick",
+    "publication": "Thomas Frederick Crane, Italian Popular Tales. Boston: Houghton Mifflin Company, 1885",
+    "description": "The growing interest in the popular tales of Europe has led me to believe that a selection from those of Italy would be entertaining to the general reader, and valuable to the student of comparative folk-lore.",
+    "source": "http://www.gutenberg.org/files/23634/23634-h/23634-h.htm#Page_xxix",
+    "storyCount": 109,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=20"
+  },
+  {
+    "id": 21,
+    "name": "Aino Folk-Tales",
+    "author": "Chamberlain Basil Hall",
+    "publication": "Aino Folk-Tales, Basil Hall Chamberlain, London, 1888",
+    "description": "The Ainu are an ethnic minority in Japan, living primarily on the northernmost Japanese island of Hokkaidō, although there were also small populations of Ainu living on the island of Sakhalin and in the Kuriles until the end of World War II, when the Soviet Union took control of Sakhalin and the Ainu there fled. Until the Meiji Restoration of 1868, when Japan took formal possession of Hokkaidō and began the systematic integration of the Ainu into the Japanese nation, the Ainu lived almost exclusively as hunter-gatherers north of the always advancing frontier of Japanese agriculture. 'Traditional' anthropological wisdom holds that the Ainu are descended from the aboriginal inhabitants of Japan who were gradually dispossessed of their land by the invading Japanese and their superior civilization. This view is held up by the fact that the Ainu generally do not look Japanese, by the apparently radical differences between the two languages, and by the large number of Ainu place-names in Japan proper. More recent anthropology, however, sees a far greater continuity between the two cultures, with many deep and ancient similarities.",
+    "source": "http://www.sacred-texts.com/shi/aft/index.htm",
+    "storyCount": 54,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=21"
+  },
+  {
+    "id": 22,
+    "name": "Kaffir (Xhosa) Folk-Lore",
+    "author": "Theal George McCall",
+    "publication": "Kaffir Folk-Lore, A Selection from the Traditional Tales Current Among the People Living on the Eastern Border of the Cape Colony, George McCall Theal, S. Sonnenschein, Le Bas & Lowrey, London,1886",
+    "description": "This is a collection of folk tales from the South African Xhosa people, the tribe to which Nelson Mandela belongs. Please note that the original title of the book uses an appellation for the Xhosa, Kaffir, which today is considered disrespectful. That said, this is a scholarly collection of Xhosa tales; it is a primary source on the subject. As such, this book is part of the cultural heritage of South Africa and is both entertaining and informative.",
+    "source": "http://www.sacred-texts.com/afr/xft/index.htm",
+    "storyCount": 24,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=22"
+  },
+  {
+    "id": 23,
+    "name": "Sixty Folk-Tales from Exclusively Slavonic Sources",
+    "author": "Wratislaw A. H.",
+    "publication": "Sixty Folk-Tales from Exclusively Slavonic Sources, A. H. Wratislaw, London, 1889",
+    "description": "This collection of Slavic folktales at first glance appears to have all of the usual suspects of European Märchen. Evil stepmothers: check; plucky youths overcome impossible odds to marry kings' daughter: check; dimwitted peasants given magical gifts: check.",
+    "source": "http://www.sacred-texts.com/neu/sfs/index.htm",
+    "storyCount": 60,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=23"
+  },
+  {
+    "id": 24,
+    "name": "Tales of Yukaghir, Lamut, and Russianized Natives of Eastern Siberia",
+    "author": "Bogoras Waldemar",
+    "publication": "Tales of Yukaghir, Lamut, and Russianized Natives of Eastern Siberia, Waldemar Bogoras, 1918",
+    "description": "The following tales were collected among Russianized natives of the Kolyma and the Anadyr country, and also among Russian creoles, who, indeed, lead the same kind of life as the Russianized natives. I have excluded a large number of those tales which treat of kings, young heroes on horseback, etc., and which, on the whole, clearly show their Russian or Turko-Mongol provenience, and have given only those that represent elements of native life. The narrators ascribe quite a number of the tales given here to the Lamut, Yukaghir, or Chuvantzi; but, so far as I am able to judge, most of those coming from the Kolyma indicate a Yukaghir provenience, and those from the Anadyr would seem to be of Chuvantzi origin. Nothing more definite than this is known. Most of the tales were taken down by myself, a large part by Mrs. Sophie Bogoras, and a few by a couple of Russian creoles who could read and write after a fashion.",
+    "source": "http://www.sacred-texts.com/asia/tes/index.htm",
+    "storyCount": 80,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=24"
+  },
+  {
+    "id": 25,
+    "name": "Eskimo Folk-Tales",
+    "author": "Rasmussen Knud",
+    "publication": "Eskimo Folk-Tales, Knud Rasmussen, London, 1921",
+    "description": "These stories were collected in various parts of Greenland, taken down from the lips of the Eskimo story-tellers themselves, by Knud Rasmussen, the Danish explorer.",
+    "source": "http://www.sacred-texts.com/nam/inu/eft/index.htm",
+    "storyCount": 52,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=25"
+  },
+  {
+    "id": 26,
+    "name": "The Eskimo of Siberia",
+    "author": "Bogoras Waldemar",
+    "publication": "The Jessup North Pacific Expedition, Edited by FRANZ BOAS, Volume VIII, III. — THE ESKIMO OF SIBERIA, By WALDEMAR BOGORAS, Leiden & New York, 1913",
+    "description": "\"Who is this man? 3 Whence does he come?\" — \"Alaka´li, I do not know him.\" — \"Do you not know Alaka´li? He and his companions, they have the shape of gulls. They screech just like gulls.\" 2",
+    "source": "http://www.sacred-texts.com/nam/inu/eos/index.htm",
+    "storyCount": 16,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=26"
+  },
+  {
+    "id": 27,
+    "name": "Roumanian Fairy Tales and Legends",
+    "author": "Mawr E. B.",
+    "publication": "Roumanian Fairy Tales and Legends, E. B. Mawr, 1881",
+    "description": "THE literature of Roumania is so little known in England, that I have ventured to translate, and bring before the public, some of the popular Basme (tales) and legends of the country.",
+    "source": "http://www.sacred-texts.com/neu/rft/index.htm",
+    "storyCount": 13,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=27"
+  },
+  {
+    "id": 28,
+    "name": "Fairy Tales of Modern Greece",
+    "author": "Gianakoulis Theodore P. & MacPherson Georgia H.",
+    "publication": "Fairy Tales of Modern Greece, Theodore P. Gianakoulis and Georgia H. MacPherson, 1930",
+    "description": "This is a wonderful collection of stories about Greek fairies. Similar to the northern fairies, they are not adverse to interacting with mortals. However, there is always some proviso, such as the fairy bride who is forbidden to speak, and drives her husband mad (The Fairy Mother). The tragedy can also turn the other way, such as the fairy maiden exiled from the fairy palace by one kiss from a mortal (The Fairy Comb). Greek fairies avoid guns (i.e. metal), crosses, and talismans, just like their northern counterparts. They have sanctuaries, sometimes on mountain peaks, sometimes in the ocean. The Greek fairies described here are obvious descendants of the nature elementals of ancient mythology.--J.B. Hare.",
+    "source": "http://www.sacred-texts.com/neu/ftmg/index.htm",
+    "storyCount": 12,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=28"
+  },
+  {
+    "id": 29,
+    "name": "Basque Legends",
+    "author": "Webster Wentworth",
+    "publication": "Basque Legends, Wentworth Webster, London, 1879",
+    "description": "THE study of the recent science of Comparative Mythology is one of the most popular and attractive of minor scientific pursuits. It deals with a subject-matter which has interested most of us at one period of our lives, and turns the delight of our childhood into a charm and recreation for maturer age. Nor is it without more useful lessons. In it we see more clearly than perhaps elsewhere the reciprocal influence, which none can wholly escape, of words and language upon thought, and again of thought and fancy upon words and language; how mere words and syllables may modify both conception and belief; how the metaphor, which at first presented an object more clearly and vividly to the mind than any more direct form of speech could do, soon confuses and at last wholly distorts the original idea, and buries its meaning under a new and foreign superstructure. We may mark here, too, by numerous examples, how slowly the human mind rises to the conception of any abstract truth, and how continually it falls back upon the concrete fact which it is compelled to picture to itself in order to state in words the simplest mental abstraction. The phrase, \"The dawn flies before the sun,\" passing into the myth of Daphne and Apollo, is a lesson in psychology no less than in philology and in comparative mythology.",
+    "source": "http://www.sacred-texts.com/neu/basque/bl/index.htm",
+    "storyCount": 48,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=29"
+  },
+  {
+    "id": 30,
+    "name": "Tibetan Folk Tales",
+    "author": "Shelton A. L.",
+    "publication": "Tibetan Folk Tales, by A. L. Shelton, 1925",
+    "description": "It is found among the old, old histories of the Tibetans that a female demon living among the mountains in Northern India mated with a monkey from the forests of Tibet, and from this union sprang the Tibetan race of people. The greater part of their literature is of a sacred nature, telling of their creation, of the formation of the world, of Buddha and his miraculous birth and death, of his reincarnations and the revisions of his teachings.",
+    "source": "http://www.sacred-texts.com/asia/tft/index.htm",
+    "storyCount": 49,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=30"
+  },
+  {
+    "id": 31,
+    "name": "Children's and Household Tales (brothers Grimm)",
+    "author": "Grimm Jacob & Wilhelm",
+    "publication": "Children's and Household Tales by brothers Grimm, translated by Margaret Hunt, 1812",
+    "description": "The Grimms' first collection of folktales was not published during their lifetime. It was a manuscript containing 53 stories, some written out in detail, others sketched in brief outline form. In December 1810 they submitted this collection to Clemens Brentano and Achim von Arnim for inclusion in a planned third volume to their successful collection of folk poetry entitled Des Knaben Wunderhorn (The Boy's Magic Horn, 3 volumes, 1806, 1808, 1808), which was to be dedicated to folktales. This fairy-tale volume never materialized, and the manuscript was not returned to its authors, but the Grimms' interest in collecting and editing folklore did not die. In 1812 they came out with their own fairy-tale collection.",
+    "source": "http://www.gutenberg.org/cache/epub/5314/pg5314.html",
+    "storyCount": 210,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=31"
+  },
+  {
+    "id": 32,
+    "name": "Fairy Tales of the Slav Peasants and Herdsmen",
+    "author": "Chodsko Alex.",
+    "publication": "Fairy Tales of the Slav Peasants and Herdsmen, From the French of Alex. Chodsko Translated and Illustrated by Emily J. Harding, London: George Allen, 1896",
+    "description": "Very few of the twenty fairy tales included in this volume have been presented before in an English dress; this will doubtless enhance their value in the eyes of the young folk, for whom, principally, they are intended. It is hoped that older readers will find some additional interest in tracing throughout the many evidences of kinship between these stories and those of more pronounced Eastern origin.",
+    "source": "http://www.gutenberg.org/files/25555/25555-h/25555-h.htm#story_20#story_20",
+    "storyCount": 20,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=32"
+  },
+  {
+    "id": 33,
+    "name": "Tales of the Punjab Told by the People",
+    "author": "Steel Flora Annie",
+    "publication": "Tales of the Punjab Told by the People, Steel Flora Annie, London, 1894",
+    "description": "MANY of the tales in this collection appeared either in the Indian Antiquary, the Calcutta Review, or the Legends of the Punjab. They were then in the form of literal translations, in many cases uncouth or even unpresentable to ears polite, in all scarcely intelligible to the untravelled English reader; for it must be remembered that, with the exception of the Adventures of Raja Rasâlu, all these stories are strictly folk-tales passing current among a people who can neither read nor write, and whose diction is full of colloquialisms, and, if we choose to call them so, vulgarisms. It would be manifestly unfair, for instance, to compare the literary standard of such tales with that of the Arabian Nights, the Tales of a Parrot, or similar works. The manner in which these stories were collected is in itself sufficient to show how misleading it would be, if, with the intention of giving the conventional Eastern flavour to the text, it were to be manipulated into a flowery dignity; and as a description of the procedure will serve the double purpose of credential and excuse, the authors give it,–premising that all the stories but three have been collected by Mrs. F. A. Steel during winter tours through the various districts of which her husband has been Chief Magistrate.",
+    "source": "http://btjerusalem.com/masa/punjab/pu00.htm",
+    "storyCount": 43,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=33"
+  },
+  {
+    "id": 34,
+    "name": "Finnish Fairy Tales and Folk Tales",
+    "author": "Mikko Mighty",
+    "publication": "Mighty Mikko – Finnish Fairy Tales and Folk Tales, Parker Fillmore, New York, 1922",
+    "description": "These stories of her mother’s native land",
+    "source": "http://www.gutenberg.org/files/38112/mikko/mikko.htm",
+    "storyCount": 29,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=34"
+  },
+  {
+    "id": 35,
+    "name": "Myths and Legends of the Sioux",
+    "author": "Mclaughlin Marie L.",
+    "publication": "Myths and Legends of the Sioux, Marie L. Mclaughlin, 1913",
+    "description": "In publishing these \"Myths of the Sioux,\" I deem it proper to state that I am of one-fourth Sioux blood. My maternal grandfather, Captain Duncan Graham, a Scotchman by birth, who had seen service in the British Army, was one of a party of Scotch Highlanders who in 1811 arrived in the British Northwest by way of York Factory, Hudson Bay, to found what was known as the Selkirk Colony, near Lake Winnipeg, now within the province of Manitoba, Canada. Soon after his arrival at Lake Winnipeg he proceeded up the Red River of the North and the western fork thereof to its source, and thence down the Minnesota River to Mendota, the confluence of the Minnesota and Mississippi Rivers, where he located. My grandmother, Ha-za-ho-ta-win, was a full-blood of the Medawakanton Band of the Sioux Tribe of Indians. My father, Joseph Buisson, born near Montreal, Canada, was connected with the American Fur Company, with headquarters at Mendota, Minnesota, which point was for many years the chief distributing depot of the American Fur Company, from which the Indian trade conducted by that company on the upper Mississippi was directed.",
+    "source": "http://www.gutenberg.org/files/341/341-h/341-h.htm",
+    "storyCount": 38,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=35"
+  },
+  {
+    "id": 36,
+    "name": "Tales and Traditions of the Eskimo",
+    "author": "Rink Henry",
+    "publication": "Tales and Traditions of the Eskimo, Henry Rink, London, 1875",
+    "description": "With the exception of a few small and scattered tribes who may be considered as the only link between the coast people and the inlanders, the Eskimo always have their habitations close to the sea, or on the banks of rivers in the immediate vicinity of their outlets into the sea. Even on their hunting and trading expeditions they seldom withdraw more than twenty, and only in very rare cases more than eighty miles, from the sea-shore. Save a slight intermixture of European settlers, the Eskimo are the only inhabitants of the shores of Arctic America, and of both sides of Davis Strait and Baffin Bay, including Greenland, as well as a tract of about four hundred miles on the Behring Strait coast of Asia. Southward they extend as far as about 50° N.L. on the eastern side, and 60° on the western side of America, and from 55° to 60° on the shores of Hudson Bay. Only on the west the Eskimo near their frontier are interrupted on two small spots of the coast by the Indians, named Kennayans and Ugalenzes, who have there advanced to the sea-shore for the sake of fishing. These coasts of Arctic America, of course, also comprise all the surrounding islands. Of these the Aleutian Islands form an exceptional group; the inhabitants of these on the one hand distinctly differing from the coast people here mentioned, while on the other they show a closer relationship to the Eskimo than any other nation. The Aleutians, therefore, may be considered as the only abnormal branch of the Eskimo nation. The Aleutian language, though differing completely from the Eskimo with regard to the sound of the words, shows a great similarity to it in structure; and otherwise the Aleutians only seem to differ from the Eskimo inasmuch as some institutions have been slightly more developed among them. On the other hand, all over the eastern and widest parts of their territories the Eskimo are very distinctly severed from the adjoining nations. In the western part some slight transitions may be traced: namely, in the case of the inland Eskimo by the different situation of their dwelling-places; in that of the Aleutians by their language and social institutions. Finally, it may be mentioned that a few small Indian tribes have adopted somewhat of the Eskimo mode of life, which has also been the case with some of their neighbours on the Asiatic side.",
+    "source": "http://www.sacred-texts.com/nam/inu/tte/index.htm",
+    "storyCount": 150,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=36"
+  },
+  {
+    "id": 37,
+    "name": "Tales of the North American Indians",
+    "author": "Thompson Stith",
+    "publication": "Tales of the North American Indians, Stith Thompson, 1929",
+    "description": "DURING the past century the untiring labors of a score or two of field workers have gathered from the North American Indians by far the most extensive body of tales representative of any primitive people. These tales are available in government reports, folk-lore journals, and publications of learned societies. Unfortunately, the libraries in which more than a small portion of them can be examined are few, and even in the largest libraries the very wealth of material serves but to confuse the general reader who seeks without undue expenditure of time to acquaint himself with American Indian tales.",
+    "source": "http://www.sacred-texts.com/nam/tnai/",
+    "storyCount": 96,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=37"
+  },
+  {
+    "id": 38,
+    "name": "Folk Tales of Brittany",
+    "author": "Masson Elsie",
+    "publication": "Folk Tales of Brittany, Elsie Masson, Philadelphia, 1929",
+    "description": "These tales are still characteristic of the tales told or sung in the farmhouses, at weddings and christenings in the Breton-speaking regions of Brittany, in spite of the disastrous modern influence of moving pictures and popular songs.",
+    "source": "http://www.sacred-texts.com/neu/celt/ftb/index.htm",
+    "storyCount": 15,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=38"
+  },
+  {
+    "id": 39,
+    "name": "Chukchee Mythology",
+    "author": "Bogoras Waldemar",
+    "publication": "Chukchee Mythology, Waldemar Bogoras, Leiden & New York, 1910",
+    "description": "{Reduced to HTML by Christopher M. Weimer, Oct. 2003}",
+    "source": "http://www.sacred-texts.com/asia/cm/index.htm",
+    "storyCount": 59,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=39"
+  },
+  {
+    "id": 40,
+    "name": "Chinook Texts",
+    "author": "Boas Franz",
+    "publication": "Chinook Texts, Franz Boas, 1894",
+    "description": "U.S. Bureau of American Ethnology, Bulletin no. 20",
+    "source": "http://www.sacred-texts.com/nam/nw/chinook/index.htm",
+    "storyCount": 26,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=40"
+  },
+  {
+    "id": 41,
+    "name": "Maidu Texts",
+    "author": "Dixon Roland B.",
+    "publication": "Maidu Texts, Roland B. Dixon, 1912",
+    "description": "PUBLICATIONS of the American Ethnological Society",
+    "source": "http://www.sacred-texts.com/nam/ca/mdut/index.htm",
+    "storyCount": 18,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=41"
+  },
+  {
+    "id": 42,
+    "name": "Notes on the Folklore of the Fjort",
+    "author": "Dennett Richard Edward",
+    "publication": "Notes on the Folklore of the Fjort, Richard Edward Dennett, 1898",
+    "description": "NOTES ON THE FOLKLORE OF THE FJORT (FRENCH CONGO).",
+    "source": "http://www.sacred-texts.com/afr/fjort/index.htm",
+    "storyCount": 34,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=42"
+  },
+  {
+    "id": 43,
+    "name": "Georgian Folk Tales",
+    "author": "Wardrop Marjory",
+    "publication": "Georgian Folk Tales, Marjory Wardrop, 1894",
+    "description": "This is a short collection of folk tales from the nation of Georgia by Marjorie Wardrop. Wardrop also translated the Georgian author Rusthaveli's The Man in the Panther's Skin. Although many of the motifs of these stories are also found in European folklore, there are characters and plot elements which localize them in the central Asian area.",
+    "source": "http://www.sacred-texts.com/asia/geft/index.htm",
+    "storyCount": 39,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=43"
+  },
+  {
+    "id": 44,
+    "name": "Koryak Texts",
+    "author": "Bogoras Waldemar",
+    "publication": "Koryak Texts, Waldemar Bogoras, 1917",
+    "description": "Publications of the American Ethnological Society",
+    "source": "http://www.sacred-texts.com/asia/kort/index.htm",
+    "storyCount": 25,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=44"
+  },
+  {
+    "id": 45,
+    "name": "Folklore and Legends: Oriental",
+    "author": "Tibbitts Charles John",
+    "publication": "Folklore and Legends: Oriental, Charles John Tibbitts, 1889",
+    "description": "This is an anthology of tales from several widely separated Asian story-telling traditions, with the center of gravity somewhere in Persia. This was originally published in a series of 'folklore and legends' volumes by the firm of W.W. Gibbings between 1891 and 1905, and the author (editor?) is unnamed, but the initials C.J.T. given after the preface are apparently those of one Charles John Tibbitts. It has been republished as Oriental Myths and Legends. The book is meant to be enjoyed as light reading, and the stories are unattributed and uncredited. However, by internal evidence, the tales originate from Arabian, Persian, Indian, and Kalmyk sources, and have Islamic, Hindu, Buddhist and Zoroastrian elements.",
+    "source": "http://www.sacred-texts.com/asia/flo/index.htm",
+    "storyCount": 24,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=45"
+  },
+  {
+    "id": 46,
+    "name": "Yana Texts",
+    "author": "Sapir Edward",
+    "publication": "Yana Texts, Edward Sapir, 1910",
+    "description": "TOGETHER WITH YANA MYTHS COLLECTED BY ROLAND B. DIXON.",
+    "source": "http://www.sacred-texts.com/nam/ca/yat/index.htm",
+    "storyCount": 37,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=46"
+  },
+  {
+    "id": 47,
+    "name": "Australian Legendary Tales",
+    "author": "Parker K. Langloh",
+    "publication": "Australian Legendary Tales, K. Langloh Parker, 1897",
+    "description": "ILLUSTRATIONS BY A NATIVE ARTIST, AND A SPECIMEN",
+    "source": "http://www.sacred-texts.com/aus/alt/index.htm",
+    "storyCount": 31,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=47"
+  },
+  {
+    "id": 48,
+    "name": "Some Myths and Legends of the Australian Aborigines",
+    "author": "Thomas W. J.",
+    "publication": "Some Myths and Legends of the Australian Aborigines, W. J. Thomas, 1923",
+    "description": "Melbourne, Auckland, Christchurch, Dunedin, Wellington",
+    "source": "http://www.sacred-texts.com/aus/mla/index.htm",
+    "storyCount": 19,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=48"
+  },
+  {
+    "id": 49,
+    "name": "Coos Texts",
+    "author": "Frachtenberg Leo J.",
+    "publication": "Coos Texts, Leo J. Frachtenberg, 1913",
+    "description": "Columbia University Contributions to Anthropology Volume I",
+    "source": "http://www.sacred-texts.com/nam/nw/coos/index.htm",
+    "storyCount": 32,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=49"
+  },
+  {
+    "id": 50,
+    "name": "Achomawi and Atsugewi Tales",
+    "author": "Dixon Roland B.",
+    "publication": "Achomawi and Atsugewi Tales, Roland B. Dixon, 1908",
+    "description": "Journal of American Folk-Lore, Vol. XXI, No. 81, pp. 159-77 [1908]",
+    "source": "http://www.sacred-texts.com/nam/ca/aat/index.htm",
+    "storyCount": 12,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=50"
+  },
+  {
+    "id": 51,
+    "name": "Achomawi Myths",
+    "author": "Dixon Roland B.",
+    "publication": "Achomawi Myths, Roland B. Dixon, 1909",
+    "description": "COLLECTED BY JEREMIAH CURTIN; EDITED BY ROLAND B. DIXON",
+    "source": "http://www.sacred-texts.com/nam/ca/aat/index.htm",
+    "storyCount": 5,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=51"
+  },
+  {
+    "id": 52,
+    "name": "Ancient Tales and Folk-lore of Japan",
+    "author": "Smith Richard Gordon",
+    "publication": "Ancient Tales and Folk-lore of Japan, Richard Gordon Smith, 1918",
+    "description": "This is a memorable collection of historical legends and folktales from Japan. Nearly all of them are set in a well-defined time and place, instead of 'once upon a time.' Themes include ghosts; unrequited love across social boundaries; Shinto landscape, tree and ocean spirits; and tales driven by Bushido and Buddhist ethics. Not a few of these yarns end up with someone committing Seppuku.",
+    "source": "http://www.sacred-texts.com/shi/atfj/index.htm",
+    "storyCount": 57,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=52"
+  },
+  {
+    "id": 53,
+    "name": "Hausa Folk-lore",
+    "author": "Shaihua Maalam",
+    "publication": "Hausa Folk-lore, Maalam Shaihua, 1913",
+    "description": "COLLECTED AND TRANSLITERATED WITH ENGLISH",
+    "source": "http://www.sacred-texts.com/afr/hausa/index.htm",
+    "storyCount": 22,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=53"
+  },
+  {
+    "id": 54,
+    "name": "Philippine Folklore Stories",
+    "author": "Miller John Maurice",
+    "publication": "Philippine Folklore Stories, John Maurice Miller, 1904",
+    "description": "As these stories are only legends that have been handed down from remote times, the teacher must impress upon the minds of the children that they are myths and are not to be given credence; otherwise the imaginative minds of the native children would accept them as truth, and trouble would be caused that might be hard to remedy. Explain then the fiction and show the children the folly of belief in such fanciful tales.",
+    "source": "http://www.sacred-texts.com/asia/pfs/index.htm",
+    "storyCount": 13,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=54"
+  },
+  {
+    "id": 55,
+    "name": "Philippine Folk Tales",
+    "author": "Cole Mable Cook",
+    "publication": "Philippine Folk Tales, Mable Cook Cole, 1916",
+    "description": "From time to time since the American occupation of the Islands, Philippine folk-tales have appeared in scientific publications, but never, so far as the writer is aware, has there been an attempt to offer to the general public a comprehensive popular collection of this material. It is my earnest hope that this collection of tales will give those who are interested opportunity to learn something of the magic, superstitions, and weird customs of the Filipinos, and to feel the charm of their wonder-world as it is pictured by these dark-skinned inhabitants of our Island possessions.",
+    "source": "http://www.sacred-texts.com/asia/pft/index.htm",
+    "storyCount": 61,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=55"
+  },
+  {
+    "id": 56,
+    "name": "Folk Stories From Southern Nigeria",
+    "author": "Dayrell Elphinstone",
+    "publication": "Folk Stories From Southern Nigeria, Elphinstone Dayrell, 1910",
+    "description": "This is one of the important collections of African folklore published under the Andrew Lang imprint. The tales, replete with African wisdom stories and animal fables is one of the best. – J.B. Hare",
+    "source": "http://www.sacred-texts.com/afr/fssn/index.htm",
+    "storyCount": 40,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=56"
+  },
+  {
+    "id": 57,
+    "name": "Yaqui Myths and Legends",
+    "author": "Giddings Ruth Warner",
+    "publication": "Yaqui Myths and Legends, Ruth Warner Giddings, 1959",
+    "description": "The University of Arizona Press Tucson, Arizona",
+    "source": "http://www.sacred-texts.com/nam/sw/yml/index.htm",
+    "storyCount": 61,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=57"
+  },
+  {
+    "id": 58,
+    "name": "Tales of the Cochiti Indians",
+    "author": "Benedict Ruth",
+    "publication": "Tales of the Cochiti Indians, Ruth Benedict, 1932",
+    "description": "Bureau of American Ethnology Bulletin No. 98",
+    "source": "http://www.sacred-texts.com/nam/sw/tci/index.htm",
+    "storyCount": 119,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=58"
+  },
+  {
+    "id": 59,
+    "name": "Zuñi Folk Tales",
+    "author": "Cushing Frank Hamilton",
+    "publication": "Zuñi Folk Tales, Frank Hamilton Cushing, 1901",
+    "description": "It is instructive to compare superstition with science. Mythology is the term used to designate the superstitions of the ancients. Folk-lore is the term used to designate the superstitions of the ignorant of today. Ancient mythology has been carefully studied by modern thinkers for purposes of trope and simile in the embellishment of literature, and especially of poetry; then it has been investigated for the purpose of discovering its meaning in the hope that some occult significance might be found, on the theory that the wisdom of the ancients was far superior to that of modern men. Now, science has entered this field of study to compare one mythology with another, and preeminently to compare mythology with science itself, for the purpose of discovering stages of human opinion.",
+    "source": "http://www.sacred-texts.com/nam/zuni/zft/index.htm",
+    "storyCount": 33,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=59"
+  },
+  {
+    "id": 60,
+    "name": "Seneca Indian Myths",
+    "author": "Curtin Jeremiah",
+    "publication": "Seneca Indian Myths, Jeremiah Curtin, 1922",
+    "description": "The Seneca are one of the members of the powerful Iroquois tribe, and live in the western part of New York State, along the shores of Lake Ontario to the west of the Finger Lake region. This huge (500 page) book of Seneca myths was collected by Jeremiah Curtin at the turn of the 20th century. Curtin also wrote Creation Myths of Primitive America, Myths and Folk-lore of Ireland, and Tales of the Fairies and of the Ghost World, all also at this site.",
+    "source": "http://www.sacred-texts.com/nam/iro/sim/index.htm",
+    "storyCount": 90,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=60"
+  },
+  {
+    "id": 61,
+    "name": "Myths and Folk-lore of Ireland",
+    "author": "Curtin Jeremiah",
+    "publication": "Myths and Folk-lore of Ireland, , 1890",
+    "description": "Myths and Folk-lore of Ireland by Jeremiah Curtin [b. 1835, d. 1906] Boston, Little, Brown [1890, copyright 1899]",
+    "source": "http://www.sacred-texts.com/neu/celt/mfli/index.htm",
+    "storyCount": 20,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=61"
+  },
+  {
+    "id": 62,
+    "name": "Tales of the Fairies and of the Ghost World",
+    "author": "Curtin Jeremiah",
+    "publication": "Tales of the Fairies and of the Ghost World, Jeremiah Curtin, 1895",
+    "description": "Tales of the Fairies and of the Ghost World",
+    "source": "http://www.sacred-texts.com/neu/celt/tfgw/index.htm",
+    "storyCount": 30,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=62"
+  },
+  {
+    "id": 63,
+    "name": "The Jataka (Volume I)",
+    "author": "Chalmers Robert (translator)",
+    "publication": "The Jataka (Volume I), Robert Chalmers (translator), 1895",
+    "description": "The Jataka is a massive collection of Buddhist folklore about previous incarnations of the Buddha, both in human and animal form. Originally written in Pali, and dating to at least 380 BCE, the Jataka includes many stories which have traveled afar. Many of these can be traced cross-culturally in the folklore of many countries.",
+    "source": "http://www.sacred-texts.com/bud/j1/index.htm",
+    "storyCount": 150,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=63"
+  },
+  {
+    "id": 64,
+    "name": "The Jataka (Volume II)",
+    "author": "Rouse W.H.D. (translator)",
+    "publication": "The Jataka, (Volume II) W.H.D. Rouse (translater), 1895",
+    "description": "The Jataka is a massive collection of Buddhist folklore about previous incarnations of the Buddha, both in human and animal form. Originally written in Pali, and dating to at least 380 BCE, the Jataka includes many stories which have traveled afar. Many of these can be traced cross-culturally in the folklore of many countries.",
+    "source": "http://www.sacred-texts.com/bud/j2/index.htm",
+    "storyCount": 150,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=64"
+  },
+  {
+    "id": 65,
+    "name": "The Jataka (Volume III)",
+    "author": "Francis H.T. & Neil R.A. (translators)",
+    "publication": "The Jataka, Volume III, tr. by H.T. Francis and R.A. Neil, ed. E. B. Cowell. 1897",
+    "description": "This is volume three of six of the complete Jataka translation edited by E.B. Cowell. The Jataka is the treasury of tales of the past lives of the Buddha.",
+    "source": "http://www.sacred-texts.com/bud/j3/index.htm",
+    "storyCount": 138,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=65"
+  },
+  {
+    "id": 66,
+    "name": "The Jataka (Volume IV)",
+    "author": "Rouse W. H. D. (translator)",
+    "publication": "The Jataka, Volume IV, tr. by W.H.D. Rouse, 1901",
+    "description": "This is volume four of six of the complete Jataka translation edited by E.B. Cowell. The Jataka is the treasury of tales of the past lives of the Buddha.",
+    "source": "http://www.sacred-texts.com/bud/j4/index.htm",
+    "storyCount": 72,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=66"
+  },
+  {
+    "id": 67,
+    "name": "The Jataka (Volume V)",
+    "author": "Francis H. T. (translator)",
+    "publication": "The Jataka, Volume V, tr. By H. T. Francis ed. E. B. Cowell, 1905",
+    "description": "This is volume five of the complete Jataka translation edited by E.B. Cowell. The Jataka is the treasure-house of stories about the Buddha's previous incarnations.",
+    "source": "http://www.sacred-texts.com/bud/j5/index.htm",
+    "storyCount": 30,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=67"
+  },
+  {
+    "id": 68,
+    "name": "The Jataka (Volume VI)",
+    "author": "Cowell E. B. & Rouse W. H. D.",
+    "publication": "The Jataka Volume VI, tr. E. B. Cowell & W. H. D. Rouse, 1907",
+    "description": "This is the sixth and final volume of the complete Jataka, translated here by E.B. Cowell and W.D.H. Rouse. The Jataka is the treasure-house of stories about the Buddha's previous incarnations.",
+    "source": "http://www.sacred-texts.com/bud/j6/index.htm",
+    "storyCount": 16,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=68"
+  },
+  {
+    "id": 69,
+    "name": "Vikram and the Vampire",
+    "author": "Burton Richard R.",
+    "publication": "Vikram and the Vampire, Richard R. Burton, 1870",
+    "description": "\"Les fables, loin de grandir les hommes, la Nature et Dieu, rapetssent tout.\"",
+    "source": "http://www.sacred-texts.com/goth/vav/index.htm",
+    "storyCount": 13,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=69"
+  },
+  {
+    "id": 70,
+    "name": "Cossack Fairy Tales",
+    "author": "Bain R. Nisbet",
+    "publication": "Cossack Fairy Tales, R. Nisbet Bain (translator), 1916",
+    "description": "The favourable reception given to my volume of Russian Fairy Tales has encouraged me to follow it up with a sister volume of stories selected from another Slavonic dialect extraordinarily rich in folk-tales – I mean Ruthenian, the language of the Cossacks.",
+    "source": "http://www.gutenberg.org/files/29672/29672-h/29672-h.htm",
+    "storyCount": 27,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=70"
+  },
+  {
+    "id": 71,
+    "name": "The Story of Gunnlaug the Worm-Tongue and Raven the Skald",
+    "author": "Magnusson Eirikr & Morris William (translators)",
+    "publication": "The Story of Gunnlaug the Worm-Tongue and Raven the Skald, Eirikr Magnusson & William Morris (translators), 1875",
+    "description": "Translated From The Icelandic By Eirikr Magnusson And William Morris",
+    "source": "http://www.gutenberg.org/files/24421/24421-h/24421-h.htm",
+    "storyCount": 18,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=71"
+  },
+  {
+    "id": 72,
+    "name": "The Story of Frithiof the Bold",
+    "author": "Magnusson Eirikr & Morris William (translators)",
+    "publication": "The Story of Frithiof the Bold, Eirikr Magnusson And William Morris (translators), 1875",
+    "description": "Translated From The Icelandic By Eirikr Magnusson And William Morris",
+    "source": "http://www.gutenberg.org/files/19944/19944-h/19944-h.htm",
+    "storyCount": 15,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=72"
+  },
+  {
+    "id": 73,
+    "name": "Folk-Tales of Bengal",
+    "author": "Day Lal Behari",
+    "publication": "Folk-Tales of Bengal, Lal Behari Day, 1912",
+    "description": "With Coloured Illustrations by Warwick Goble, 1912",
+    "source": "http://www.gutenberg.org/files/38488/38488-h/38488-h.htm",
+    "storyCount": 22,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=73"
+  },
+  {
+    "id": 74,
+    "name": "Santal Folk Tales",
+    "author": "Campbell A. (translator)",
+    "publication": "Santal Folk Tales, Campbell A. (translator), 1891",
+    "description": "Of late years the Folk tales of India have been the subject of much study and research, and several interesting collections of them have been published. But I am not aware that as yet the folk lore of the Santals, has received the attention which it deserves.",
+    "source": "https://archive.org/stream/cu31924024159489/cu31924024159489_djvu.txt",
+    "storyCount": 23,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=74"
+  },
+  {
+    "id": 75,
+    "name": "The Ocean of Story Volume 1",
+    "author": "Tawney C.H. (Translator)",
+    "publication": "The Ocean of Story Volume 1, C. H. Tawney (Translator), 1892",
+    "description": "BEING C. H. TAWNEY’S TRANSLATION OF SOMADEVA’S KATHĀ SARIT SĀGARA (OR ocean of streams of story) NOW EDITED WITH INTRODUCTION, FRESH EXPLANATORY NOTES AND TERMINAL ESSAY BY N. M. PENZER, M.A., F.R.G.S., F.G.S. MEMBER OF THE FOLK-LORE SOCIETY; FELLOW OF THE ROYAL ANTHROPOLOGICAL INSTITUTE; MEMBER OF THE ROYAL ASIATIC SOCIETY, ETC. AUTHOR OF “AN ANNOTATED BIBLIOGRAPHY OF SIR RICHARD FRANCIS BURTON,” ETC.",
+    "source": "http://www.wisdomlib.org/hinduism/book/the-ocean-of-story-volume-1/index.html",
+    "storyCount": 14,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=75"
+  },
+  {
+    "id": 76,
+    "name": "The Ocean of Story Volume 2",
+    "author": "Tawney C.H. (Translator)",
+    "publication": "The Ocean of Story Volume 2, C. H. Tawney (Translator), 1892",
+    "description": "The Kathā Sarit Sāgara is the earliest extant short story collection, written by Somadeva around 1070. It's a fine collection of stories, presented in a fine translation, fascinating both simply as a good read and as an artifact: many of these stories have influenced other famous stories and folktales from across the globe.",
+    "source": "http://www.wisdomlib.org/hinduism/book/the-ocean-of-story-volume-2/index.html",
+    "storyCount": 12,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=76"
+  },
+  {
+    "id": 77,
+    "name": "Four Louisiana Folk-Tales",
+    "author": "Fortier Alcée",
+    "publication": "Four Louisiana Folk-Tales, Alcée Fortier, The Journal of American Folklore, April 1, 1906, pp. 123-126.",
+    "description": "The Journal of American Folklore, April 1, 1906, pp. 123-126.",
+    "source": "https://archive.org/stream/jstor-534605/534605_djvu.txt",
+    "storyCount": 4,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=77"
+  },
+  {
+    "id": 78,
+    "name": "Surinam Folk-Tales",
+    "author": "Penard A. P, and Penard T. E",
+    "publication": "Surinam Folk-Tales, Penard A. P, and Penard T. E., The Journal of American Folklore, Vol. 30, No. 116, April-June, 1917, pp. 239-250.",
+    "description": "Vol. 30, No. 116 (Apr. - Jun., 1917) (pp. 239-250)",
+    "source": "https://archive.org/stream/jstor-534605/534605_djvu.txt",
+    "storyCount": 4,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=78"
+  },
+  {
+    "id": 79,
+    "name": "French Canadian Folk-Tales",
+    "author": "Wintemberg W. J.",
+    "publication": "French Canadian Folk-Tales, W. J. Wintemberg, The Journal of American Folklore, Volume 17, No. 67. 18, 1905, pp. 265-267",
+    "description": "French Canadian Folk-Tales VOL. XVII. — no. 67. 18 W. J. Wintemberg. Toronto, Canada. 1905 &nbsp",
+    "source": "https://archive.org/stream/jstor-534226/534226_djvu.txt",
+    "storyCount": 3,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=79"
+  },
+  {
+    "id": 80,
+    "name": "The Tooti Nameh or Tales of a Parrot",
+    "author": "Ziya'al-Din Nakhshabi",
+    "publication": "The Tooti Nameh or Tales of a Parrot, Ziya'al-Din Nakhshabi, London,1801",
+    "description": "IN THE PERSIAN LANGUAGE, WITH AN ENGLISH TRANSLATION.",
+    "source": "https://archive.org/details/tutinamahtootina00lond",
+    "storyCount": 35,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=80"
+  },
+  {
+    "id": 81,
+    "name": "Zanzibar Tales Told by Natives of the East Coast of Africa",
+    "author": "Bateman George W.",
+    "publication": "Bateman George W., Zanzibar Tales Told by Natives of the East Coast of Africa, 1901",
+    "description": "Told by Natives of the East Coast of Africa",
+    "source": "http://www.gutenberg.org/files/37472/37472-h/37472-h.htm",
+    "storyCount": 10,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=81"
+  },
+  {
+    "id": 82,
+    "name": "Tales from the Lands of Nuts and Grapes: Spanish and Portuguese Folklore",
+    "author": "Sellers Charles",
+    "publication": "Sellers Charles, Tales from the Lands of Nuts and Grapes: Spanish and Portuguese Folklore, London, 1888",
+    "description": "Simpkin, Marshall & Co.; Hamilton, Adams & Co.",
+    "source": "http://www.gutenberg.org/files/31481/31481-h/31481-h.htm",
+    "storyCount": 21,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=82"
+  },
+  {
+    "id": 83,
+    "name": "A Collection of Popular Tales from the Norse and North German",
+    "author": "Asbjørsen Peter Christian",
+    "publication": "Asbjørsen Peter Christian, A Collection of Popular Tales from the Norse and North German, 1907",
+    "description": "LONDON STOCKHOLM COPENHAGEN BERLIN NEW YORK",
+    "source": "http://www.wisdomlib.org/scandinavia/book/a-collection-of-popular-tales-from-the-norse-and-north-german/index.html",
+    "storyCount": 42,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=83"
+  },
+  {
+    "id": 84,
+    "name": "French Canadian Folk-Tales",
+    "author": "Wintemberg W. J.",
+    "publication": "Wintemberg W. J., French Canadian Folk-Tales, The Journal of American Folklore, Volume 17, No. 67. 18, 1905, pp. 265-267",
+    "description": "The following tales were kindly communicated to me by Mr. John C. Day, of Toronto. These tales were related by Mr. Day's mother, a French Canadian.",
+    "source": "https://archive.org/stream/jstor-534226/534226_djvu.txt",
+    "storyCount": 3,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=84"
+  },
+  {
+    "id": 85,
+    "name": "Russian Fairy Tales from the Skazki of Polevoi",
+    "author": "Nisbet Bain R.",
+    "publication": "Nisbet Bain R., Russian Fairy Tales from the Skazki of Polevoi, London, 1901",
+    "description": "Russian Fairy From the Skazki of Polevoi By R. Nisbet Bain Illustrated by C. M. Gere Third Edition London A. H. Bullen 18 Cecil Court, St. Martin’s Lane, W.C. 1901",
+    "source": "http://www.gutenberg.org/files/34705/34705-h/34705-h.htm#ch10",
+    "storyCount": 24,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=85"
+  },
+  {
+    "id": 86,
+    "name": "Fables and Folk-Tales from an Eastern Forest",
+    "author": "Skeat Walter",
+    "publication": "Skeat Walter, Fables and Folk-Tales from an Eastern Forest, Cambridge, 1901",
+    "description": "Fables and Folk-Tales from an Eastern Forest",
+    "source": "https://archive.org/details/fablesfolktalesf00skearich",
+    "storyCount": 26,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=86"
+  },
+  {
+    "id": 87,
+    "name": "The Flying Dutchman and Other Folktales from the Netherlands",
+    "author": "Meder Theo",
+    "publication": "Meder Theo, The Flying Dutchman and Other Folktales from the Netherlands, Westport, Connecticut, London, 2008",
+    "description": "All rights reserved. No portion of this book may be reproduced, by any process or technique, without the express written consent of the publisher. Exceptions include reproduction and performance in educational, not-for-profit settings.",
+    "source": "http://depot.knaw.nl/10287/1/TMFlyingDutchman.pdf",
+    "storyCount": 125,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=87"
+  },
+  {
+    "id": 88,
+    "name": "Russian Folk-Tales",
+    "author": "Afanasev Aleksandr Nikolayevich",
+    "publication": "Russian Folk-Tales, Aleksandr Nikolayevich Afanasev, Translated from the Russian by Leonard A. Magnus, London, 1916",
+    "description": "Any editor of Slav folk-tales starts with great advantages. Russia is a country where artistic development began very late; where popular lore was conserved with little alteration owing to the immensities of the country, the primitiveness of the people, and the punctiliousness of the compilers.",
+    "source": "https://archive.org/stream/RussianFolk-tales/RussianFolkTales_Afanasev_368pgs_djvu.txt",
+    "storyCount": 73,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=88"
+  },
+  {
+    "id": 89,
+    "name": "The Russian Garland",
+    "author": "Steele Robert",
+    "publication": "The Russian Garland Being Russian Folk Tales: Translated from a Collection of Chap-Books Made in Moscow Edited by Robert Steele and Pictured by J. De Rosciszewski",
+    "description": "Being Russian Folk Tales: Translated from a Collection of Chap-Books Made in Moscow Edited by Robert Steele and Pictured by J. De Rosciszewski",
+    "source": "https://archive.org/details/russiangarlandbe00steeiala",
+    "storyCount": 17,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=89"
+  },
+  {
+    "id": 90,
+    "name": "Told in the Coffee House",
+    "author": "Adler Cyrus & Ramsay Allan",
+    "publication": "Adler Cyrus & Ramsay Allan, Told in the Coffee House, The Macmillan Company, London, 1898",
+    "description": "TOLD IN THE COFFEE HOUSE Turkish Tales Collected and done into English By CYRUS ADLER and ALLAN RAMSAY New York The Macmillan Company London: Macmillan & Co., Ltd. 1898 All rights reserved Copyright, 1898, By the MACMILLAN COMPANY. U.S.A.",
+    "source": "http://www.gutenberg.org/files/30577/30577-h/30577-h.htm",
+    "storyCount": 29,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=90"
+  },
+  {
+    "id": 91,
+    "name": "A Journey in Southern Siberia: The Mongols, their Religion and their Myths",
+    "author": "Curtin Jeremiah",
+    "publication": "Curtin Jeremiah, A Journey in Southern Siberia: The Mongols, their Religion and their Myths, Cambridge, 1909",
+    "description": "A Journey in Southern Siberia: The Mongols, their Religion and their Myths",
+    "source": "http://www.sacred-texts.com/asia/jss/index.htm",
+    "storyCount": 14,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=91"
+  },
+  {
+    "id": 92,
+    "name": "Tales from Turkey",
+    "author": "Ramsay Allan & Francis McCullagh",
+    "publication": "TALES FROM TURKEY COLLECTED AND DONE INTO ENGLISH BY ALLAN RAMSAY AND FRANCIS McCULLAGH THE FORMER BEING WEARER OF THE FOLLOWING DECORATIONS: THE SECOND ORDER OF OSMANIEH, THE SECOND ORDER OF THE MEDJIDIEH, AND THE GOLD AND SILVER MEDALS FOR MERIT, THE LIAKAT; THE LATTER BEING AUTHOR OF THE FALL OF ABDUL- HAMID,\" \"WITH THE COSSACKS,\" ETC. ILLUSTRATED BY THE RUSSIAN ARTIST M. VENIAMIN PAVLOVICH BIELKIN LONDON SIMPKIN, MARSHALL, HAMILTON, KENT & CO. LTD. Simfkin, Marshall, Hamilton, Kent & Co. Ltd. 1914 TO MRS. ALEXANDER RAMSAY",
+    "description": null,
+    "source": "http://gwdspace.wrlc.org:8180/xmlui/bitstream/handle/38989/c01rjdgv5/LowRes_39020025956502.pdf?sequence=2",
+    "storyCount": 57,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=92"
+  },
+  {
+    "id": 93,
+    "name": "Old Deccan Days or Hindoo Fairy Legends Current in Southern India",
+    "author": "Frere M.",
+    "publication": "Frere M., Old Deccan Days or Hindoo Fairy Legends Current in Southern India, Philadelphia, 1870",
+    "description": "A Few words seem necessary regarding the origin of these stories, in addition to what the Narrator says for herself in her Narrative, and what is stated in the Collector’s “Apology.”",
+    "source": "http://www.gutenberg.org/files/36696/36696-h/36696-h.htm",
+    "storyCount": 24,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=93"
+  },
+  {
+    "id": 94,
+    "name": "The Facetious Nights",
+    "author": "Straparola Giovanni Francesco",
+    "publication": "Straparola Giovanni Francesco, The Facetious Nights, translated by W. G. Waters, 1901",
+    "description": "CONSISTS OF AN EXQUISITE AND DELIGHTFUL COLLECTION OF HUMOROUS WITTYAND MIRTHFUL CONVERSATIONS FABLES AND ENIGMAS INCLUDING SINGING MUSIC AND DANCING",
+    "source": "http://www.surlalunefairytales.com/facetiousnights",
+    "storyCount": 87,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=94"
+  },
+  {
+    "id": 95,
+    "name": "Myths of the Cherokee",
+    "author": "Mooney James",
+    "publication": "Mooney James, Myths of the Cherokee, From Nineteenth Annual Report of the Bureau of American Ethnology 1897-98, Part I, 1900",
+    "description": "From Nineteenth Annual Report of the Bureau of American Ethnology 1897-98, Part I. [1900]",
+    "source": "http://www.gutenberg.org/files/45634/45634-h/45634-h.htm",
+    "storyCount": 126,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=95"
+  },
+  {
+    "id": 96,
+    "name": "Moorish Literature",
+    "author": "Basset René",
+    "publication": "Basset René, Moorish Literature, London & New York, 1901",
+    "description": "Translated into English for the first time",
+    "source": "https://archive.org/stream/moorishliteratur00bassrich/moorishliteratur00bassrich_djvu.txt",
+    "storyCount": 1,
+    "url": "https://folkmasa.org/yashpeh/mb_bookp.php?mishtane=96"
+  }
+]
