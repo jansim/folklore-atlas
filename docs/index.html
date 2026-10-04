@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Folklore Map</title>
+    <meta name="description" content="A map of 4,268 folktales from the YASHPEH International Folktales Collection." />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <aside id="panel">
+      <header>
+        <h1>Folklore Map</h1>
+        <p class="subtitle" id="summary">Loading tales…</p>
+      </header>
+      <div class="controls">
+        <input id="search" type="search" placeholder="Search titles and excerpts…" autocomplete="off" />
+        <select id="book">
+          <option value="">All books</option>
+        </select>
+      </div>
+      <div id="list" aria-live="polite"></div>
+      <footer>
+        Data: <a href="https://folkmasa.org/yashpeh/mb_yash.php" target="_blank" rel="noopener">YASHPEH International Folktales Collection</a>
+        (public domain). Locations are approximate.
+      </footer>
+    </aside>
+    <main id="map"></main>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <script src="app.js"></script>
+  </body>
+</html>
