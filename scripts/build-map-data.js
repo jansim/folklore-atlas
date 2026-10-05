@@ -13,7 +13,7 @@ const EXCERPT_LENGTH = 240;
 
 const stories = read('data/stories.json');
 const books = read('data/books.json');
-const { places } = read('data/locations.json');
+const { regions, places } = read('data/locations.json');
 
 const byTradition = new Map();
 const byBook = new Map();
@@ -45,9 +45,10 @@ const out = {
   source: 'https://folkmasa.org/yashpeh/mb_yash.php',
   storyUrl: 'https://folkmasa.org/yashpeh/mb_yashp.php?mishtane=',
   books: Object.fromEntries(books.map((b) => [b.id, { name: b.name, author: b.author }])),
+  regions,
   places: places
     .filter((p) => placed.get(p.id).length)
-    .map((p) => ({ id: p.id, name: p.name, lat: p.lat, lng: p.lng, stories: placed.get(p.id) })),
+    .map((p) => ({ id: p.id, name: p.name, region: p.region, lat: p.lat, lng: p.lng, stories: placed.get(p.id) })),
 };
 
 const outFile = path.join(ROOT, 'docs/data/map.json');

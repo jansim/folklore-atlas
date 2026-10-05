@@ -3,30 +3,70 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Folklore Map</title>
-    <meta name="description" content="A map of 4,268 folktales from the YASHPEH International Folktales Collection." />
+    <title>Wisp Atlas</title>
+    <meta name="description" content="A night-sky map of 4,268 folktales from the YASHPEH International Folktales Collection." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Work+Sans:wght@400;500;600&display=swap"
+    />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <aside id="panel">
-      <header>
-        <h1>Folklore Map</h1>
-        <p class="subtitle" id="summary">Loading tales…</p>
-      </header>
-      <div class="controls">
-        <input id="search" type="search" placeholder="Search titles and excerpts…" autocomplete="off" />
-        <select id="book">
-          <option value="">All books</option>
-        </select>
-      </div>
-      <div id="list" aria-live="polite"></div>
-      <footer>
-        Data: <a href="https://folkmasa.org/yashpeh/mb_yash.php" target="_blank" rel="noopener">YASHPEH International Folktales Collection</a>
-        (public domain). Locations are approximate.
-      </footer>
-    </aside>
-    <main id="map"></main>
+    <svg id="sky" aria-hidden="true"></svg>
+    <div class="app">
+      <section class="stage">
+        <header class="top">
+          <a class="brand" href="./">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+              <path d="M12 2v6M12 16v6M2 12h6M16 12h6M5 5l3.5 3.5M15.5 15.5L19 19M19 5l-3.5 3.5M8.5 15.5L5 19"></path>
+            </svg>
+            Wisp Atlas
+          </a>
+          <nav class="crumbs" id="crumbs" aria-label="Where you are in the sky"></nav>
+          <div class="zoom">
+            <button class="chip round" id="zoom-in" aria-label="Zoom in">+</button>
+            <button class="chip round" id="zoom-out" aria-label="Zoom out">−</button>
+          </div>
+        </header>
+        <div class="chips" id="regions" role="group" aria-label="Parts of the sky"></div>
+        <div id="map" aria-label="Map of tales"></div>
+        <footer class="legend">
+          <p><span class="dot" aria-hidden="true"></span>Each star is a place where tales were told; the brighter it shines, the more tales.</p>
+          <button class="chip" id="falling-star">Follow a falling star</button>
+        </footer>
+      </section>
+
+      <aside id="panel">
+        <div class="handle" aria-hidden="true"></div>
+        <div class="panel-head">
+          <div class="eyebrow" id="eyebrow">The whole sky</div>
+          <h2 id="count">Loading tales…</h2>
+          <label class="search">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+              <circle cx="11" cy="11" r="7"></circle>
+              <path d="M20 20l-4-4"></path>
+            </svg>
+            <span class="sr-only">Filter these tales</span>
+            <input id="search" type="search" placeholder="Filter these tales" autocomplete="off" />
+          </label>
+          <label class="select">
+            <span class="sr-only">Book</span>
+            <select id="book">
+              <option value="">From every book</option>
+            </select>
+          </label>
+        </div>
+        <div id="list" aria-live="polite"></div>
+        <p class="credit">
+          Tales from the
+          <a href="https://folkmasa.org/yashpeh/mb_yash.php" target="_blank" rel="noopener">YASHPEH International Folktales Collection</a>
+          (public domain). Star positions are approximate.
+        </p>
+      </aside>
+    </div>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
     <script src="app.js"></script>
   </body>

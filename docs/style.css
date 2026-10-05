@@ -1,11 +1,26 @@
+/* Wisp Atlas — "Night Sky Atlas" design: tales as stars above the places they were told. */
+
 :root {
-  --bg: #fbf7ef;
-  --panel: #fffdf8;
-  --ink: #2b2420;
-  --muted: #776b60;
-  --line: #e6dccd;
-  --accent: #b5452b;
-  --accent-soft: #f4dfd4;
+  --night: #070b1c;
+  --night-deep: #060a1a;
+  --land: #0e1535;
+  --land-edge: #4a5aa8;
+  --grid: #3a4680;
+  --panel: #0b1130;
+  --raised: #0e1535;
+  --line: #2a3566;
+  --rule: #1a2350;
+  --ink: #e6e4f2;
+  --ink-soft: #d6d8ec;
+  --ink-muted: #9ba2c8;
+  --ink-faint: #8e96c2;
+  --title: #f6f1e1;
+  --gold: #f4d58d;
+  --gold-soft: #f4e7c3;
+  --gold-hover: #fff1cc;
+  --on-gold: #1a1530;
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --sans: 'Work Sans', system-ui, sans-serif;
 }
 
 * {
@@ -19,220 +34,662 @@ body {
 }
 
 body {
-  display: flex;
-  background: var(--bg);
+  background: var(--night);
   color: var(--ink);
-  font: 15px/1.45 Georgia, 'Times New Roman', serif;
+  font: 400 15px/1.5 var(--sans);
+  overflow: hidden;
 }
 
-#panel {
-  display: flex;
-  flex-direction: column;
-  width: 380px;
-  max-width: 100%;
+a {
+  color: var(--gold);
+}
+
+a:hover {
+  color: var(--gold-hover);
+}
+
+button {
+  font: inherit;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+:focus-visible {
+  outline: 1px dashed var(--gold);
+  outline-offset: 2px;
+}
+
+/* Background star-field */
+#sky {
+  position: fixed;
+  inset: 0;
+  width: 100%;
   height: 100%;
-  background: var(--panel);
-  border-right: 1px solid var(--line);
-  z-index: 1;
+  pointer-events: none;
+}
+
+.app {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 440px;
+  height: 100%;
+}
+
+/* ---------- Map stage ---------- */
+
+.stage {
+  display: grid;
+  grid-template-rows: 88px auto minmax(0, 1fr) 88px;
+  min-width: 0;
+  padding: 0 40px;
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--title);
+  font: 600 30px/1 var(--serif);
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.brand svg {
+  color: var(--gold);
+}
+
+.brand:hover {
+  color: var(--title);
+}
+
+.crumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  font-size: 14px;
+  color: var(--ink-muted);
+}
+
+.crumbs button {
+  padding: 4px 0;
+  border: 0;
+  background: none;
+  color: var(--ink-muted);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.crumbs button:hover {
+  color: var(--gold-soft);
+}
+
+.crumbs .here {
+  color: var(--gold-soft);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.crumbs .sep {
+  color: #5a6396;
+}
+
+.zoom {
+  display: flex;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.chip {
+  height: 36px;
+  padding: 0 16px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: transparent;
+  color: #c9cde8;
+  font: 500 13px var(--sans);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.chip:hover {
+  border-color: var(--gold);
+  color: var(--gold-soft);
+}
+
+.chip.sel {
+  border-color: var(--gold);
+  color: var(--gold-soft);
+}
+
+.chip.round {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  font-size: 18px;
+}
+
+.chips {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 4px 0 8px;
+}
+
+.chips .n {
+  margin-left: 6px;
+  color: #7d85b3;
 }
 
 #map {
-  flex: 1;
-  height: 100%;
-  background: #dfe9ec;
+  min-height: 0;
+  background: transparent;
+  font-family: var(--sans);
 }
 
-header {
-  padding: 18px 20px 8px;
+.legend {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
 }
 
-h1 {
+.legend p {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   margin: 0;
-  font-size: 26px;
-  font-weight: normal;
+  font-size: 13px;
+  color: var(--ink-muted);
+}
+
+.legend .dot {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fff6dc;
+  box-shadow: 0 0 8px 3px rgba(244, 213, 141, 0.6);
+}
+
+#falling-star {
+  height: 44px;
+  color: var(--gold-soft);
+}
+
+/* ---------- Stars on the map ---------- */
+
+.leaflet-container {
+  background: transparent;
+}
+
+.star-icon {
+  background: none;
+  border: 0;
+}
+
+.star {
+  --k: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  cursor: pointer;
+  transition: opacity 0.3s;
+}
+
+.star .core {
+  width: calc(6px * var(--k));
+  height: calc(6px * var(--k));
+  border-radius: 50%;
+  background: #fff6dc;
+  box-shadow:
+    0 0 calc(6px * var(--k)) 2px rgba(244, 213, 141, 0.9),
+    0 0 calc(20px * var(--k)) calc(7px * var(--k)) rgba(244, 213, 141, 0.28);
+  animation: twinkle 3.4s ease-in-out infinite;
+}
+
+.star .ray {
+  position: absolute;
+  width: calc(22px * var(--k));
+  height: 1px;
+  background: rgba(255, 240, 200, 0.55);
+}
+
+.star .ray.v {
+  width: 1px;
+  height: calc(22px * var(--k));
+}
+
+.star .ring {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(244, 213, 141, 0.7);
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.star .wl {
+  position: absolute;
+  left: 50%;
+  top: 38px;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font: 500 12px/1 var(--sans);
   letter-spacing: 0.02em;
+  color: var(--gold-soft);
+  text-shadow: 0 0 6px var(--night), 0 0 3px var(--night);
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
 }
 
-.subtitle {
-  margin: 4px 0 0;
-  color: var(--muted);
-  font-size: 14px;
+.star-icon:hover .wl,
+.star-icon:focus-visible .wl,
+.star-icon.on .wl,
+.star-icon.hover .wl,
+.labels .star-icon.major .wl,
+.labels-all .star-icon .wl {
+  opacity: 1;
 }
 
-.controls {
+.star-icon.on .ring,
+.star-icon.hover .ring {
+  opacity: 1;
+}
+
+.star-icon.on .core {
+  width: calc(10px * var(--k));
+  height: calc(10px * var(--k));
+}
+
+.star-icon.on {
+  z-index: 1000 !important;
+}
+
+.star-icon.dim .star {
+  opacity: 0.22;
+}
+
+.star-icon.dim .wl {
+  opacity: 0 !important;
+}
+
+.star-icon:focus-visible {
+  outline: none;
+}
+
+.star-icon:focus-visible .star {
+  outline: 1px dashed var(--gold);
+  border-radius: 50%;
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* A falling star streaks across the sky */
+.meteor {
+  position: fixed;
+  width: 140px;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255, 246, 220, 0), rgba(255, 246, 220, 0.9));
+  transform-origin: right center;
+  pointer-events: none;
+  animation: fall 0.9s ease-in forwards;
+  z-index: 2000;
+}
+
+@keyframes fall {
+  from {
+    opacity: 0;
+    translate: -260px -120px;
+  }
+  30% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    translate: 0 0;
+  }
+}
+
+.leaflet-control-attribution.leaflet-control {
+  background: rgba(7, 11, 28, 0.7);
+  color: #6d75a3;
+  font-size: 11px;
+}
+
+.leaflet-control-attribution a {
+  color: #8e96c2;
+}
+
+/* ---------- Tale panel ---------- */
+
+#panel {
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 8px 20px 12px;
-  border-bottom: 1px solid var(--line);
+  min-height: 0;
+  padding: 32px 40px 0 0;
 }
 
-.controls input,
-.controls select {
-  width: 100%;
-  padding: 8px 10px;
+.handle {
+  display: none;
+}
+
+.panel-head {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0 0 16px 16px;
+}
+
+.eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+h2 {
+  margin: 0 0 8px;
+  font: 500 34px/1.05 var(--serif);
+  color: var(--title);
+}
+
+.search,
+.select {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 46px;
+  padding: 0 18px;
   border: 1px solid var(--line);
-  border-radius: 6px;
-  background: #fff;
-  color: inherit;
-  font: inherit;
+  border-radius: 999px;
+  color: var(--ink-muted);
   font-size: 14px;
 }
 
-.controls input:focus,
-.controls select:focus {
-  outline: 2px solid var(--accent-soft);
-  border-color: var(--accent);
+.search:focus-within,
+.select:focus-within {
+  border-color: var(--gold);
+}
+
+.search input,
+.select select {
+  width: 100%;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+}
+
+.search input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}
+
+.search input::placeholder {
+  color: var(--ink-muted);
+}
+
+.select select {
+  appearance: none;
+  cursor: pointer;
+  background: transparent
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239BA2C8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")
+    no-repeat right center;
+  padding-right: 20px;
+}
+
+.select option {
+  background: var(--panel);
+  color: var(--ink);
 }
 
 #list {
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
+  scrollbar-color: var(--line) transparent;
 }
 
-.list-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 12px 20px 6px;
-  color: var(--muted);
-  font-size: 13px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.list-head h2 {
-  margin: 0;
-  color: var(--ink);
-  font-size: 19px;
-  font-weight: normal;
-  text-transform: none;
-  letter-spacing: 0;
-}
-
-button.link {
-  padding: 0;
-  border: 0;
-  background: none;
-  color: var(--accent);
-  font: inherit;
-  cursor: pointer;
-}
-
-ul {
+#list ul {
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.place {
+.row {
   display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 8px 20px;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  min-height: 58px;
+  padding: 10px 16px;
+  border: 0;
+  border-bottom: 1px solid var(--rule);
+  background: transparent;
+  color: inherit;
+  text-align: left;
   cursor: pointer;
 }
 
-.place:hover,
-.place:focus {
-  background: var(--accent-soft);
-  outline: none;
+.row:hover .t,
+.row:focus-visible .t {
+  color: var(--gold-hover);
 }
 
-.count {
-  color: var(--muted);
+.row .t {
+  font: 600 21px/1.15 var(--serif);
+  color: var(--title);
+}
+
+.row .m {
+  font-size: 13px;
+  color: var(--ink-faint);
+}
+
+.place-row {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.place-row .n {
+  flex-shrink: 0;
+  font-size: 13px;
+  color: var(--ink-faint);
   font-variant-numeric: tabular-nums;
 }
 
-.story {
-  padding: 10px 20px;
-  border-top: 1px solid var(--line);
+.tale.open {
+  margin: 4px 0;
+  border-radius: 14px;
+  background: var(--raised);
 }
 
-.story summary {
-  cursor: pointer;
-  list-style: none;
+.tale.open .row {
+  border-bottom-color: transparent;
 }
 
-.story summary::-webkit-details-marker {
+.tale-body {
   display: none;
+  padding: 0 16px 18px;
 }
 
-.story .title {
-  font-size: 16px;
+.tale.open .tale-body {
+  display: block;
 }
 
-.story .meta {
-  color: var(--muted);
-  font-size: 13px;
-}
-
-.story p {
-  margin: 8px 0 4px;
+.tale-body p {
+  margin: 4px 0 14px;
   font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-soft);
 }
 
-.story a {
-  color: var(--accent);
+.tale-body .actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.btn-gold {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 20px;
+  border-radius: 999px;
+  background: var(--gold);
+  color: var(--on-gold);
+  font-weight: 600;
   font-size: 14px;
+  text-decoration: none;
+}
+
+.btn-gold:hover {
+  background: var(--gold-hover);
+  color: var(--on-gold);
+}
+
+.tale-body .chip {
+  height: 44px;
+}
+
+.more {
+  display: block;
+  margin: 16px auto;
 }
 
 .empty {
-  padding: 16px 20px;
-  color: var(--muted);
+  padding: 16px;
+  color: var(--ink-faint);
+  font: italic 500 18px/1.4 var(--serif);
 }
 
-footer {
-  padding: 10px 20px;
-  border-top: 1px solid var(--line);
-  color: var(--muted);
+.credit {
+  margin: 0;
+  padding: 14px 16px 18px;
+  border-top: 1px solid var(--rule);
+  color: #6d75a3;
   font-size: 12px;
 }
 
-footer a {
-  color: inherit;
+.credit a {
+  color: var(--ink-faint);
 }
 
-.leaflet-tooltip {
-  font: 13px/1.3 Georgia, serif;
-}
+/* ---------- Phone: map above, tales in a bottom sheet ---------- */
 
-@media (max-width: 720px) {
-  body {
-    flex-direction: column-reverse;
+@media (max-width: 800px) {
+  .app {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(0, 1fr) 46%;
+  }
+
+  .stage {
+    position: relative;
+    grid-template-rows: 64px auto minmax(0, 1fr);
+    padding: 0 16px;
+  }
+
+  .brand {
+    font-size: 24px;
+  }
+
+  .crumbs {
+    display: none;
+  }
+
+  .zoom .chip.round {
+    width: 40px;
+    height: 40px;
+  }
+
+  .chips {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    margin: 0 -16px;
+    padding: 0 16px 6px;
+    scrollbar-width: none;
+  }
+
+  .legend p {
+    display: none;
+  }
+
+  .legend {
+    position: absolute;
+    right: 16px;
+    bottom: 12px;
+    z-index: 500;
+  }
+
+  #falling-star {
+    background: var(--night);
   }
 
   #panel {
-    width: 100%;
-    height: 50%;
-    border-right: 0;
-    border-top: 1px solid var(--line);
+    padding: 0;
+    border: 1px solid var(--line);
+    border-bottom: 0;
+    border-radius: 22px 22px 0 0;
+    background: var(--panel);
   }
 
-  #map {
-    height: 50%;
+  .handle {
+    display: block;
+    width: 40px;
+    height: 4px;
+    margin: 10px auto 4px;
+    border-radius: 2px;
+    background: #34407a;
   }
 
-  header {
-    padding: 12px 16px 4px;
+  .panel-head {
+    padding: 4px 16px 12px;
+    gap: 8px;
   }
 
-  h1 {
-    font-size: 21px;
+  h2 {
+    font-size: 28px;
+    margin-bottom: 4px;
   }
 
-  .controls {
-    flex-direction: row;
-    padding: 6px 16px 10px;
+  .panel-head .select {
+    display: none;
   }
 
-  .place,
-  .story,
-  .list-head,
-  .empty,
-  footer {
-    padding-left: 16px;
-    padding-right: 16px;
+  .row {
+    padding: 10px 16px;
   }
 }
