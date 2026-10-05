@@ -16,7 +16,13 @@ git clone --recurse-submodules https://github.com/jansim/folklore-map.git
 git submodule update --init
 ```
 
-`scripts/build-data.js` turns it into the files the site reads:
+The site's data files in `docs/data/` are generated and not tracked in git. Build them before serving:
+
+```sh
+npm run build        # = build:land + build:data
+```
+
+`scripts/build-data.js` turns trilogy into the files the site reads:
 
 - `vendor/trilogy/data/aft.csv`: 1,518 tales with full text, provenance and ATU tale type
 - `vendor/trilogy/data/atu_df.csv`: the ATU tale-type index (type names and chapters, used as "kinds" of tale)
@@ -29,7 +35,7 @@ npm run build:data   # writes docs/data/map.json and docs/data/tales/<id>.json, 
 
 1,498 tales are placed at 98 places; 20 have no usable provenance and are left off the map. Tale ids are row numbers
 in `aft.csv`, so they stay stable as long as the submodule commit does. To update to a newer trilogy, run
-`git -C vendor/trilogy pull`, rebuild, check the unplaced report, and commit the submodule bump with the data.
+`git -C vendor/trilogy pull`, rebuild, check the unplaced report, and commit the submodule bump.
 
 ## The site
 
@@ -42,12 +48,14 @@ in `aft.csv`, so they stay stable as long as the submodule commit does. To updat
 - "Follow a falling star" picks a random tale; on phones the tale list becomes a bottom sheet
 - links: `#germany`, `#germany/238` (a place with a tale open), `#read/238` (the reader)
 
-It can be served directly with GitHub Pages (branch → `/docs`), or locally:
+Serve it locally after `npm run build`:
 
 ```sh
 npm run serve    # http://localhost:8000
 ```
 
+Because `docs/data/` is not committed, publishing it (e.g. on GitHub Pages) needs a build step first.
+
 `docs/data/land.json` holds the land outlines from [Natural Earth](https://www.naturalearthdata.com/) 1:110m
-(public domain), prepared by `scripts/build-land.js` from the
-[world-atlas](https://github.com/topojson/world-atlas) TopoJSON (see the script header to regenerate it).
+(public domain), built by `scripts/build-land.js` (`npm run build:land`), which downloads the
+[world-atlas](https://github.com/topojson/world-atlas) TopoJSON.
