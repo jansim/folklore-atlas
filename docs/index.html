@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Wisp Atlas</title>
-    <meta name="description" content="A night-sky map of 4,268 folktales from the YASHPEH International Folktales Collection." />
+    <meta name="description" content="A night-sky map of folktales from around the world, from the trilogy Annotated Folktales dataset." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -31,10 +31,10 @@
             <button class="chip round" id="zoom-out" aria-label="Zoom out">−</button>
           </div>
         </header>
-        <div class="chips" id="regions" role="group" aria-label="Parts of the sky"></div>
+        <div class="chips" id="kinds" role="group" aria-label="Kinds of tale"></div>
         <div id="map" aria-label="Map of tales"></div>
         <footer class="legend">
-          <p><span class="dot" aria-hidden="true"></span>Each star is a place where tales were told; the brighter it shines, the more tales.</p>
+          <p><span class="dot" aria-hidden="true"></span>Each star is a place where tales were told. Tales of the same type are joined in constellations.</p>
           <button class="chip" id="falling-star">Follow a falling star</button>
         </footer>
       </section>
@@ -53,20 +53,60 @@
             <input id="search" type="search" placeholder="Filter these tales" autocomplete="off" />
           </label>
           <label class="select">
-            <span class="sr-only">Book</span>
-            <select id="book">
-              <option value="">From every book</option>
+            <span class="sr-only">Tale type</span>
+            <select id="type">
+              <option value="">Every tale type</option>
             </select>
           </label>
         </div>
         <div id="list" aria-live="polite"></div>
         <p class="credit">
-          Tales from the
-          <a href="https://folkmasa.org/yashpeh/mb_yash.php" target="_blank" rel="noopener">YASHPEH International Folktales Collection</a>
-          (public domain). Star positions are approximate.
+          Tales from the Annotated Folktales in
+          <a href="https://github.com/j-hagedorn/trilogy" target="_blank" rel="noopener">trilogy</a>
+          (CC BY-SA 4.0), gathered by D. L. Ashliman in
+          <a href="https://sites.pitt.edu/~dash/folktexts.html" target="_blank" rel="noopener">Folktexts</a>. Star positions are approximate.
         </p>
       </aside>
     </div>
+    <section id="reader" hidden tabindex="-1" aria-labelledby="reader-title">
+      <header class="reader-top">
+        <button class="back" id="reader-back">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+          Back to the sky
+        </button>
+        <div class="reader-brand">Wisp Atlas</div>
+        <div class="reader-tools">
+          <button class="chip round" id="reader-size" aria-label="Change text size">Aa</button>
+          <button class="chip" id="reader-aloud">Read aloud</button>
+        </div>
+      </header>
+      <div class="reader-grid">
+        <aside class="reader-where">
+          <div class="where-card">
+            <div id="reader-map" aria-hidden="true"></div>
+            <div class="where-label">
+              <div class="eyebrow">Where it was told</div>
+              <div id="reader-place"></div>
+            </div>
+          </div>
+          <dl id="reader-facts"></dl>
+        </aside>
+        <article class="reader-tale">
+          <div class="eyebrow" id="reader-eyebrow"></div>
+          <h1 id="reader-title"></h1>
+          <div class="divider" aria-hidden="true"><span></span><i></i><span></span></div>
+          <div id="reader-text"></div>
+          <p class="reader-source" id="reader-source"></p>
+        </article>
+        <aside class="reader-kin">
+          <div class="eyebrow">Kindred tales</div>
+          <ul id="reader-kindred"></ul>
+          <div class="eyebrow" id="reader-nearby-title"></div>
+          <ul id="reader-nearby"></ul>
+        </aside>
+      </div>
+      <div class="reader-progress" aria-hidden="true"><span id="reader-progress"></span></div>
+    </section>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
     <script src="app.js"></script>
   </body>

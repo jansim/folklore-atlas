@@ -1,0 +1,4 @@
+[submodule "vendor/trilogy"]
+	path = vendor/trilogy
+	url = https://github.com/j-hagedorn/trilogy.git
+	shallow = true

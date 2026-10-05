@@ -2,10 +2,9 @@
   "name": "folklore-map",
   "version": "0.1.0",
   "private": true,
-  "description": "A map of folktales from the YASHPEH International Folktales Collection",
+  "description": "Wisp Atlas: a night-sky map of folktales from the trilogy Annotated Folktales",
   "scripts": {
-    "scrape": "node scraper/scrape.js",
-    "build:map": "node scripts/build-map-data.js",
+    "build:data": "node scripts/build-data.js",
     "serve": "python3 -m http.server 8000 -d docs"
   },
   "engines": {

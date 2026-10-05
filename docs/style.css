@@ -693,3 +693,301 @@ h2 {
     padding: 10px 16px;
   }
 }
+
+/* ---------- Constellations ---------- */
+
+.star-icon.kin .wl {
+  opacity: 1;
+}
+
+.star-icon.kin .ring {
+  opacity: 0.45;
+}
+
+.tale-body .kin-note {
+  margin-top: -6px;
+  font-size: 13px;
+  color: var(--ink-faint);
+}
+
+/* ---------- Reader ---------- */
+
+#reader {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  overflow-y: auto;
+  background: var(--night);
+}
+
+#reader:focus {
+  outline: none;
+}
+
+#reader[hidden] {
+  display: none;
+}
+
+body.reading .app {
+  visibility: hidden;
+}
+
+.reader-top {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  height: 84px;
+  padding: 0 40px;
+  background: linear-gradient(var(--night) 70%, rgba(7, 11, 28, 0));
+}
+
+.back {
+  justify-self: start;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink-muted);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.back:hover {
+  color: var(--gold-soft);
+}
+
+.reader-brand {
+  font: 600 24px var(--serif);
+  color: var(--title);
+}
+
+.reader-tools {
+  justify-self: end;
+  display: flex;
+  gap: 10px;
+}
+
+.reader-tools .chip {
+  height: 44px;
+}
+
+.reader-grid {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 640px) 300px;
+  justify-content: center;
+  gap: 64px;
+  padding: 24px 40px 120px;
+}
+
+.reader-where,
+.reader-kin {
+  position: sticky;
+  top: 108px;
+  align-self: start;
+}
+
+.where-card {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--raised);
+}
+
+#reader-map {
+  height: 180px;
+  background: #0a1029;
+}
+
+#reader-map .star-icon .ring {
+  opacity: 1;
+}
+
+.where-label {
+  padding: 14px 20px 18px;
+}
+
+.where-label .eyebrow {
+  font-size: 11px;
+  margin-bottom: 4px;
+}
+
+#reader-place {
+  font-size: 15px;
+  color: var(--ink);
+}
+
+#reader-facts {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: 8px 12px;
+  margin: 20px 0 0;
+  font-size: 13px;
+}
+
+#reader-facts dt {
+  color: var(--ink-faint);
+}
+
+#reader-facts dd {
+  margin: 0;
+  color: var(--ink-soft);
+  overflow-wrap: anywhere;
+}
+
+.reader-tale h1 {
+  margin: 14px 0 0;
+  font: 500 60px/1.02 var(--serif);
+  color: var(--title);
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 26px 0 28px;
+}
+
+.divider span {
+  width: 64px;
+  height: 1px;
+  background: #34407a;
+}
+
+.divider i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff6dc;
+  box-shadow: 0 0 8px 3px rgba(244, 213, 141, 0.6);
+}
+
+#reader-text p {
+  margin: 0 0 22px;
+  font: 500 21px/1.75 var(--serif);
+  color: var(--ink);
+}
+
+#reader-text.large p {
+  font-size: 24px;
+}
+
+#reader-text.larger p {
+  font-size: 28px;
+}
+
+.reader-source {
+  margin: 36px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--rule);
+  font-size: 13px;
+  color: var(--ink-faint);
+}
+
+.reader-kin ul {
+  margin: 8px 0 32px;
+  padding: 0;
+  list-style: none;
+}
+
+.reader-kin li a {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--rule);
+  text-decoration: none;
+}
+
+.reader-kin .t {
+  font: 500 20px/1.2 var(--serif);
+  color: var(--title);
+}
+
+.reader-kin a:hover .t {
+  color: var(--gold-hover);
+}
+
+.reader-kin .m {
+  font-size: 12px;
+  color: var(--ink-faint);
+}
+
+.reader-kin .none {
+  padding: 12px 0;
+  color: var(--ink-faint);
+  font: italic 500 17px var(--serif);
+}
+
+.reader-progress {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--rule);
+}
+
+.reader-progress span {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: var(--gold);
+}
+
+@media (max-width: 1180px) {
+  .reader-grid {
+    grid-template-columns: 260px minmax(0, 640px);
+    gap: 48px;
+  }
+
+  .reader-kin {
+    position: static;
+    grid-column: 2;
+  }
+}
+
+@media (max-width: 800px) {
+  .reader-top {
+    height: 64px;
+    padding: 0 16px;
+    grid-template-columns: 1fr auto;
+  }
+
+  .reader-brand {
+    display: none;
+  }
+
+  .reader-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+    padding: 8px 16px 80px;
+  }
+
+  .reader-where,
+  .reader-kin {
+    position: static;
+    grid-column: auto;
+  }
+
+  .reader-tale {
+    order: -1;
+  }
+
+  .reader-tale h1 {
+    font-size: 40px;
+  }
+
+  #reader-text p {
+    font-size: 19px;
+  }
+
+  #reader-map {
+    height: 140px;
+  }
+}
