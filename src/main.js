@@ -177,11 +177,14 @@ import { distanceToRings, random, rankBySpread, smoothstep, spotsWithin, sunflow
     const z = clamp(v.z, 0, ZMAX);
     const a = ease(clamp(z, 0, 1));
     const fade = ease(clamp((z - 1) / 0.7, 0, 1));
-    const s = z <= 1 ? lay.sg + (lay.sf - lay.sg) * a : lay.sf * Math.pow(2, z - 1);
-    // Zoomed in, keep the map's edges beyond the edges of the screen.
+    // Once the ring has faded the map fills the screen, poles to the top and bottom edge, however far out.
+    const cover = Math.max(lay.sf, lay.H / Math.PI, lay.W / (2 * Math.PI));
+    const s = z <= 1 ? lay.sg + (lay.sf - lay.sg) * a : Math.max(lay.sf * Math.pow(2, z - 1), lay.sf + (cover - lay.sf) * fade);
+    // Zoomed in, keep the map's edges beyond the edges of the screen (or, while it is shorter than the
+    // screen, inside it). Nearer the flat map, draw it in to the centre of the ring.
     const maxN = 90 - lay.cy / s / RAD;
     const maxS = 90 - (lay.H - lay.cy) / s / RAD;
-    const latF = -maxS <= maxN ? clamp(v.lat, -maxS, maxN) : (maxN - maxS) / 2;
+    const latF = clamp(v.lat, Math.min(-maxS, maxN) * fade, Math.max(-maxS, maxN) * fade);
     return {
       z,
       a,
@@ -220,7 +223,8 @@ import { distanceToRings, random, rankBySpread, smoothstep, spotsWithin, sunflow
       cx: vw.cx,
       cy: vw.cy,
       rx: vw.s * (1.18 + (2.95 - 1.18) * vw.a) * m,
-      ry: vw.s * (1.18 + (1.72 - 1.18) * vw.a) * m,
+      // Flat, the ring meets the map's top and bottom edges (half its height is pi / 2).
+      ry: vw.s * (1.18 + (1.56 - 1.18) * vw.a) * m,
       op: 1 - vw.fade,
     };
   }
@@ -442,9 +446,11 @@ import { distanceToRings, random, rankBySpread, smoothstep, spotsWithin, sunflow
 
   // ---------- Animation loop ----------
 
+  // Without a z of its own, a flight keeps heading where the one before it was: never to a half-unrolled globe.
   function flyTo(to, dur = 900) {
-    const t = { z: to.z ?? v.z, lon: to.lon ?? v.lon, lat: to.lat ?? v.lat };
-    anim = { start: performance.now(), dur, from: { ...v }, to: t, dlon: wrap(t.lon - v.lon) };
+    const t = { z: to.z ?? anim?.to.z ?? v.z, lon: to.lon ?? v.lon, lat: to.lat ?? v.lat };
+    const morph = to.morph ?? (!!anim?.morph && t.z === anim.to.z);
+    anim = { start: performance.now(), dur, from: { ...v }, to: t, dlon: wrap(t.lon - v.lon), morph };
   }
 
   function stepView(now, dt) {
@@ -551,12 +557,14 @@ import { distanceToRings, random, rankBySpread, smoothstep, spotsWithin, sunflow
     worldEl.setPointerCapture(e.pointerId);
     press = pointers.size === 0 ? { x: e.clientX, y: e.clientY, type: e.pointerType } : null;
     pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
-    anim = null;
+    // A touch stops a flight, but not the globe unrolling or rolling up: that always finishes.
+    if (!anim?.morph) anim = null;
     idleSince = performance.now();
     if (pointers.size === 1) startDrag(pointers.get(e.pointerId));
     else if (pointers.size === 2) {
       drag = null;
-      pinch = { d: spread(), z: v.z };
+      held = false;
+      pinch = { d: spread() };
     }
     worldEl.classList.add('dragging');
   });
@@ -575,8 +583,11 @@ import { distanceToRings, random, rankBySpread, smoothstep, spotsWithin, sunflow
     idleSince = performance.now();
     keepBusy();
     if (pinch && pointers.size >= 2) {
-      v.z = clamp(pinch.z + Math.log2(spread() / pinch.d), 0, ZMAX);
-      clampLat();
+      const d = spread();
+      zoomInput(Math.log2(d / pinch.d));
+      pinch.d = d;
+    } else if (anim?.morph) {
+      if (drag) startDrag(pointers.get(e.pointerId));
     } else if (drag) {
       const k = 1 / (RAD * view().s);
       v.lon = wrap(drag.lon - (e.clientX - drag.x) * k);
@@ -610,19 +621,67 @@ import { distanceToRings, random, rankBySpread, smoothstep, spotsWithin, sunflow
     'wheel',
     (e) => {
       e.preventDefault();
-      anim = null;
       idleSince = performance.now();
       keepBusy();
       const dy = e.deltaMode === 1 ? e.deltaY * 33 : e.deltaY;
-      v.z = clamp(v.z - dy * 0.0012, 0, ZMAX);
-      clampLat();
+      zoomInput(-dy * 0.0012);
     },
     { passive: false },
   );
 
+  // There is no stopping between the globe (z = 0) and the flat map (z = 1): zoom in on the globe, or out
+  // past the flat map, and it unrolls or rolls up the whole way. Arriving at the flat map from further in,
+  // a scroll or pinch stops there first; the next one goes on to the globe.
+  const MORPH_PUSH = 0.1;
+  let push = 0;
+  let pushAt = 0;
+  // After unrolling, rolling up or stopping at the flat map, the rest of the same scroll or pinch is let go.
+  let held = false;
+  const toGlobe = (dur = 1100) => {
+    idleSince = performance.now() - 3000;
+    flyTo({ z: 0, lat: 22, morph: true }, dur);
+    held = true;
+  };
+  // Unrolled by zooming, the map keeps the latitude in view for zooming in further.
+  const toFlat = (dur = 1100, lat) => {
+    flyTo({ z: 1, lat, morph: true }, dur);
+    held = true;
+  };
+  function zoomInput(dz) {
+    const now = performance.now();
+    const pause = now - pushAt > 250;
+    pushAt = now;
+    if (pause) push = 0;
+    if (anim?.morph || (held && !pause)) return;
+    held = false;
+    anim = null;
+    if (v.z < 1) {
+      push = dz > 0 ? push + dz : 0;
+      if (push > MORPH_PUSH) toFlat();
+      return;
+    }
+    const z = v.z + dz;
+    if (z > 1) {
+      v.z = Math.min(z, ZMAX);
+      push = 0;
+    } else {
+      // Coming from further in, stop at the flat map for the rest of this scroll or pinch.
+      if (v.z > 1) held = true;
+      else push += 1 - z;
+      v.z = 1;
+      if (push > MORPH_PUSH) return toGlobe();
+    }
+    clampLat();
+  }
+
   const zoomBy = (dz) => {
     idleSince = performance.now();
-    flyTo({ z: clamp(v.z + dz, 0, ZMAX) }, 500);
+    const z = anim ? anim.to.z : v.z;
+    if (z < 1) {
+      if (dz > 0) toFlat();
+    } else if (z + dz >= 1) flyTo({ z: Math.min(z + dz, ZMAX) }, 500);
+    else if (z > 1) flyTo({ z: 1 }, 500);
+    else toGlobe();
   };
   worldEl.addEventListener('keydown', (e) => {
     const step = 12 / Math.pow(2, Math.max(0, v.z - 1));
@@ -638,11 +697,8 @@ import { distanceToRings, random, rankBySpread, smoothstep, spotsWithin, sunflow
 
   $('#zoom-in').addEventListener('click', () => zoomBy(0.7));
   $('#zoom-out').addEventListener('click', () => zoomBy(-0.7));
-  $('#to-globe').addEventListener('click', () => {
-    idleSince = performance.now() - 3000;
-    flyTo({ z: 0, lat: 22 }, 1400);
-  });
-  $('#to-flat').addEventListener('click', () => flyTo({ z: 1, lat: 0 }, 1200));
+  $('#to-globe').addEventListener('click', () => toGlobe(1400));
+  $('#to-flat').addEventListener('click', () => toFlat(1200, 0));
   if (innerWidth < 500) $('#search').placeholder = 'Search tales and lands';
   if (matchMedia('(pointer: coarse)').matches) {
     $('#hint').textContent = 'Pinch to zoom. Zoom out and the world becomes a globe; drag to turn it.';

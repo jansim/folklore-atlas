@@ -65,17 +65,15 @@ export function drawBackdrop(l, { vw, projection, frame }) {
   path({ type: 'Sphere' });
   ctx.fillStyle = '#0B1233';
   ctx.fill();
-  ctx.restore();
-
+  // The rim, inside the ring too: half unrolled, the sphere's outline reaches past it.
   if (vw.a < 0.999) {
-    ctx.beginPath();
-    path({ type: 'Sphere' });
     ctx.globalAlpha = 1 - vw.a;
     ctx.strokeStyle = '#3B4A92';
     ctx.lineWidth = 1;
     ctx.stroke();
     ctx.globalAlpha = 1;
   }
+  ctx.restore();
 
   if (frame.op > 0.005) drawFrame(ctx, frame);
 }
