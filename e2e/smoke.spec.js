@@ -14,13 +14,22 @@ test.afterEach(async ({ page }) => {
   expect(page.errors, 'no errors in the console').toEqual([]);
 });
 
-test('opens on the globe with a tale and its kin', async ({ page }) => {
+test('opens on the globe with no tale chosen', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('#loading')).toBeHidden();
-  await expect(page.locator('#tale-title')).not.toBeEmpty();
-  await expect(page.locator('#tale-atu')).toContainText('ATU 510A');
+  await expect(page.locator('#panel')).toBeHidden();
+  await expect(page.locator('#wisps .wisp.on')).toHaveCount(0);
+  await expect.poll(() => visibleWisps(page).count()).toBeGreaterThan(10);
+});
+
+test('the chosen tale can be closed', async ({ page }) => {
+  await page.goto('/#germany');
+  await expect(page.locator('#panel')).toBeVisible();
   await expect(page.locator('#wisps .wisp.on')).toHaveCount(1);
-  await expect.poll(() => visibleWisps(page).count()).toBeGreaterThan(20);
+  await page.locator('#close').click();
+  await expect(page.locator('#panel')).toBeHidden();
+  await expect(page.locator('#wisps .wisp.on')).toHaveCount(0);
+  expect(new URL(page.url()).hash).toBe('');
 });
 
 test('zooming in shows more of the tales of a place', async ({ page }) => {
@@ -43,7 +52,8 @@ test('clicking a wisp on the map opens its tale', async ({ page }) => {
   await page.waitForTimeout(1800);
   // The list's buttons carry where their wisp is on screen; pick one away from the panel and the others.
   const wisp = await page.evaluate(() => {
-    const panel = document.querySelector('#panel').getBoundingClientRect();
+    const panelEl = document.querySelector('#panel');
+    const panel = panelEl.hidden ? { left: Infinity, top: Infinity } : panelEl.getBoundingClientRect();
     const all = [...document.querySelectorAll('#wisps .wisp:not(.on)')].map((b) => ({ label: b.getAttribute('aria-label'), x: +b.dataset.x, y: +b.dataset.y }));
     const clear = (w) => all.every((o) => o === w || Math.hypot(o.x - w.x, o.y - w.y) > 30);
     const free = (w) => w.y > 120 && w.y < innerHeight - 40 && (w.x < panel.left - 20 || w.y < panel.top - 20);
