@@ -79,6 +79,24 @@ npm run test:e2e   # Playwright smoke tests of the built site, on a desktop and 
 
 Run `npm run build` first; the first time, install a browser for Playwright with `npx playwright install chromium`.
 
+## Performance
+
+The map and the wisps are drawn on canvases (`src/render.js`):
+
+- a backdrop canvas (glow, globe disc, astrolabe ring), redrawn only when the zoom or layout changes
+- a map canvas (graticule, land, borders, highlighted countries, coasts), redrawn only when the view moves. Borders
+  and coasts are TopoJSON meshes, so every shared border is projected once.
+- a wisp canvas (wisps from pre-rendered sprites, the constellation), redrawn every frame at 1x pixel density: the
+  wisps are soft glows and look the same, at a quarter of the pixels on a high-density screen
+
+There are no SVG filters, CSS blurs or per-wisp elements. Each wisp on screen has a button in a visually hidden list
+(`#wisps`) for keyboards and screen readers; tale names are a few HTML labels. The page draws at up to 60 frames a
+second while you turn or zoom (also on 120 Hz screens) and at 30 while the globe only turns and breathes on its own.
+
+`npm run perf` (with the site served at http://localhost:8000) measures frames per second, main-thread time and the
+page's own drawing time per frame, on the turning globe and zoomed into the map; `perf/profile.js` lists the
+functions that take the most time.
+
 ## Deploying
 
 `.github/workflows/pages.yml` runs `npm ci`, `npm run build` and both test suites on every pull request and push. On

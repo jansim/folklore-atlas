@@ -11,7 +11,8 @@
     "dev": "node scripts/build-site.js --watch --serve",
     "serve": "node scripts/build-site.js --serve",
     "test": "node --test",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "perf": "node perf/measure.js"
   },
   "engines": {
     "node": ">=20.11"

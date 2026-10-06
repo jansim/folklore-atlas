@@ -66,7 +66,7 @@ input:focus-visible,
 
 #sky,
 #world,
-#map {
+#world canvas {
   position: fixed;
   inset: 0;
   width: 100%;
@@ -85,244 +85,36 @@ input:focus-visible,
   outline-offset: -6px;
 }
 
-#wisps {
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+#world.pointing {
+  cursor: pointer;
+}
+
+#labels {
   position: absolute;
   inset: 0;
   pointer-events: none;
 }
-
-.sph {
-  fill: #0b1233;
-}
-.grat {
-  fill: none;
-  stroke: #26306a;
-  stroke-width: 0.5;
-  stroke-dasharray: 1 4;
-}
-.ct {
-  fill: #0f1738;
-  stroke: #222d63;
-  stroke-width: 0.5;
-  transition: fill 0.5s, stroke 0.5s;
-}
-.ct.k {
-  fill: #3a3550;
-  stroke: #9c8a5e;
-}
-.ct.o {
-  fill: #6e5f3a;
-  stroke: var(--gold);
-  stroke-width: 1.1;
-}
-.coast {
-  fill: none;
-  stroke: #5363b8;
-  stroke-width: 0.8;
-  stroke-dasharray: 1.4 2.8;
-  stroke-linecap: round;
-}
-.rim {
-  fill: none;
-  stroke: #3b4a92;
-  stroke-width: 1;
-}
-.arc {
-  fill: none;
-  stroke: #f8de9c;
-  stroke-width: 1;
-  opacity: 0.55;
-  stroke-dasharray: 2 5;
-  stroke-linecap: round;
-  animation: flow 5s linear infinite;
-}
-.arcg {
-  fill: none;
-  stroke: var(--gold);
-  stroke-width: 6;
-  opacity: 0.13;
-  filter: url(#soft);
-}
-.end {
-  fill: var(--gold-pale);
-  filter: url(#soft2);
-}
-.fr1 {
-  fill: none;
-  stroke: #8a7440;
-  stroke-width: 0.8;
-}
-.fr2 {
-  fill: none;
-  stroke: #8a7440;
-  stroke-width: 1.1;
-}
-.frt {
-  fill: none;
-  stroke: #8a7440;
-  stroke-width: 0.7;
-}
-.frs {
-  fill: #e9c77b;
-}
-.frl {
-  font: 600 13px var(--serif);
-  letter-spacing: 6px;
-  fill: #c9a962;
-}
-
-/* ---------- Wisps: one per tale shown ---------- */
-
-.wisp {
+#labels .wl {
   position: absolute;
   left: 0;
   top: 0;
-  width: 44px;
-  height: 44px;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: auto;
-  will-change: transform;
-}
-.wisp:focus-visible {
-  outline: 1px dashed var(--gold);
-  outline-offset: 0;
-  border-radius: 50%;
-}
-.wisp.hid {
-  visibility: hidden;
-  pointer-events: none;
-}
-.wisp .core {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: #fff6dc;
-  box-shadow: 0 0 6px 2px rgba(244, 213, 141, 0.85), 0 0 18px 6px rgba(244, 213, 141, 0.22);
-  animation: breathe 5s ease-in-out infinite;
-}
-.wisp .halo {
-  position: absolute;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  background: rgba(244, 213, 141, 0.16);
-  filter: blur(5px);
-  animation: halo 5s ease-in-out infinite;
-}
-.wisp.on .halo {
-  width: 40px;
-  height: 40px;
-  background: rgba(244, 213, 141, 0.3);
-}
-.wisp .ray {
-  position: absolute;
-  width: 16px;
-  height: 1px;
-  background: rgba(255, 240, 200, 0.45);
-}
-.wisp .ray.v {
-  width: 1px;
-  height: 16px;
-}
-.wisp.kin .core {
-  width: 7px;
-  height: 7px;
-  box-shadow: 0 0 8px 3px rgba(244, 213, 141, 0.95), 0 0 24px 9px rgba(244, 213, 141, 0.3);
-}
-.wisp.on .core {
-  width: 10px;
-  height: 10px;
-  background: #fffbee;
-  box-shadow: 0 0 10px 4px rgba(255, 226, 150, 1), 0 0 34px 14px rgba(244, 213, 141, 0.4);
-}
-.wisp.on .ray {
-  width: 26px;
-}
-.wisp.on .ray.v {
-  width: 1px;
-  height: 26px;
-}
-.wisp .ring {
-  position: absolute;
-  width: 30px;
-  height: 30px;
-  border: 1px solid rgba(244, 213, 141, 0.8);
-  border-radius: 50%;
-  opacity: 0;
-}
-.wisp.on .ring {
-  opacity: 1;
-  animation: pulse 2.6s ease-out infinite;
-}
-.wisp .wl {
-  position: absolute;
-  left: 50%;
-  top: 36px;
-  transform: translateX(-50%);
   white-space: nowrap;
   font: 500 12px/1 var(--sans);
   letter-spacing: 0.02em;
   color: var(--ink-warm);
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.2s, visibility 0.2s;
-  pointer-events: none;
   text-shadow: 0 0 6px var(--night), 0 0 2px var(--night);
-}
-.wisp:hover,
-.wisp:focus-visible,
-.wisp.on {
-  z-index: 1;
-}
-.wisp:hover .wl,
-.wisp:focus-visible .wl,
-.wisp.on .wl {
-  opacity: 1;
-  visibility: visible;
-}
-
-@keyframes breathe {
-  0%,
-  100% {
-    opacity: 0.5;
-    transform: scale(0.8);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.18);
-  }
-}
-@keyframes halo {
-  0%,
-  100% {
-    opacity: 0.25;
-    transform: scale(0.7);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.25);
-  }
-}
-@keyframes pulse {
-  0% {
-    transform: scale(0.7);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1.6);
-    opacity: 0;
-  }
-}
-@keyframes flow {
-  to {
-    stroke-dashoffset: -56;
-  }
 }
 
 /* ---------- Header and search ---------- */
@@ -882,18 +674,5 @@ input:focus-visible,
   .excerpt,
   .reading p {
     font-size: 18px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .wisp .core,
-  .wisp .halo,
-  .wisp.on .ring,
-  .arc {
-    animation: none;
-  }
-  .wisp .core,
-  .wisp .halo {
-    opacity: 0.9;
   }
 }

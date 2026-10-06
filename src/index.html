@@ -18,33 +18,11 @@
     <svg id="sky" aria-hidden="true"></svg>
 
     <div id="world" tabindex="0" aria-label="Map of tales. Drag or use the arrow keys to turn it; scroll, pinch or press + and − to zoom.">
-      <svg id="map" aria-hidden="true">
-        <defs>
-          <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="28"></feGaussianBlur></filter>
-          <filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="3"></feGaussianBlur></filter>
-          <filter id="soft2" x="-200%" y="-200%" width="500%" height="500%"><feGaussianBlur stdDeviation="1.6"></feGaussianBlur></filter>
-          <clipPath id="frameclip"><ellipse id="frame-clip"></ellipse></clipPath>
-        </defs>
-        <circle id="glow-disc" fill="#2B3F9E" filter="url(#glow)"></circle>
-        <g clip-path="url(#frameclip)">
-          <path class="sph" id="sphere"></path>
-          <path class="grat" id="graticule"></path>
-          <g id="countries"></g>
-          <path class="coast" id="coast"></path>
-          <g id="arcs"></g>
-          <g id="ends"></g>
-        </g>
-        <path class="rim" id="rim"></path>
-        <g id="frame">
-          <ellipse class="fr1" id="frame-inner"></ellipse>
-          <ellipse class="fr2" id="frame-outer"></ellipse>
-          <path class="frt" id="frame-ticks"></path>
-          <path class="frs" id="frame-stars"></path>
-          <text class="frl" id="frame-north" text-anchor="middle">SEPTENTRIO</text>
-          <text class="frl" id="frame-south" text-anchor="middle">MERIDIES</text>
-        </g>
-      </svg>
-      <div id="wisps"></div>
+      <canvas id="backdrop" aria-hidden="true"></canvas>
+      <canvas id="map" aria-hidden="true"></canvas>
+      <canvas id="sky-wisps" aria-hidden="true"></canvas>
+      <div id="labels" aria-hidden="true"></div>
+      <div id="wisps" class="sr-only" role="group" aria-label="Tales on the map"></div>
     </div>
 
     <header class="top" data-nozoom>
