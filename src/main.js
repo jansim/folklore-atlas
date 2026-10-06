@@ -803,9 +803,9 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
   }
 
   const nPlaces = (n) => `${n} ${n === 1 ? 'place' : 'places'}`;
-  const kinHead = (n) => (n ? `Similar tales are told in ${nPlaces(n)}` : 'Similar tales are not recorded elsewhere yet');
+  const kinHead = (n) => (n ? `Similar tales told in ${nPlaces(n)}` : 'Similar tales are not recorded elsewhere yet');
   const famHead = (n) =>
-    n ? `${nPlaces(n)} ${n === 1 ? 'has' : 'have'} tales from the same family` : 'No other places have tales from the same family yet';
+    n ? `Tales from the same family told in ${nPlaces(n)}` : 'No other places have tales from the same family yet';
   const nTales = (n) => `${n} ${n === 1 ? 'tale' : 'tales'}`;
   const range = ([from, to]) => `ATU ${from}–${to}`;
   const named = (t) => t.typeName && t.typeName !== 'Unnamed tale type';
