@@ -36,8 +36,20 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
   const panel = $('#panel');
   const loading = $('#loading');
 
+  // A keyboard opening over the search box squeezes the window on some phones: while typing, a change of
+  // height alone (not a turn of the phone) leaves the stars and the globe where they are.
+  let laidOut = { W: innerWidth, H: innerHeight };
+  const typing = () => document.activeElement?.matches('input, textarea') ?? false;
+  const onResize = (fn) => () => {
+    if (innerWidth === laidOut.W && innerHeight < laidOut.H && typing()) return;
+    fn();
+  };
   drawSky();
-  window.addEventListener('resize', drawSky);
+  window.addEventListener('resize', onResize(drawSky));
+  // iOS scrolls the page to bring a focused field into view, and can leave it scrolled: put it back.
+  document.addEventListener('focusout', () => requestAnimationFrame(() => (scrollX || scrollY) && !typing() && scrollTo(0, 0)));
+  // Safari's pinch zoom outside the map (touch-action keeps it off elsewhere): the map zooms itself.
+  document.addEventListener('gesturestart', (e) => e.preventDefault());
 
   const json = (url) =>
     fetch(url).then((r) => {
@@ -174,20 +186,29 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
     // On a phone the ring (1.18 globe radii, plus 18px and its lettering) nearly touches the screen's edges.
     const fit = (top, bottom) => (sheet ? Math.min((W - 44) / 661, (bottom - top - 92) / 661) : Math.min(W / 1056, (bottom - top) / 828));
     let k = fit(y0, y1);
-    if (!sheet) {
+    let cy = (y0 + y1) / 2;
+    // A phone's globe keeps its size with the sheet open, rather than shrinking to fit the strip left above
+    // it: it rises until its ring (330 px a unit of scale, and 46 px of lettering) meets the controls, and
+    // its foot goes under the sheet. Only where that would take the chosen tale, at its centre, too near the
+    // sheet does it shrink, and only as far as it must.
+    if (sheet) {
+      const cyMax = y1 - Math.max(90, 0.3 * (y1 - y0));
+      k = Math.min(fit(y0, H), (cyMax - y0 - 46) / 330.4);
+      cy = Math.min(cyMax, Math.max(cy, y0 + 330.4 * k + 46));
+    } else {
       // Keep the globe from reaching more than 40% of the way under the side panel, open or not.
       const css = getComputedStyle(document.documentElement);
       const panelW = parseFloat(css.getPropertyValue('--panel-w'));
       const panelLeft = W - parseFloat(css.getPropertyValue('--gutter')) - panelW;
       k = Math.min(k, (panelLeft + 0.4 * panelW - W / 2) / 280);
     }
-    // (Smaller still above a phone's sheet on a short screen, rather than reaching under the controls.)
+    // (Smaller on a phone than elsewhere, on a screen too short for more.)
     k = clamp(k, sheet ? 0.15 : 0.25, 1.8);
     // A phone skips the flat map in its ring for one that fills the screen: its scale needn't make room
     // for the sheet, so zooming in and out keeps the same steps with the sheet open or closed.
     const kf = sheet ? clamp(fit(y0, H), 0.25, 1.8) : k;
     const cx = W / 2;
-    target = { W, H, cx, cy: (y0 + y1) / 2, sg: 280 * k, sf: 160 * kf, shift: (W / 2 - cx) * 0.58 };
+    target = { W, H, cx, cy, sg: 280 * k, sf: 160 * kf, shift: (W / 2 - cx) * 0.58 };
     if (!lay) lay = { ...target };
     backLayer.resize(W, H);
     mapLayer.resize(W, H);
@@ -603,7 +624,8 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
     ctx.clip();
     drawConstellation(ctx, sprites, arcs);
     ctx.restore();
-    drawWisps(ctx, sprites, onScreen, t);
+    // (By the globe's size as laid out, not as zoomed: zooming in spreads the wisps, it doesn't swell them.)
+    drawWisps(ctx, sprites, onScreen, t, clamp(Math.sqrt(lay.sg / 280), 0.65, 1));
     drawLabels();
     updateWispList(now);
     frameTimes?.push(performance.now() - started);
@@ -1436,7 +1458,7 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
   measure();
   lay = { ...target };
   new ResizeObserver(measure).observe(panel);
-  window.addEventListener('resize', measure);
+  window.addEventListener('resize', onResize(measure));
   requestAnimationFrame(loop);
   document.fonts?.ready.then(() => (mapDirty = true));
   // Indexing the detailed outlines takes some 50 ms: do it when the page is idle.
@@ -1459,6 +1481,7 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
     const sky = $('#sky');
     const W = innerWidth;
     const H = innerHeight;
+    laidOut = { W, H };
     const rnd = random(42);
     const sizes = [0.5, 0.6, 0.8, 1, 1.2];
     const alphas = [0.2, 0.3, 0.45, 0.6];
@@ -1469,6 +1492,8 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
       dots += `<circle cx="${x}" cy="${y}" r="${sizes[Math.floor(rnd() * 5)]}" opacity="${alphas[Math.floor(rnd() * 4)]}"></circle>`;
     }
     sky.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    sky.style.width = `${W}px`;
+    sky.style.height = `${H}px`;
     sky.innerHTML = `<g fill="#DDE2FF">${dots}</g>`;
   }
 })();

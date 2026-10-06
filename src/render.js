@@ -46,12 +46,15 @@ export function drawBackdrop(l, { vw, projection, frame }) {
   l.clear();
   const path = geoPath(projection, ctx);
 
-  const glow = (1 - vw.a) * 0.55;
+  // The glow reaches a fifth of the globe's radius past its edge (56px on a desktop-sized globe), and is
+  // fainter too around a small one, so it never swamps the globe above a phone's sheet.
+  const glow = (1 - vw.a) * 0.55 * Math.min(1, 0.5 + vw.s / 400);
   if (glow > 0.005) {
-    const r = vw.s + 56;
+    const spread = Math.min(56, Math.max(8, vw.s * 0.2));
+    const r = vw.s + spread;
     const g = ctx.createRadialGradient(vw.cx, vw.cy, 0, vw.cx, vw.cy, r);
     g.addColorStop(0, `rgba(43,63,158,${glow})`);
-    g.addColorStop(Math.max(0, (vw.s - 28) / r), `rgba(43,63,158,${glow})`);
+    g.addColorStop(Math.max(0, (vw.s - spread / 2) / r), `rgba(43,63,158,${glow})`);
     g.addColorStop(1, 'rgba(43,63,158,0)');
     ctx.fillStyle = g;
     ctx.beginPath();
@@ -248,16 +251,17 @@ const draw = (ctx, img, x, y, scale) => {
 const breath = (t, w) => 0.5 - 0.5 * Math.cos(TAU * ((t + w.delay) / w.dur));
 
 // wisps: [{ x, y, alpha, state: '' | 'sib' | 'kin' | 'on', dur, delay }]
-export function drawWisps(ctx, sprites, wisps, t) {
+// size: how far their glow (halo, rays, pulse) reaches, 1 around a desktop-sized globe, less around a small one.
+export function drawWisps(ctx, sprites, wisps, t, size = 1) {
   for (const w of wisps) {
     const b = breath(t, w);
     const on = w.state === 'on';
     const kin = w.state === 'kin';
     const sib = w.state === 'sib';
     ctx.globalAlpha = w.alpha * (0.25 + 0.75 * b) * (on ? 1.6 : 1);
-    draw(ctx, sib ? sprites.sibHalo : sprites.halo, w.x, w.y, (on ? 1.5 : 1) * (0.7 + 0.55 * b));
+    draw(ctx, sib ? sprites.sibHalo : sprites.halo, w.x, w.y, size * (on ? 1.5 : 1) * (0.7 + 0.55 * b));
 
-    const ray = on ? 13 : 8;
+    const ray = (on ? 13 : 8) * size;
     ctx.globalAlpha = w.alpha * 0.45;
     ctx.fillStyle = '#FFF0C8';
     ctx.fillRect(w.x - ray, w.y - 0.5, ray * 2, 1);
@@ -272,7 +276,7 @@ export function drawWisps(ctx, sprites, wisps, t) {
       ctx.strokeStyle = '#F4D58D';
       ctx.lineWidth = 1;
       ctx.beginPath();
-      ctx.arc(w.x, w.y, 15 * (0.7 + 0.9 * k), 0, TAU);
+      ctx.arc(w.x, w.y, 15 * size * (0.7 + 0.9 * k), 0, TAU);
       ctx.stroke();
     }
   }

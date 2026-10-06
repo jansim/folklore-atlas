@@ -34,6 +34,16 @@
 html,
 body {
   height: 100%;
+  overscroll-behavior: none;
+}
+
+/* An app on a touch screen, not a page: no double-tap or pinch zoom of the whole page (the map zooms
+   itself), no grey flash on a tapped button, no text selected or callout by a long press on the map. */
+html {
+  touch-action: pan-x pan-y;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
@@ -79,6 +89,12 @@ input:focus-visible,
   height: 100%;
 }
 
+#world,
+#labels {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
 #world {
   cursor: grab;
   touch-action: none;
@@ -587,19 +603,23 @@ input:focus-visible,
   letter-spacing: 0.02em;
   transition: letter-spacing 0.3s, color 0.3s, text-shadow 0.3s;
 }
-.rt:hover {
-  color: #fff6dc;
-}
-.rt:hover .rx {
-  letter-spacing: 0.06em;
-  text-shadow: 0 0 14px rgba(244, 213, 141, 0.45);
-}
-.rt:hover .rl {
-  background: var(--gold);
-}
-.rt:hover i {
-  background: var(--gold);
-  border-color: var(--gold);
+/* (Only where there is a pointer to hover with: on a touch screen the hover sticks after a tap, and the
+   title would spread out under the finger.) */
+@media (hover: hover) {
+  .rt:hover {
+    color: #fff6dc;
+  }
+  .rt:hover .rx {
+    letter-spacing: 0.06em;
+    text-shadow: 0 0 14px rgba(244, 213, 141, 0.45);
+  }
+  .rt:hover .rl {
+    background: var(--gold);
+  }
+  .rt:hover i {
+    background: var(--gold);
+    border-color: var(--gold);
+  }
 }
 .rt:focus-visible {
   outline-offset: 4px;
@@ -1151,6 +1171,10 @@ body.reading .controls {
     padding: 0 14px;
     gap: 8px;
   }
+  /* Under 16px, iOS zooms the whole page in on a field as it is focused. */
+  .search-box input {
+    font-size: 16px;
+  }
   /* As wide as the screen, from the search box's right edge, however narrow the box. */
   #results {
     top: 48px;
@@ -1186,6 +1210,7 @@ body.reading .controls {
     margin: 0;
     width: auto;
     max-height: 46%;
+    overscroll-behavior: contain;
     border-radius: 28px 28px 0 0;
     background: #0b1130;
     border-bottom: 0;
