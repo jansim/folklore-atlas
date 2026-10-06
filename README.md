@@ -59,7 +59,8 @@ The site's source is in `src/`; `scripts/build-site.js` (`npm run build:site`) b
 
 - the world starts as a slowly turning globe in an astrolabe ring; zoom out to the globe, in to the flat map and
   beyond (scroll, pinch, the zoom buttons or + and −), drag or use the arrow keys to turn and pan it
-- every tale is a wisp near its place, inside the place's country (and drifting no farther than its border).
+- every tale is a wisp in its place's country: a country's tales are spread evenly over its whole area, each of its
+  places taking the spots nearest it, and drift no farther than its border.
   Which wisps show depends on the zoom: they are ranked so that the wisps shown at any zoom are spread evenly over
   the map and never closer than a few dozen pixels (`src/lib/wisps.js`), so zooming in reveals more of them, and
   wisps at the edge of showing slowly fade in and out
