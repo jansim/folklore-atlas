@@ -700,9 +700,6 @@ import { distanceToRings, random, rankBySpread, smoothstep, spotsWithin, sunflow
   $('#to-globe').addEventListener('click', () => toGlobe(1400));
   $('#to-flat').addEventListener('click', () => toFlat(1200, 0));
   if (innerWidth < 500) $('#search').placeholder = 'Search tales and lands';
-  if (matchMedia('(pointer: coarse)').matches) {
-    $('#hint').textContent = 'Pinch to zoom. Zoom out and the world becomes a globe; drag to turn it.';
-  }
 
   // ---------- The chosen tale ----------
 
