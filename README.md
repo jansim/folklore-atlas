@@ -46,8 +46,9 @@ trilogy is included as a git submodule in `vendor/trilogy`, pinned to a specific
   The country each place lies in (lit up on the map) is found from its coordinates.
 - `data/constellations.json`: a star-constellation drawing for every tale, e.g. a sun and a moon for "Sun, Moon, and
   Talia". Tales share the drawing of their ATU type unless they have their own; drawings are built from ~140 named
-  icons (animals, people, things) that they place and scale, in a compact SVG-path-like format described in the
-  file's `_comment` and decoded into stars and lines by `src/lib/constellations.js`. The build copies it to
+  icons (animals, people, things) that they place and scale, in a compact SVG-path-like format (straight and curved
+  lines, circles) described in the file's `_comment` and decoded into stars, lines and circles by
+  `src/lib/constellations.js`. The build copies it to
   `dist/data/constellations.json`.
 
 1,498 tales are placed at 98 places; 20 have no usable provenance and are left off the map. Tale ids are row numbers
