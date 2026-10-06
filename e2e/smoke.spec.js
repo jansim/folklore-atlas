@@ -103,8 +103,8 @@ test('the reader opens kindred tales and closes with Escape', async ({ page }) =
   const before = await page.locator('#r-title').textContent();
   await page.locator('#fs-up').click();
   await expect(page.locator('#reading')).toHaveAttribute('style', /--fs: 25px/);
-  const other = page.locator('#r-others-list .more').first();
-  const title = (await other.evaluate((b) => b.firstChild.textContent)).trim();
+  const other = page.locator('#r-kin-chips .kc, #r-fam-chips .kc').first();
+  const title = (await other.getAttribute('title')).match(/“(.*)”/)[1];
   await other.click();
   await expect(page.locator('#r-title')).toHaveText(title);
   expect(title).not.toBe(before);

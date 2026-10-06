@@ -863,9 +863,9 @@ import { distanceToRings, random, rankBySpread, smoothstep, spotsWithin, sunflow
     q.addEventListener('focus', place);
   }
 
-  function otherRow(t, opts) {
+  function otherRow(t) {
     const b = el('button', 'more', t.title);
-    b.addEventListener('click', () => pick(t.id, opts));
+    b.addEventListener('click', () => pick(t.id));
     return b;
   }
 
@@ -1104,10 +1104,6 @@ import { distanceToRings, random, rankBySpread, smoothstep, spotsWithin, sunflow
     $('#r-fam').hidden = !state.fam.length;
     renderChips($('#r-fam-chips'), state.fam, 'silver', Infinity, null, { reading: true });
     setTips(sel, $('#r-kin-tip'), $('#r-fam-tip'));
-    const others = sel.place.tales.filter((t) => t !== sel);
-    $('#r-others').hidden = !others.length;
-    $('#r-others-head').textContent = `More tales from ${sel.place.name}`;
-    $('#r-others-list').replaceChildren(...others.slice(0, OTHERS_SHOWN).map((t) => otherRow(t, { reading: true })));
     readingEl.replaceChildren(firstParagraph(sel.excerpt));
     readingEl.focus({ preventScroll: true });
 
