@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { detailMap, flatView, pieces, tracePieces } from '../src/lib/detail-map.js';
+import { MERCATOR_MAX, detailMap, flatView, mercatorLat, pieces, tracePieces } from '../src/lib/detail-map.js';
 
 // A context that records the points of the path traced into it.
 const recorder = () => {
@@ -40,7 +40,7 @@ test('polygons across the antimeridian keep their longitudes continuous', () => 
 test('only the parts that reach the screen are traced, at the turn that puts them there', () => {
   const map = detailMap(topo);
   // 10 px per degree, the map centred on lon 0 and lat 0, a screen 100 x 100 px (lon -5..5, lat -5..5).
-  const at = (lon0) => flatView({ ox: 50 - 10 * lon0, oy: 50, kx: 10, w: 100, h: 100, margin: 0 });
+  const at = (lon0) => flatView({ ox: 50 - 10 * lon0, oy: 50, k: 10, w: 100, h: 100, margin: 0 });
   const ctx = recorder();
   tracePieces(ctx, map.fills, at(0), true);
   assert.equal(ctx.subpaths.length, 1);
@@ -54,14 +54,26 @@ test('only the parts that reach the screen are traced, at the turn that puts the
   assert.deepEqual(west.subpaths[0][0], [50 + 10 * (175 - 360 + 180), 50 + 100]);
 });
 
-test('the map can be narrowed: longitude and latitude scale apart', () => {
+test('zoomed in, the map turns Mercator: latitudes are drawn at their Mercator y', () => {
   const map = detailMap(topo);
-  // 5 px per degree of longitude and 10 of latitude: the screen shows lon -10..10 and lat -5..5.
-  const t = flatView({ ox: 50, oy: 50, kx: 5, ky: 10, w: 100, h: 100, margin: 0 });
-  assert.deepEqual([t.lon0, t.lon1, t.lat0, t.lat1], [-10, 10, -5, 5]);
+  const t = flatView({ ox: 50, oy: 50, k: 10, m: 1, w: 100, h: 100, margin: 0 });
+  assert.deepEqual([t.lon0, t.lon1, t.y0, t.y1], [-5, 5, -5, 5]);
   const ctx = recorder();
   tracePieces(ctx, map.fills, t, true);
-  assert.deepEqual(ctx.subpaths[0].slice(0, 3), [[50, 50], [100, 50], [100, -50]]);
+  const [x, y] = ctx.subpaths[0][2];
+  assert.equal(x, 150);
+  assert.ok(Math.abs(y - (50 - 10 * mercatorLat(10))) < 1e-3);
+  // Halfway, halfway between the latitude and its Mercator y.
+  const half = recorder();
+  tracePieces(half, map.fills, flatView({ ox: 50, oy: 50, k: 10, m: 0.5, w: 100, h: 100, margin: 0 }), true);
+  assert.ok(Math.abs(half.subpaths[0][2][1] - (50 - 5 * (10 + mercatorLat(10)))) < 1e-3);
+});
+
+test('Mercator y matches the latitude at the equator and stops where the map is square', () => {
+  assert.ok(Math.abs(mercatorLat(0)) < 1e-9);
+  assert.ok(mercatorLat(10) > 10);
+  assert.ok(Math.abs(mercatorLat(90) - 180) < 1e-9);
+  assert.ok(Math.abs(mercatorLat(-90) + mercatorLat(MERCATOR_MAX)) < 1e-9);
 });
 
 test('a ring around a pole is closed along the pole', () => {
