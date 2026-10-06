@@ -40,7 +40,7 @@ test('polygons across the antimeridian keep their longitudes continuous', () => 
 test('only the parts that reach the screen are traced, at the turn that puts them there', () => {
   const map = detailMap(topo);
   // 10 px per degree, the map centred on lon 0 and lat 0, a screen 100 x 100 px (lon -5..5, lat -5..5).
-  const at = (lon0) => flatView({ ox: 50 - 10 * lon0, oy: 50, k: 10, w: 100, h: 100, margin: 0 });
+  const at = (lon0) => flatView({ ox: 50 - 10 * lon0, oy: 50, kx: 10, w: 100, h: 100, margin: 0 });
   const ctx = recorder();
   tracePieces(ctx, map.fills, at(0), true);
   assert.equal(ctx.subpaths.length, 1);
@@ -52,6 +52,16 @@ test('only the parts that reach the screen are traced, at the turn that puts the
   tracePieces(west, map.fills, at(-180), true);
   assert.equal(west.subpaths.length, 1);
   assert.deepEqual(west.subpaths[0][0], [50 + 10 * (175 - 360 + 180), 50 + 100]);
+});
+
+test('the map can be narrowed: longitude and latitude scale apart', () => {
+  const map = detailMap(topo);
+  // 5 px per degree of longitude and 10 of latitude: the screen shows lon -10..10 and lat -5..5.
+  const t = flatView({ ox: 50, oy: 50, kx: 5, ky: 10, w: 100, h: 100, margin: 0 });
+  assert.deepEqual([t.lon0, t.lon1, t.lat0, t.lat1], [-10, 10, -5, 5]);
+  const ctx = recorder();
+  tracePieces(ctx, map.fills, t, true);
+  assert.deepEqual(ctx.subpaths[0].slice(0, 3), [[50, 50], [100, 50], [100, -50]]);
 });
 
 test('a ring around a pole is closed along the pole', () => {
