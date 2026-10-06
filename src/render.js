@@ -31,6 +31,7 @@ export function layer(canvas, maxDpr = 2) {
 
 // ---------- The map ----------
 
+const OCEAN = '#0B1233';
 const COUNTRY = { fill: '#0F1738', stroke: '#222D63', width: 0.5 };
 const KIN = { fill: [58, 53, 80], stroke: [156, 138, 94], width: 0.5 };
 const SIB = { fill: [37, 43, 68], stroke: [127, 136, 168], width: 0.5 };
@@ -61,9 +62,19 @@ export function drawBackdrop(l, { vw, projection, frame }) {
   ctx.beginPath();
   ctx.ellipse(frame.cx, frame.cy, frame.rx, frame.ry, 0, 0, TAU);
   ctx.clip();
+  // Zooming in from the flat map, the ring reaches past the map's top and bottom edges until it fades:
+  // carry the sea on above the map, and the land of Antarctica on below it.
+  if (vw.fade > 0) {
+    const top = projection([vw.lon, 90])[1];
+    const bottom = projection([vw.lon, -90])[1];
+    ctx.fillStyle = OCEAN;
+    ctx.fillRect(0, 0, l.w, top);
+    ctx.fillStyle = COUNTRY.fill;
+    ctx.fillRect(0, bottom, l.w, l.h - bottom);
+  }
   ctx.beginPath();
   path({ type: 'Sphere' });
-  ctx.fillStyle = '#0B1233';
+  ctx.fillStyle = OCEAN;
   ctx.fill();
   // The rim, inside the ring too: half unrolled, the sphere's outline reaches past it.
   if (vw.a < 0.999) {
