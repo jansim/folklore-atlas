@@ -76,24 +76,25 @@ export function detailMap(topo) {
   };
 }
 
-// The screen as a transform from degrees: x = ox + k * lon, y = oy - k * lat, for a map centred on
-// lon0 (so lon runs from lon0 - 180 to lon0 + 180), with the window it shows in degrees and a margin.
-export function flatView({ ox, oy, k, w, h, margin = 4 }) {
-  return { ox, oy, k, lon0: (-ox - margin) / k, lon1: (w - ox + margin) / k, lat0: (oy - h - margin) / k, lat1: (oy + margin) / k };
+// The screen as a transform from degrees: x = ox + kx * lon, y = oy - ky * lat, with the window it
+// shows in degrees and a margin. kx is less than ky where the map is narrowed to the true proportions
+// of the latitude in view.
+export function flatView({ ox, oy, kx, ky = kx, w, h, margin = 4 }) {
+  return { ox, oy, kx, ky, lon0: (-ox - margin) / kx, lon1: (w - ox + margin) / kx, lat0: (oy - h - margin) / ky, lat1: (oy + margin) / ky };
 }
 
 // Adds the parts that reach the window to the context's current path, each at every whole turn of
 // 360° that puts it there (the window is narrower than the world, so no point shows twice).
 export function tracePieces(ctx, parts, t, close) {
-  const { ox, oy, k, lon0, lon1, lat0, lat1 } = t;
+  const { ox, oy, kx, ky, lon0, lon1, lat0, lat1 } = t;
   for (const { bbox, rings } of parts) {
     if (bbox[1] > lat1 || bbox[3] < lat0) continue;
     for (let turn = -360; turn <= 360; turn += 360) {
       if (bbox[0] + turn > lon1 || bbox[2] + turn < lon0) continue;
-      const x0 = ox + k * turn;
+      const x0 = ox + kx * turn;
       for (const xy of rings) {
-        ctx.moveTo(x0 + k * xy[0], oy - k * xy[1]);
-        for (let i = 2; i < xy.length; i += 2) ctx.lineTo(x0 + k * xy[i], oy - k * xy[i + 1]);
+        ctx.moveTo(x0 + kx * xy[0], oy - ky * xy[1]);
+        for (let i = 2; i < xy.length; i += 2) ctx.lineTo(x0 + kx * xy[i], oy - ky * xy[i + 1]);
         if (close) ctx.closePath();
       }
     }
