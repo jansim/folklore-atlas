@@ -5,8 +5,9 @@
 //   - a run of points, "2c6m" is (2,12)-(6,22). Consecutive points are joined by a line; a single point is
 //     a lone star. "Q" and a control point before a point curve the line to it, as in SVG ("00Qh0z0" bows
 //     up towards (17,0)), and a trailing "Z" (or "Q" control "Z") closes the run back to its first point.
-//   - a circle, "O" with its center, radius and optional number of stars spaced evenly around it from the
-//     top: "Ohh84" is a circle of radius 8 around (17,17) with stars at its top, right, bottom and left.
+//   - a circle, "O" with its center, radius and number of stars spaced evenly around it from the top, 4 if
+//     left out: "Ohh8" is a circle of radius 8 around (17,17) with stars at its top, right, bottom and left,
+//     "Ohh86" one with six stars.
 //   - a reference to a named icon, "@sun", drawn whole or placed in a box: "@sun:XYS" puts the icon's
 //     grid at X,Y scaled by S/35 (so "@sun:00z" is the icon as is and "@sun:i0h" its top-right quarter),
 //     and a trailing "-" mirrors it left to right ("@fox:00z-" faces left).
@@ -45,7 +46,7 @@ export function shapes(drawing, icons = {}, seen = []) {
     }
     const c = part.match(CIRCLE);
     if (c) {
-      out.push({ circle: [digit(c[1]), digit(c[2]), digit(c[3])], stars: c[4] ? digit(c[4]) : 0 });
+      out.push({ circle: [digit(c[1]), digit(c[2]), digit(c[3])], stars: c[4] ? digit(c[4]) : 4 });
       continue;
     }
     const m = part.match(REF);

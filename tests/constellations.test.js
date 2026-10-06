@@ -25,10 +25,11 @@ test('Q curves a line through a control point that is not a star', () => {
   assert.equal(pathData(decode('00Qh0z0')), 'M0 0Q17 0 35 0');
 });
 
-test('O draws a circle with stars spaced evenly from the top', () => {
-  assert.deepEqual(decode('Ohh8'), { stars: [], lines: [], circles: [[17, 17, 8]] });
+test('O draws a circle with stars spaced evenly from the top, four by default', () => {
+  assert.deepEqual(decode('Ohh80'), { stars: [], lines: [], circles: [[17, 17, 8]] });
+  assert.equal(decode('Ohh86').stars.length, 6);
   // The run from the top to the bottom of the circle joins two of its stars.
-  assert.deepEqual(decode('Ohh84 h9hp'), {
+  assert.deepEqual(decode('Ohh8 h9hp'), {
     stars: [[17, 9], [25, 17], [17, 25], [9, 17]],
     lines: [[0, 2]],
     circles: [[17, 17, 8]],
@@ -36,7 +37,7 @@ test('O draws a circle with stars spaced evenly from the top', () => {
 });
 
 test('references place, scale and mirror icons', () => {
-  const icons = { dot: '00', bar: '00z0', arc: '00Qhhz0', o: 'Ohh7' };
+  const icons = { dot: '00', bar: '00z0', arc: '00Qhhz0', o: 'Ohh70' };
   const points = (d) => shapes(d, icons).map((s) => s.points);
   assert.deepEqual(points('@bar'), [[[0, 0], [35, 0]]]);
   assert.deepEqual(points('@dot:a5z'), [[[10, 5]]]);
