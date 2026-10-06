@@ -194,7 +194,7 @@ function drawFrame(ctx, { cx, cy, rx, ry, op }) {
   }
   ctx.fill();
 
-  ctx.font = "600 13px 'Cormorant Garamond', Georgia, serif";
+  ctx.font = "600 13px 'Spectral', Georgia, serif";
   if ('letterSpacing' in ctx) ctx.letterSpacing = '6px';
   ctx.fillStyle = '#C9A962';
   ctx.textAlign = 'center';
