@@ -624,7 +624,7 @@ import { distanceToRings, random, rankBySpread, smoothstep, spotsWithin, sunflow
       idleSince = performance.now();
       keepBusy();
       const dy = e.deltaMode === 1 ? e.deltaY * 33 : e.deltaY;
-      zoomInput(-dy * 0.0012);
+      zoomInput(-dy * 0.0015);
     },
     { passive: false },
   );
