@@ -71,3 +71,14 @@ test('world.json has countries and land', () => {
   assert.ok(world.objects.countries.geometries.length > 150);
   assert.ok(world.objects.land);
 });
+
+test('world-detail.json has every country of world.json, in more detail', () => {
+  const world = read('world.json');
+  const detail = read('world-detail.json');
+  const names = new Set(detail.objects.countries.geometries.map((g) => g.properties.name));
+  for (const g of world.objects.countries.geometries) assert.ok(names.has(g.properties.name), g.properties.name);
+  assert.ok(detail.objects.land);
+  const points = (topo) => topo.arcs.reduce((n, arc) => n + arc.length, 0);
+  assert.ok(points(detail) > 2 * points(world));
+  assert.ok(fs.statSync(path.join(DATA, 'world-detail.json')).size < 400_000, 'world-detail.json is under 400 kB');
+});
