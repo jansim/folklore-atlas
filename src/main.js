@@ -1159,6 +1159,7 @@ import { distanceToRings, random, rankBySpread, smoothstep, spotsWithin, sunflow
   }
   $('#back').addEventListener('click', closeReader);
   $('#r-close').addEventListener('click', closeReader);
+  $('#r-bar-close').addEventListener('click', closeReader);
   readerScroll.addEventListener(
     'scroll',
     () => {

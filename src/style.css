@@ -654,7 +654,7 @@ body.reading .controls {
 /* A plain golden X at the right edge of the text, level with the place above the title. */
 .r-close {
   position: absolute;
-  top: -30px;
+  top: -64px;
   right: -20px;
   width: 80px;
   height: 80px;
@@ -850,6 +850,12 @@ body.reading .controls {
 }
 .tb.big {
   font-size: 16px;
+}
+.tb-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 6px;
 }
 .tb:hover {
   border-color: var(--gold);
