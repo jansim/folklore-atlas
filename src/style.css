@@ -607,6 +607,7 @@ body.reading .controls {
 .r-scroll {
   position: absolute;
   inset: 0;
+  overflow-x: hidden;
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--line) transparent;
@@ -1156,29 +1157,64 @@ body.reading .controls {
     margin: 0;
     width: auto;
     max-height: 46%;
-    border-radius: 18px 18px 0 0;
+    border-radius: 28px 28px 0 0;
+    background: #0b1130;
     border-bottom: 0;
-    padding: 8px 20px 20px;
+    padding: 0 20px 20px;
     gap: 10px;
     box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.45);
+  }
+  /* Pulled up to fill the screen (main.js), and settling there or back after a pull. */
+  #panel.full {
+    max-height: calc(100% - 40px);
+  }
+  #panel.full,
+  #panel.dragging,
+  #panel.settling {
+    z-index: 4;
+  }
+  #panel.dragging {
+    animation: none;
+    overscroll-behavior: contain;
+  }
+  #panel.settling {
+    animation: none;
+    transition:
+      max-height 0.25s ease-out,
+      transform 0.22s ease-in;
+  }
+  #panel > .p-head {
+    touch-action: none;
+  }
+  /* Read the tale stays in sight at the foot of the sheet until it is scrolled to. */
+  #panel > .rt {
+    position: sticky;
+    bottom: -20px;
+    margin: 0 -20px -10px;
+    padding: 0 20px 20px;
+    height: 76px;
+    background: linear-gradient(rgba(11, 17, 48, 0), #0b1130 32%);
   }
   .close {
     top: 6px;
     right: 10px;
   }
+  /* The grip along the sheet's top edge, which stays put as the sheet scrolls. */
   .sheet-toggle {
+    position: sticky;
+    top: 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    align-self: center;
+    align-self: stretch;
     flex: none;
-    width: 88px;
-    height: 24px;
-    margin-bottom: 2px;
+    height: 30px;
+    margin: 0 -20px -4px;
     padding: 0;
     border: 0;
-    background: transparent;
-    cursor: pointer;
+    background: #0b1130;
+    cursor: grab;
+    touch-action: none;
   }
   .sheet-toggle span {
     width: 40px;
@@ -1200,6 +1236,10 @@ body.reading .controls {
   }
   .r-bar {
     padding: 0 12px 0 16px;
+  }
+  /* Within the gutter, so the page doesn't scroll sideways. */
+  .r-close {
+    right: calc(-1 * var(--gutter));
   }
   .r-mini .kh {
     display: none;
