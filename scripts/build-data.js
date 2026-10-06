@@ -4,9 +4,10 @@
 //   - vendor/trilogy/data/atu_df.csv  ATU tale type index: type names and families
 //   - data/places.json                our gazetteer: provenance -> map position
 //   - data/atu-kinds.json             the kinds of tale by ATU number, and family names atu_df.csv lacks
+//   - data/constellations.json        constellation drawings for the tales, copied without its comment
 //   - dist/data/world.json            country outlines (scripts/build-world.js), to find each place's country
 // Writes dist/data/map.json (places, tale list, tale types) and one
-// dist/data/tales/<id>.json per tale with its full text.
+// dist/data/tales/<id>.json per tale with its full text, and dist/data/constellations.json.
 //
 // Usage: node scripts/build-data.js
 
@@ -212,6 +213,9 @@ const out = {
     .map((p) => ({ id: p.id, name: p.name, lat: p.lat, lng: p.lng, country: p.generic ? null : countryAt(p.lng, p.lat), tales: placed.get(p.id) })),
 };
 fs.writeFileSync(path.join(OUT, 'map.json'), JSON.stringify(out));
+
+const { _comment, ...constellations } = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/constellations.json'), 'utf8'));
+fs.writeFileSync(path.join(OUT, 'constellations.json'), JSON.stringify(constellations));
 
 const total = [...placed.values()].reduce((n, l) => n + l.length, 0);
 console.log(`Placed ${total} of ${tales.length} tales at ${out.places.length} places (${usedTypes.size} tale types) → dist/data/`);
