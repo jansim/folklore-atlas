@@ -1,0 +1,15 @@
+{
+  "name": "folklore-map",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Wisp Atlas: a night-sky map of folktales from the trilogy Annotated Folktales",
+  "scripts": {
+    "build": "npm run build:land && npm run build:data",
+    "build:land": "node scripts/build-land.js",
+    "build:data": "node scripts/build-data.js",
+    "serve": "python3 -m http.server 8000 -d docs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
