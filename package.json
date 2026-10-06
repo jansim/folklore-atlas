@@ -1,8 +1,8 @@
 {
-  "name": "folklore-map",
+  "name": "folklore-atlas",
   "version": "0.1.0",
   "private": true,
-  "description": "Folk Atlas: folktales from the trilogy Annotated Folktales as wisps over a globe that unrolls into a flat map",
+  "description": "Folklore Atlas: folktales from the trilogy Annotated Folktales as wisps over a globe that unrolls into a flat map",
   "scripts": {
     "build": "npm run build:world && npm run build:data && npm run build:site",
     "build:world": "node scripts/build-world.js",
