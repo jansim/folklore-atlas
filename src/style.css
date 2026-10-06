@@ -1135,12 +1135,25 @@ body.reading .controls {
   .brand {
     font-size: 26px;
   }
+  /* A compact pill beside the title, as tall as the chips below it, that widens into the row while in use. */
   .search {
-    flex: 1;
-    min-width: 108px;
+    flex: 1 1 108px;
+    max-width: 132px;
+    margin-left: auto;
+    transition: max-width 0.2s ease-out;
+  }
+  .search:focus-within,
+  .search:has(input:not(:placeholder-shown)) {
+    max-width: 100%;
+  }
+  .search-box {
+    height: 40px;
+    padding: 0 14px;
+    gap: 8px;
   }
   /* As wide as the screen, from the search box's right edge, however narrow the box. */
   #results {
+    top: 48px;
     width: calc(100vw - 2 * var(--gutter) - var(--sa-l) - var(--sa-r));
   }
   .controls {
