@@ -852,10 +852,8 @@ body.reading .controls {
   font-size: 16px;
 }
 .tb-close {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   margin-left: 6px;
+  padding: 0 14px;
 }
 .tb:hover {
   border-color: var(--gold);
