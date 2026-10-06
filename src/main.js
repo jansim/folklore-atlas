@@ -6,7 +6,7 @@ import { geoDistance, geoEquirectangularRaw, geoGraticule10, geoOrthographicRaw,
 import { feature, mesh } from 'topojson-client';
 import { drawBackdrop, drawConstellation, drawMap, drawWisps, layer, wispSprites } from './render.js';
 import { indexTale, searchTales } from './lib/search.js';
-import { angle, random, rankBySpread, smoothstep, sunflower } from './lib/wisps.js';
+import { random, rankBySpread, smoothstep, sunflower } from './lib/wisps.js';
 
 (async function () {
   const $ = (sel) => document.querySelector(sel);
@@ -121,25 +121,29 @@ import { angle, random, rankBySpread, smoothstep, sunflower } from './lib/wisps.
   let idleSince = 0;
   const t0 = performance.now();
 
-  // Where the globe sits: centred in the space the header, controls and panel leave free.
+  // Where the globe sits: centred on the screen below the header and controls. A tale panel at the side
+  // overlays the globe's right edge a little; a bottom sheet (on phones) pushes the globe up instead.
   let target = null;
   let lay = null;
+  const sheetQuery = matchMedia('(max-width: 760px)');
   function measure() {
     const W = innerWidth;
     const H = innerHeight;
-    let x0 = 0;
-    let x1 = W;
     let y0 = Math.max(56, $('.top').getBoundingClientRect().bottom - 8);
     let y1 = H;
     const controls = $('.controls').getBoundingClientRect();
     if (controls.top < H * 0.3) y0 = Math.max(y0, controls.bottom + 16);
-    if (!panel.hidden) {
-      const r = panel.getBoundingClientRect();
-      if (r.left > W * 0.45) x1 = r.left + parseFloat(getComputedStyle(panel).right);
-      else y1 = r.top;
+    if (sheetQuery.matches && !panel.hidden) y1 = panel.getBoundingClientRect().top;
+    let k = Math.min(W / 1056, (y1 - y0) / 828);
+    if (!sheetQuery.matches) {
+      // Keep the globe from reaching more than 40% of the way under the side panel, open or not.
+      const css = getComputedStyle(document.documentElement);
+      const panelW = parseFloat(css.getPropertyValue('--panel-w'));
+      const panelLeft = W - parseFloat(css.getPropertyValue('--gutter')) - panelW;
+      k = Math.min(k, (panelLeft + 0.4 * panelW - W / 2) / 280);
     }
-    const k = clamp(Math.min((x1 - x0) / 1056, (y1 - y0) / 828), 0.25, 1.8);
-    const cx = (x0 + x1) / 2;
+    k = clamp(k, 0.25, 1.8);
+    const cx = W / 2;
     target = { W, H, cx, cy: (y0 + y1) / 2, sg: 280 * k, sf: 160 * k, shift: (W / 2 - cx) * 0.58 };
     if (!lay) lay = { ...target };
     backLayer.resize(W, H);
@@ -401,7 +405,7 @@ import { angle, random, rankBySpread, smoothstep, sunflower } from './lib/wisps.
       v.lon = wrap(anim.from.lon + anim.dlon * e);
       v.lat = anim.from.lat + (anim.to.lat - anim.from.lat) * e;
       if (k >= 1) anim = null;
-    } else if (!drag && !pinch && !reduceMotion && v.z < 0.4 && now - idleSince > 4000) {
+    } else if (!state.sel && !drag && !pinch && !reduceMotion && v.z < 0.4 && now - idleSince > 4000) {
       v.lon = wrap(v.lon + (3.5 * dt) / 1000);
     }
   }
@@ -449,7 +453,8 @@ import { angle, random, rankBySpread, smoothstep, sunflower } from './lib/wisps.
       mapDirty = false;
       drawMap(mapLayer, { vw, projection: p, frame: fr, land, borders, coast, graticule, highlights });
     }
-    if (state.sel && arcsKey !== `${key}|${state.sel.id}|${state.mode}`) {
+    if (!state.sel) arcs = null;
+    else if (arcsKey !== `${key}|${state.sel.id}|${state.mode}`) {
       arcsKey = `${key}|${state.sel.id}|${state.mode}`;
       arcs = constellation(vw, p);
     }
@@ -618,6 +623,23 @@ import { angle, random, rankBySpread, smoothstep, sunflower } from './lib/wisps.
     return true;
   }
 
+  // Let go of the chosen tale: the panel closes and the globe may turn on its own again.
+  function deselect() {
+    if (!state.sel) return;
+    const wasIn = panel.contains(document.activeElement);
+    state.sel = null;
+    state.reading = false;
+    state.kin = [];
+    arcsKey = '';
+    forced = new Set();
+    markWisps();
+    setHighlights(null, []);
+    panel.hidden = true;
+    idleSince = performance.now();
+    if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+    if (wasIn) worldEl.focus({ preventScroll: true });
+  }
+
   // Light up the chosen tale, its kin and their countries, then fill in the panel.
   function select() {
     const sel = state.sel;
@@ -741,6 +763,10 @@ import { angle, random, rankBySpread, smoothstep, sunflower } from './lib/wisps.
       select();
     });
   }
+  $('#close').addEventListener('click', deselect);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && state.sel && e.target !== search) deselect();
+  });
   $('#sheet-toggle').addEventListener('click', () => {
     state.collapsed = !state.collapsed;
     renderPanel();
@@ -820,18 +846,13 @@ import { angle, random, rankBySpread, smoothstep, sunflower } from './lib/wisps.
     const place = placeById.get(a);
     return place ? pick(place.tales[0].id) : false;
   }
-  window.addEventListener('hashchange', fromHash);
+  window.addEventListener('hashchange', () => fromHash() || deselect());
 
   // ---------- Start ----------
 
   loading.hidden = true;
   measure();
-  if (!fromHash()) {
-    // Open on Cinderella, as told on the side of the globe that faces us.
-    const facing = (t) => angle([t.lon, t.lat], [v.lon, v.lat]) < 50 * RAD;
-    const first = tales.filter((t) => t.atu === '510A' && facing(t)).sort((a, b) => b.spacing - a.spacing)[0] ?? tales[0];
-    pick(first.id, { fly: false });
-  }
+  fromHash();
   measure();
   lay = { ...target };
   new ResizeObserver(measure).observe(panel);
