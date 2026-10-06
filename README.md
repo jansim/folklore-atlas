@@ -54,7 +54,10 @@ Serve it locally after `npm run build`:
 npm run serve    # http://localhost:8000
 ```
 
-Because `docs/data/` is not committed, publishing it (e.g. on GitHub Pages) needs a build step first.
+Because `docs/data/` is not committed, publishing needs a build step. `.github/workflows/pages.yml` does this:
+on every push to `main` (or a manual run) it checks out the submodule, runs `npm run build` and deploys `docs/`
+to GitHub Pages; on pull requests it only runs the build as a check. One-time setup: in the repository's
+Settings → Pages, set **Source** to **GitHub Actions**.
 
 `docs/data/land.json` holds the land outlines from [Natural Earth](https://www.naturalearthdata.com/) 1:110m
 (public domain), built by `scripts/build-land.js` (`npm run build:land`), which downloads the
