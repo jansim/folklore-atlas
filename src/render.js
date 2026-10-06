@@ -3,6 +3,7 @@
 // Both draw with plain canvas calls and pre-rendered sprites: no SVG filters or CSS blur.
 
 import { geoPath } from 'd3-geo';
+import { tracePieces } from './lib/detail-map.js';
 
 const TAU = Math.PI * 2;
 const RAD = Math.PI / 180;
@@ -82,10 +83,20 @@ export function drawBackdrop(l, { vw, projection, frame }) {
 
 // What turns with the globe: graticule, land, borders, highlighted countries and coasts.
 // highlights: Map country feature -> { sib: 0..1, kin: 0..1, own: 0..1 }
-export function drawMap(l, { projection, frame, land, borders, coast, graticule, highlights }) {
+// detail and flat (lib/detail-map.js): on the flat map zoomed in, the detailed outlines, drawn
+// straight through the flat transform instead of the coarse ones through the projection.
+export function drawMap(l, { projection, frame, land, borders, coast, graticule, highlights, detail, flat }) {
   const { ctx } = l;
   l.clear();
   const path = geoPath(projection, ctx);
+  const trace = detail
+    ? {
+        land: () => tracePieces(ctx, detail.fills, flat, true),
+        borders: () => tracePieces(ctx, detail.borders, flat),
+        coast: () => tracePieces(ctx, detail.coast, flat),
+        country: (f) => tracePieces(ctx, detail.byName.get(f.properties.name) ?? [], flat, true),
+      }
+    : { land: () => path(land), borders: () => path(borders), coast: () => path(coast), country: (f) => path(f) };
 
   ctx.save();
   ctx.beginPath();
@@ -101,11 +112,11 @@ export function drawMap(l, { projection, frame, land, borders, coast, graticule,
   ctx.setLineDash([]);
 
   ctx.beginPath();
-  path(land);
+  trace.land();
   ctx.fillStyle = COUNTRY.fill;
   ctx.fill();
   ctx.beginPath();
-  path(borders);
+  trace.borders();
   ctx.strokeStyle = COUNTRY.stroke;
   ctx.lineWidth = COUNTRY.width;
   ctx.stroke();
@@ -114,7 +125,7 @@ export function drawMap(l, { projection, frame, land, borders, coast, graticule,
     for (const [style, level] of [[SIB, h.sib], [KIN, h.kin], [OWN, h.own]]) {
       if (level < 0.01) continue;
       ctx.beginPath();
-      path(f);
+      trace.country(f);
       ctx.fillStyle = rgba(style.fill, level);
       ctx.fill();
       ctx.strokeStyle = rgba(style.stroke, level);
@@ -124,7 +135,7 @@ export function drawMap(l, { projection, frame, land, borders, coast, graticule,
   }
 
   ctx.beginPath();
-  path(coast);
+  trace.coast();
   ctx.setLineDash([1.4, 2.8]);
   ctx.lineCap = 'round';
   ctx.strokeStyle = '#5363B8';

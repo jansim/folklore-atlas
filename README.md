@@ -50,7 +50,9 @@ in `aft.csv`, so they stay stable as long as the submodule commit does. To updat
 `git -C vendor/trilogy pull`, rebuild, check the unplaced report and the tests, and commit the submodule bump.
 
 `scripts/build-world.js` (`npm run build:world`) copies the Natural Earth 1:110m countries from the
-[world-atlas](https://github.com/topojson/world-atlas) package to `dist/data/world.json`.
+[world-atlas](https://github.com/topojson/world-atlas) package to `dist/data/world.json`, for the globe and the whole
+flat map, and writes the 1:50m countries, simplified to 30% of their points, to `dist/data/world-detail.json`, for the
+flat map zoomed in (about 105 kB gzipped, loaded after the first view).
 
 ## The site
 
@@ -92,7 +94,9 @@ The map and the wisps are drawn on canvases (`src/render.js`):
 
 - a backdrop canvas (glow, globe disc, astrolabe ring), redrawn only when the zoom or layout changes
 - a map canvas (graticule, land, borders, highlighted countries, coasts), redrawn only when the view moves. Borders
-  and coasts are TopoJSON meshes, so every shared border is projected once.
+  and coasts are TopoJSON meshes, so every shared border is projected once. Zoomed into the flat map, the detailed
+  outlines are drawn straight from typed arrays (the projection there is only a scale and a shift), cut into pieces
+  with bounding boxes so only what reaches the screen is drawn (`src/lib/detail-map.js`).
 - a wisp canvas (wisps from pre-rendered sprites, the constellation), redrawn every frame at 1x pixel density: the
   wisps are soft glows and look the same, at a quarter of the pixels on a high-density screen
 
