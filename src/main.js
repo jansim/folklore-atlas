@@ -179,7 +179,8 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
       const panelLeft = W - parseFloat(css.getPropertyValue('--gutter')) - panelW;
       k = Math.min(k, (panelLeft + 0.4 * panelW - W / 2) / 280);
     }
-    k = clamp(k, 0.25, 1.8);
+    // (Smaller still above a phone's sheet on a short screen, rather than reaching under the controls.)
+    k = clamp(k, sheet ? 0.15 : 0.25, 1.8);
     // A phone skips the flat map in its ring for one that fills the screen: its scale needn't make room
     // for the sheet, so zooming in and out keeps the same steps with the sheet open or closed.
     const kf = sheet ? clamp(fit(y0, H), 0.25, 1.8) : k;
@@ -769,7 +770,10 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
   $('#zoom-out').addEventListener('click', () => zoomBy(-0.7));
   $('#to-globe').addEventListener('click', () => toGlobe(1400));
   $('#to-flat').addEventListener('click', () => toFlat(1200, 0));
-  if (innerWidth < 500) $('#search').placeholder = 'Search tales and lands';
+  // On a phone there is only room to say what the box is for.
+  const placeholder = () => ($('#search').placeholder = sheetQuery.matches ? 'Search' : 'Search a tale, a type, a land');
+  placeholder();
+  sheetQuery.addEventListener('change', placeholder);
 
   // ---------- The chosen tale ----------
 
@@ -1163,6 +1167,9 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
   // On a phone the sheet follows a finger on its top edge: pulled down it slides away and closes,
   // pulled up it grows to fill the screen. Let go, and it settles at its usual height or the full one.
   let sheetDrag = null;
+  // The tallest the sheet grows (as #panel.full): 40px short of the screen's top, below a notch.
+  const insetProbe = document.body.appendChild(el('div', 'inset-probe'));
+  const sheetMax = () => innerHeight - 40 - insetProbe.offsetHeight;
   const sheetGrip = (e) => {
     if (!sheetQuery.matches || e.target.closest('#close, #to-list') || (e.pointerType === 'mouse' && e.button !== 0)) return;
     dragged = false;
@@ -1174,7 +1181,7 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
   const sheetPull = (y) => {
     const h = sheetDrag.h - (y - sheetDrag.y);
     const base = Math.min(sheetDrag.h, innerHeight * 0.46);
-    return { h: clamp(Math.max(h, base), 0, innerHeight - 40), down: Math.max(0, base - h) };
+    return { h: clamp(Math.max(h, base), 0, sheetMax()), down: Math.max(0, base - h) };
   };
   const sheetMove = (e) => {
     if (sheetDrag?.id !== e.pointerId) return;
@@ -1209,7 +1216,7 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
       setTimeout(deselect, 220);
       return;
     }
-    const full = speed < -0.5 || (speed < 0.5 && h > (base + innerHeight - 40) / 2);
+    const full = speed < -0.5 || (speed < 0.5 && h > (base + sheetMax()) / 2);
     panel.classList.toggle('full', full);
     panel.style.maxHeight = panel.style.transform = '';
   };

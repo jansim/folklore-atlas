@@ -19,6 +19,12 @@
   --sans: 'Work Sans', system-ui, sans-serif;
   --gutter: 40px;
   --panel-w: 384px;
+  /* The page runs edge to edge (viewport-fit=cover): keep clear of the notch, the home indicator and
+     Safari's toolbar. */
+  --sa-t: env(safe-area-inset-top, 0px);
+  --sa-r: env(safe-area-inset-right, 0px);
+  --sa-b: env(safe-area-inset-bottom, 0px);
+  --sa-l: env(safe-area-inset-left, 0px);
 }
 
 * {
@@ -85,6 +91,15 @@ input:focus-visible,
   outline-offset: -6px;
 }
 
+/* Measures the notch for main.js. */
+.inset-probe {
+  position: fixed;
+  width: 0;
+  height: var(--sa-t);
+  visibility: hidden;
+  pointer-events: none;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -124,12 +139,12 @@ input:focus-visible,
   left: 0;
   right: 0;
   top: 0;
-  min-height: 80px;
+  min-height: calc(80px + var(--sa-t));
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 0 var(--gutter);
+  padding: var(--sa-t) calc(var(--gutter) + var(--sa-r)) 0 calc(var(--gutter) + var(--sa-l));
   pointer-events: none;
   z-index: 3;
 }
@@ -227,7 +242,7 @@ input:focus-visible,
 /* Centred between the header and the controls, or filling that space when it is taller. */
 #panel {
   position: fixed;
-  right: var(--gutter);
+  right: calc(var(--gutter) + var(--sa-r));
   top: 100px;
   bottom: 96px;
   height: fit-content;
@@ -622,7 +637,7 @@ body.reading .controls {
 .r-article {
   width: min(680px, 100% - 2 * var(--gutter));
   margin: 0 auto;
-  padding: 150px 0 160px;
+  padding: 150px 0 calc(160px + var(--sa-b));
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -791,8 +806,8 @@ body.reading .controls {
   left: 0;
   right: 0;
   top: 0;
-  height: 52px;
-  padding: 0 20px 0 32px;
+  height: calc(52px + var(--sa-t));
+  padding: var(--sa-t) calc(20px + var(--sa-r)) 0 calc(32px + var(--sa-l));
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -999,8 +1014,8 @@ body.reading .controls {
 }
 .hint {
   position: fixed;
-  left: var(--gutter);
-  bottom: 32px;
+  left: calc(var(--gutter) + var(--sa-l));
+  bottom: calc(32px + var(--sa-b));
   max-width: 300px;
   margin: 0;
   font-size: 12px;
@@ -1023,8 +1038,8 @@ body.reading .controls {
 }
 .controls {
   position: fixed;
-  right: var(--gutter);
-  bottom: 32px;
+  right: calc(var(--gutter) + var(--sa-r));
+  bottom: calc(32px + var(--sa-b));
   display: flex;
   align-items: center;
   gap: 10px;
@@ -1103,7 +1118,7 @@ body.reading .controls {
   }
   .controls {
     right: auto;
-    left: var(--gutter);
+    left: calc(var(--gutter) + var(--sa-l));
   }
 }
 
@@ -1113,7 +1128,7 @@ body.reading .controls {
   }
   .top {
     min-height: 0;
-    padding-top: 12px;
+    padding-top: calc(12px + var(--sa-t));
     flex-wrap: wrap;
     gap: 10px;
   }
@@ -1122,15 +1137,16 @@ body.reading .controls {
   }
   .search {
     flex: 1;
-    min-width: 180px;
+    min-width: 108px;
   }
+  /* As wide as the screen, from the search box's right edge, however narrow the box. */
   #results {
-    width: 100%;
+    width: calc(100vw - 2 * var(--gutter) - var(--sa-l) - var(--sa-r));
   }
   .controls {
-    top: 64px;
+    top: calc(64px + var(--sa-t));
     bottom: auto;
-    left: var(--gutter);
+    left: calc(var(--gutter) + var(--sa-l));
     right: auto;
     gap: 8px;
   }
@@ -1160,13 +1176,13 @@ body.reading .controls {
     border-radius: 28px 28px 0 0;
     background: #0b1130;
     border-bottom: 0;
-    padding: 0 20px 20px;
+    padding: 0 20px calc(20px + var(--sa-b));
     gap: 10px;
     box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.45);
   }
   /* Pulled up to fill the screen (main.js), and settling there or back after a pull. */
   #panel.full {
-    max-height: calc(100% - 40px);
+    max-height: calc(100% - 40px - var(--sa-t));
   }
   #panel.full,
   #panel.dragging,
@@ -1186,14 +1202,17 @@ body.reading .controls {
   #panel > .p-head {
     touch-action: none;
   }
-  /* Read the tale stays in sight at the foot of the sheet until it is scrolled to. */
-  #panel > .rt {
-    position: sticky;
-    bottom: -20px;
-    margin: 0 -20px -10px;
-    padding: 0 20px 20px;
-    height: 76px;
-    background: linear-gradient(rgba(11, 17, 48, 0), #0b1130 32%);
+  /* Read the tale stays in sight at the foot of the sheet until it is scrolled to (where the sheet is
+     tall enough to leave room for more than the title). */
+  @media (min-height: 520px) {
+    #panel > .rt {
+      position: sticky;
+      bottom: calc(-20px - var(--sa-b));
+      margin: 0 -20px -10px;
+      padding: 0 20px max(14px, var(--sa-b));
+      height: calc(62px + max(14px, var(--sa-b)));
+      background: linear-gradient(rgba(11, 17, 48, 0), #0b1130 40%);
+    }
   }
   .close {
     top: 6px;
@@ -1232,10 +1251,10 @@ body.reading .controls {
     font-size: 17px;
   }
   .r-article {
-    padding: 96px 0 96px;
+    padding: 96px 0 calc(96px + var(--sa-b));
   }
   .r-bar {
-    padding: 0 12px 0 16px;
+    padding: var(--sa-t) calc(12px + var(--sa-r)) 0 calc(16px + var(--sa-l));
   }
   /* Within the gutter, so the page doesn't scroll sideways. */
   .r-close {
@@ -1250,7 +1269,7 @@ body.reading .controls {
   #atu {
     left: 8px;
     top: auto;
-    bottom: 8px;
+    bottom: calc(8px + var(--sa-b));
     transform: none;
     width: calc(100% - 16px);
     height: auto;
