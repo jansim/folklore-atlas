@@ -758,7 +758,10 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
   $('#zoom-out').addEventListener('click', () => zoomBy(-0.7));
   $('#to-globe').addEventListener('click', () => toGlobe(1400));
   $('#to-flat').addEventListener('click', () => toFlat(1200, 0));
-  if (innerWidth < 500) $('#search').placeholder = 'Search tales and lands';
+  // On a phone there is only room to say what the box is for.
+  const placeholder = () => ($('#search').placeholder = sheetQuery.matches ? 'Search' : 'Search a tale, a type, a land');
+  placeholder();
+  sheetQuery.addEventListener('change', placeholder);
 
   // ---------- The chosen tale ----------
 

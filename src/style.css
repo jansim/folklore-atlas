@@ -1137,10 +1137,11 @@ body.reading .controls {
   }
   .search {
     flex: 1;
-    min-width: 180px;
+    min-width: 108px;
   }
+  /* As wide as the screen, from the search box's right edge, however narrow the box. */
   #results {
-    width: 100%;
+    width: calc(100vw - 2 * var(--gutter) - var(--sa-l) - var(--sa-r));
   }
   .controls {
     top: calc(64px + var(--sa-t));
