@@ -144,9 +144,14 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
     let y1 = H;
     const controls = $('.controls').getBoundingClientRect();
     if (controls.top < H * 0.3) y0 = Math.max(y0, controls.bottom + 16);
-    if (sheetQuery.matches && !panel.hidden) y1 = panel.getBoundingClientRect().top;
-    let k = Math.min(W / 1056, (y1 - y0) / 828);
-    if (!sheetQuery.matches) {
+    const sheet = sheetQuery.matches;
+    // (Its height, not where it is: it rises into place, and slides as it is pulled. Pulled up past its
+    // usual height, it covers the globe rather than squeezing it.)
+    if (sheet && !panel.hidden) y1 = H - Math.min(panel.offsetHeight, H * 0.46);
+    // On a phone the ring (1.18 globe radii, plus 18px and its lettering) nearly touches the screen's edges.
+    const fit = (top, bottom) => (sheet ? Math.min((W - 44) / 661, (bottom - top - 92) / 661) : Math.min(W / 1056, (bottom - top) / 828));
+    let k = fit(y0, y1);
+    if (!sheet) {
       // Keep the globe from reaching more than 40% of the way under the side panel, open or not.
       const css = getComputedStyle(document.documentElement);
       const panelW = parseFloat(css.getPropertyValue('--panel-w'));
@@ -154,8 +159,11 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
       k = Math.min(k, (panelLeft + 0.4 * panelW - W / 2) / 280);
     }
     k = clamp(k, 0.25, 1.8);
+    // A phone skips the flat map in its ring for one that fills the screen: its scale needn't make room
+    // for the sheet, so zooming in and out keeps the same steps with the sheet open or closed.
+    const kf = sheet ? clamp(fit(y0, H), 0.25, 1.8) : k;
     const cx = W / 2;
-    target = { W, H, cx, cy: (y0 + y1) / 2, sg: 280 * k, sf: 160 * k, shift: (W / 2 - cx) * 0.58 };
+    target = { W, H, cx, cy: (y0 + y1) / 2, sg: 280 * k, sf: 160 * kf, shift: (W / 2 - cx) * 0.58 };
     if (!lay) lay = { ...target };
     backLayer.resize(W, H);
     mapLayer.resize(W, H);
@@ -535,7 +543,7 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
       mapKey = key;
       mapDirty = false;
       const flat = flatAt(vw);
-      drawMap(mapLayer, { vw, projection: p, frame: fr, land, borders, coast, graticule, highlights, detail: flat ? detail : null, flat });
+      drawMap(mapLayer, { vw, projection: p, frame: fr, land, borders, coast, graticule, highlights, detail: flat ? detail : null, flat, plain: sheetQuery.matches });
     }
     if (!state.sel) arcs = null;
     else if (arcsKey !== `${key}|${state.sel.id}`) {
@@ -558,12 +566,12 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
     updateWispList(now);
     frameTimes?.push(performance.now() - started);
 
-    const ck = `${Math.round((vw.z / ZMAX) * 100)}|${vw.z < 0.05}|${Math.abs(vw.z - 1) < 0.05}`;
+    const ck = `${Math.round((vw.z / ZMAX) * 100)}|${vw.z < 0.05}|${Math.abs(vw.z - flatZ()) < 0.05}`;
     if (ck !== controlsKey) {
       controlsKey = ck;
       $('#zoom-level').style.width = `${Math.round((vw.z / ZMAX) * 100)}%`;
       $('#to-globe').setAttribute('aria-pressed', vw.z < 0.05);
-      $('#to-flat').setAttribute('aria-pressed', Math.abs(vw.z - 1) < 0.05);
+      $('#to-flat').setAttribute('aria-pressed', Math.abs(vw.z - flatZ()) < 0.05);
     }
   }
 
@@ -669,8 +677,11 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
     held = true;
   };
   // Unrolled by zooming, the map keeps the latitude in view for zooming in further.
+  // The flat map: z = 1, or on a phone a little closer in, where it fills the screen.
+  const flatZ = () =>
+    sheetQuery.matches ? Math.max(1.7, 1 + Math.log2((1.15 * Math.max(target.H / Math.PI, target.W / (2 * Math.PI))) / target.sf)) : 1;
   const toFlat = (dur = 1100, lat) => {
-    flyTo({ z: 1, lat, morph: true }, dur);
+    flyTo({ z: flatZ(), lat, morph: true }, dur);
     held = true;
   };
   function zoomInput(dz) {
@@ -686,15 +697,16 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
       if (push > MORPH_PUSH) toFlat();
       return;
     }
+    const flat = flatZ();
     const z = v.z + dz;
-    if (z > 1) {
+    if (z > flat) {
       v.z = Math.min(z, ZMAX);
       push = 0;
     } else {
       // Coming from further in, stop at the flat map for the rest of this scroll or pinch.
-      if (v.z > 1) held = true;
-      else push += 1 - z;
-      v.z = 1;
+      if (v.z > flat + 0.001) held = true;
+      else push += flat - z;
+      v.z = flat;
       if (push > MORPH_PUSH) return toGlobe();
     }
     clampLat();
@@ -703,10 +715,11 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
   const zoomBy = (dz) => {
     idleSince = performance.now();
     const z = anim ? anim.to.z : v.z;
+    const flat = flatZ();
     if (z < 1) {
       if (dz > 0) toFlat();
-    } else if (z + dz >= 1) flyTo({ z: Math.min(z + dz, ZMAX) }, 500);
-    else if (z > 1) flyTo({ z: 1 }, 500);
+    } else if (z + dz >= flat) flyTo({ z: Math.min(z + dz, ZMAX) }, 500);
+    else if (z > flat + 0.001) flyTo({ z: flat }, 500);
     else toGlobe();
   };
   worldEl.addEventListener('keydown', (e) => {
@@ -780,6 +793,8 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
     closeAtu();
     setHighlights(null, [], []);
     panel.hidden = true;
+    panel.classList.remove('full');
+    panel.style.maxHeight = panel.style.transform = '';
     idleSince = performance.now();
     if (location.hash) history.replaceState(null, '', location.pathname + location.search);
     if (wasIn) worldEl.focus({ preventScroll: true });
@@ -961,7 +976,7 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
     const freeW = sheet ? lay.W : r.left;
     const freeH = sheet ? r.top - 120 : lay.H - 200;
     const k = Math.min((freeW * 0.6) / (Math.max(8, x1 - x0) * RAD * lay.sf), (freeH * 0.6) / (Math.max(5, y1 - y0) * RAD * lay.sf));
-    const z = clamp(1 + Math.log2(k), 1.3, ZMAX);
+    const z = clamp(1 + Math.log2(k), Math.max(1.3, flatZ()), ZMAX);
     const s = lay.sf * Math.pow(2, z - 1);
     idleSince = performance.now();
     flyTo({ z, lon: lon - (freeW / 2 - lay.cx) / (RAD * s), lat }, 1200);
@@ -1105,10 +1120,72 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
     else if (state.sel && state.list) openList(state.list);
     else deselect();
   });
+  let dragged = false;
   $('#sheet-toggle').addEventListener('click', () => {
+    if (dragged) return void (dragged = false);
     state.collapsed = !state.collapsed;
     renderPanel();
   });
+
+  // On a phone the sheet follows a finger on its top edge: pulled down it slides away and closes,
+  // pulled up it grows to fill the screen. Let go, and it settles at its usual height or the full one.
+  let sheetDrag = null;
+  const sheetGrip = (e) => {
+    if (!sheetQuery.matches || e.target.closest('#close, #to-list') || (e.pointerType === 'mouse' && e.button !== 0)) return;
+    dragged = false;
+    sheetDrag = { id: e.pointerId, y: e.clientY, h: panel.offsetHeight, moved: false, at: e.timeStamp, last: e.clientY, speed: 0 };
+    e.currentTarget.setPointerCapture(e.pointerId);
+  };
+  // How far the sheet is pulled: its height, and how far it has slid down below its usual height (or below
+  // the height it had, if smaller).
+  const sheetPull = (y) => {
+    const h = sheetDrag.h - (y - sheetDrag.y);
+    const base = Math.min(sheetDrag.h, innerHeight * 0.46);
+    return { h: clamp(Math.max(h, base), 0, innerHeight - 40), down: Math.max(0, base - h) };
+  };
+  const sheetMove = (e) => {
+    if (sheetDrag?.id !== e.pointerId) return;
+    const dy = e.clientY - sheetDrag.y;
+    if (!sheetDrag.moved) {
+      if (Math.abs(dy) < 6) return;
+      sheetDrag.moved = dragged = true;
+      panel.classList.add('dragging');
+      if (state.collapsed && dy < 0) (state.collapsed = false), renderPanel();
+    }
+    const dt = e.timeStamp - sheetDrag.at;
+    if (dt > 0) sheetDrag.speed = 0.6 * sheetDrag.speed + (0.4 * (e.clientY - sheetDrag.last)) / dt;
+    sheetDrag.at = e.timeStamp;
+    sheetDrag.last = e.clientY;
+    const { h, down } = sheetPull(e.clientY);
+    panel.style.maxHeight = `${h}px`;
+    panel.style.transform = down ? `translateY(${down}px)` : '';
+  };
+  const sheetRelease = (e) => {
+    if (sheetDrag?.id !== e.pointerId) return;
+    const { moved, speed } = sheetDrag;
+    const { h, down } = sheetPull(e.clientY);
+    const base = Math.min(sheetDrag.h, innerHeight * 0.46);
+    sheetDrag = null;
+    panel.classList.remove('dragging');
+    if (!moved) return;
+    panel.classList.add('settling');
+    setTimeout(() => panel.classList.remove('settling'), 300);
+    if (e.type === 'pointercancel') return void (panel.style.maxHeight = panel.style.transform = '');
+    if (down > Math.min(120, base * 0.35) || (down > 16 && speed > 0.5)) {
+      panel.style.transform = `translateY(${panel.offsetHeight + 24}px)`;
+      setTimeout(deselect, 220);
+      return;
+    }
+    const full = speed < -0.5 || (speed < 0.5 && h > (base + innerHeight - 40) / 2);
+    panel.classList.toggle('full', full);
+    panel.style.maxHeight = panel.style.transform = '';
+  };
+  for (const grip of [$('#sheet-toggle'), $('#panel > .p-head')]) {
+    grip.addEventListener('pointerdown', sheetGrip);
+    grip.addEventListener('pointermove', sheetMove);
+    grip.addEventListener('pointerup', sheetRelease);
+    grip.addEventListener('pointercancel', sheetRelease);
+  }
 
   // ---------- The reading view ----------
 
