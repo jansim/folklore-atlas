@@ -87,8 +87,8 @@ test('reads a tale and links to it', async ({ page }) => {
   await expect(page.locator('#reader')).toBeHidden();
   await expect(page).toHaveURL(/#[a-z-]+\/100$/);
   await expect(page.locator('#panel')).toBeVisible();
-  await expect(page.locator('#kin-head')).toContainText('Similar tale');
-  await expect(page.locator('#fam-head')).toHaveText('Similar family · no other places yet');
+  await expect(page.locator('#kin-head')).toContainText('Similar tales');
+  await expect(page.locator('#fam-head')).toHaveText('No other places have tales from the same family yet');
   const chip = page.locator('#kin-chips .kc:not(.more-kin)').first();
   const place = await chip.textContent();
   await chip.click();

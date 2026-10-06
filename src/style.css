@@ -410,6 +410,15 @@ input:focus-visible,
 .kh.gold {
   color: var(--gold);
 }
+/* Headings that say something about the tale, in the italic serif of "Read the tale". */
+.kh.kh-say {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 18px;
+  letter-spacing: 0.01em;
+  text-transform: none;
+}
 /* The "?" next to "Similar tale" and "Similar family", and what it explains on hover or focus. */
 .q {
   display: inline-flex;
@@ -419,7 +428,7 @@ input:focus-visible,
   height: 16px;
   border: 1px solid currentColor;
   border-radius: 50%;
-  font-size: 10px;
+  font: 400 10px var(--sans);
   letter-spacing: 0;
   opacity: 0.7;
   cursor: help;
@@ -770,9 +779,6 @@ body.reading .controls {
   height: 30px;
   padding: 0 12px;
   font-size: 13px;
-}
-.r-kin .kh {
-  letter-spacing: 0.14em;
 }
 .r-back {
   align-self: center;

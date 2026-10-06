@@ -777,6 +777,9 @@ import { distanceToRings, random, rankBySpread, smoothstep, spotsWithin, sunflow
   }
 
   const nPlaces = (n) => `${n} ${n === 1 ? 'place' : 'places'}`;
+  const kinHead = (n) => (n ? `Similar tales are told in ${nPlaces(n)}` : 'Similar tales are not recorded elsewhere yet');
+  const famHead = (n) =>
+    n ? `${nPlaces(n)} ${n === 1 ? 'has' : 'have'} tales from the same family` : 'No other places have tales from the same family yet';
   const nTales = (n) => `${n} ${n === 1 ? 'tale' : 'tales'}`;
   const range = ([from, to]) => `ATU ${from}–${to}`;
   const named = (t) => t.typeName && t.typeName !== 'Unnamed tale type';
@@ -800,8 +803,8 @@ import { distanceToRings, random, rankBySpread, smoothstep, spotsWithin, sunflow
     $('#tale-excerpt').textContent = sel.excerpt;
     const nKin = state.kin.length;
     const nFam = state.fam.length;
-    $('#kin-head').textContent = nKin ? `Similar tale · told in ${nPlaces(nKin)}` : 'Similar tale · not recorded elsewhere yet';
-    $('#fam-head').textContent = nFam ? `Similar family · ${nPlaces(nFam)}` : 'Similar family · no other places yet';
+    $('#kin-head').textContent = kinHead(nKin);
+    $('#fam-head').textContent = famHead(nFam);
     setTips(sel, $('#kin-tip'), $('#fam-tip'));
     renderChips($('#kin-chips'), state.kin, '', state.allKin ? Infinity : KIN_SHOWN, () => ((state.allKin = true), renderPanel()));
     renderChips($('#fam-chips'), state.fam, 'silver', state.allFam ? Infinity : FAM_SHOWN, () => ((state.allFam = true), renderPanel()));
@@ -1100,8 +1103,10 @@ import { distanceToRings, random, rankBySpread, smoothstep, spotsWithin, sunflow
     renderType($('#r-type'), sel);
     $('#r-source').replaceChildren();
     $('#r-kin').hidden = !state.kin.length;
+    $('#r-kin-head').textContent = kinHead(state.kin.length);
     renderChips($('#r-kin-chips'), state.kin, '', Infinity, null, { reading: true });
     $('#r-fam').hidden = !state.fam.length;
+    $('#r-fam-head').textContent = famHead(state.fam.length);
     renderChips($('#r-fam-chips'), state.fam, 'silver', Infinity, null, { reading: true });
     setTips(sel, $('#r-kin-tip'), $('#r-fam-tip'));
     readingEl.replaceChildren(firstParagraph(sel.excerpt));
