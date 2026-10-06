@@ -138,8 +138,9 @@ input:focus-visible,
 }
 .brand {
   font-family: var(--serif);
+  font-style: italic;
   font-size: 30px;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--ink-bright);
   text-decoration: none;
 }
@@ -527,22 +528,57 @@ input:focus-visible,
   color: var(--gold-muted);
   border-bottom: 0;
 }
-.primary {
+/* Read the tale, Back to the atlas: an italic serif label between two gold rules ending in diamonds. */
+.rt {
   flex: none;
-  height: 44px;
+  height: 48px;
+  margin: 2px 0;
+  padding: 0;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
+  gap: 12px;
   border: 0;
-  border-radius: 999px;
-  background: var(--gold);
-  color: #1a1530;
-  font: 600 14px var(--sans);
+  background: transparent;
+  color: var(--ink-warm);
   cursor: pointer;
 }
-.primary:hover {
-  background: #f8e2ad;
+.rt .rl {
+  flex-grow: 1;
+  height: 1px;
+  background: #6b5b38;
+  transition: background 0.3s;
+}
+.rt i {
+  width: 5px;
+  height: 5px;
+  transform: rotate(45deg);
+  border: 1px solid #b79a55;
+  transition: background 0.3s, border-color 0.3s;
+}
+.rt .rx {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 21px;
+  letter-spacing: 0.02em;
+  transition: letter-spacing 0.3s, color 0.3s, text-shadow 0.3s;
+}
+.rt:hover {
+  color: #fff6dc;
+}
+.rt:hover .rx {
+  letter-spacing: 0.06em;
+  text-shadow: 0 0 14px rgba(244, 213, 141, 0.45);
+}
+.rt:hover .rl {
+  background: var(--gold);
+}
+.rt:hover i {
+  background: var(--gold);
+  border-color: var(--gold);
+}
+.rt:focus-visible {
+  outline-offset: 4px;
 }
 
 /* ---------- The reading view ---------- */
@@ -735,46 +771,13 @@ body.reading .controls {
   padding: 0 12px;
   font-size: 13px;
 }
-.r-kin .kh,
-.r-others .kh {
+.r-kin .kh {
   letter-spacing: 0.14em;
-}
-.r-others {
-  display: flex;
-  flex-direction: column;
-  padding-top: 20px;
-}
-.r-others .kh {
-  padding-bottom: 6px;
-}
-.r-others .more {
-  min-height: 48px;
-  padding: 10px 0;
-  gap: 16px;
-  color: #ece9f6;
-  font-size: 21px;
-}
-.r-others .more span {
-  font-size: 12px;
 }
 .r-back {
   align-self: center;
+  width: min(420px, 100%);
   margin-top: 8px;
-  height: 46px;
-  padding: 0 24px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  background: transparent;
-  color: var(--ink-warm);
-  font: 400 14px var(--sans);
-  cursor: pointer;
-}
-.r-back:hover {
-  border-color: var(--gold);
-  color: var(--gold-pale);
 }
 .r-bar {
   position: absolute;
@@ -998,7 +1001,6 @@ body.reading .controls {
   margin: 0;
 }
 .hint .credit {
-  margin-top: 8px;
   font-size: 11px;
   color: #5d6594;
 }
