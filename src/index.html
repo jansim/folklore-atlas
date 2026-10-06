@@ -63,30 +63,69 @@
         <span id="tale-family"></span>
       </div>
 
-      <div id="tale-summary">
-        <p class="excerpt" id="tale-excerpt"></p>
-        <section class="kindred">
-          <div class="kin-head">
-            <span class="eyebrow muted" id="kin-head"></span>
-            <div class="segs" role="group" aria-label="Show tellings of">
-              <button class="seg" id="mode-type" aria-pressed="true">Same tale</button>
-              <button class="seg" id="mode-family" aria-pressed="false">Same family</button>
-            </div>
-          </div>
-          <div class="kin-chips" id="kin-chips"></div>
-        </section>
-        <section class="others" id="others" hidden>
-          <span class="eyebrow muted" id="others-head"></span>
-          <div id="others-list"></div>
-        </section>
-        <button class="primary" id="read">Read the tale</button>
-      </div>
-
-      <div id="tale-reading" hidden>
-        <div class="reading" id="reading" tabindex="0" aria-label="Tale text"></div>
-        <button class="secondary" id="back">Back to the map</button>
-      </div>
+      <p class="excerpt" id="tale-excerpt"></p>
+      <button class="primary" id="read">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+          <path d="M12 6c-2-1.5-5-2-8-1.5v13c3-.5 6 0 8 1.5 2-1.5 5-2 8-1.5v-13c-3-.5-6 0-8 1.5zM12 6v13"></path>
+        </svg>
+        Read the tale
+      </button>
+      <section class="kindred">
+        <span class="kh gold" id="kin-head"></span>
+        <div class="kin-chips" id="kin-chips"></div>
+      </section>
+      <section class="kindred">
+        <span class="kh silver" id="fam-head"></span>
+        <div class="kin-chips" id="fam-chips"></div>
+      </section>
+      <section class="others" id="others" hidden>
+        <span class="kh" id="others-head"></span>
+        <div id="others-list"></div>
+      </section>
     </aside>
+
+    <div id="reader" hidden role="dialog" aria-modal="true" aria-labelledby="r-title">
+      <div class="r-scroll" id="r-scroll">
+        <article class="r-article">
+          <header class="r-head">
+            <div class="kh gold" id="r-place"></div>
+            <h1 id="r-title"></h1>
+            <div class="r-type" id="r-type"></div>
+            <div class="r-rule" aria-hidden="true"><span></span><i></i><span></span></div>
+          </header>
+          <div id="reading" tabindex="-1"></div>
+          <div class="r-stars" aria-hidden="true">✦ ✦ ✦</div>
+          <p class="r-source" id="r-source"></p>
+          <section class="r-kin" id="r-kin" hidden>
+            <span class="kh gold">The same tale is also told in</span>
+            <div class="kin-chips" id="r-kin-chips"></div>
+          </section>
+          <section class="r-others" id="r-others" hidden>
+            <span class="kh" id="r-others-head"></span>
+            <div id="r-others-list"></div>
+          </section>
+          <button class="r-back" id="back">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <circle cx="12" cy="12" r="9"></circle>
+              <path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"></path>
+            </svg>
+            Back to the atlas
+          </button>
+        </article>
+      </div>
+      <div class="r-bar" id="r-bar">
+        <div class="r-mini" aria-hidden="true"><span id="r-mini-title"></span><span class="kh gold" id="r-mini-place"></span></div>
+        <div class="r-tools">
+          <button class="tb" id="fs-down" aria-label="Smaller text">A−</button>
+          <button class="tb big" id="fs-up" aria-label="Larger text">A+</button>
+          <button class="r-close" id="r-close" aria-label="Close the tale and return to the atlas">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <path d="M6 6l12 12M18 6L6 18"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
 
     <div id="loading" role="status">Gathering the wisps…</div>
 

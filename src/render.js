@@ -33,6 +33,7 @@ export function layer(canvas, maxDpr = 2) {
 
 const COUNTRY = { fill: '#0F1738', stroke: '#222D63', width: 0.5 };
 const KIN = { fill: [58, 53, 80], stroke: [156, 138, 94], width: 0.5 };
+const SIB = { fill: [37, 43, 68], stroke: [127, 136, 168], width: 0.5 };
 const OWN = { fill: [110, 95, 58], stroke: [244, 213, 141], width: 1.1 };
 const rgba = ([r, g, b], a) => `rgba(${r},${g},${b},${a})`;
 
@@ -80,7 +81,7 @@ export function drawBackdrop(l, { vw, projection, frame }) {
 }
 
 // What turns with the globe: graticule, land, borders, highlighted countries and coasts.
-// highlights: Map country feature -> { kin: 0..1, own: 0..1 }
+// highlights: Map country feature -> { sib: 0..1, kin: 0..1, own: 0..1 }
 export function drawMap(l, { projection, frame, land, borders, coast, graticule, highlights }) {
   const { ctx } = l;
   l.clear();
@@ -110,7 +111,7 @@ export function drawMap(l, { projection, frame, land, borders, coast, graticule,
   ctx.stroke();
 
   for (const [f, h] of highlights) {
-    for (const [style, level] of [[KIN, h.kin], [OWN, h.own]]) {
+    for (const [style, level] of [[SIB, h.sib], [KIN, h.kin], [OWN, h.own]]) {
       if (level < 0.01) continue;
       ctx.beginPath();
       path(f);
@@ -205,6 +206,10 @@ export function wispSprites(dpr) {
     halo: sprite(18, [[0, 'rgba(244,213,141,0.2)'], [0.45, 'rgba(244,213,141,0.15)'], [1, 'rgba(244,213,141,0)']], dpr),
     core: sprite(16, [[0, '#FFF6DC'], [0.15, '#FFF6DC'], [0.22, 'rgba(244,213,141,0.85)'], [0.5, 'rgba(244,213,141,0.22)'], [1, 'rgba(244,213,141,0)']], dpr),
     end: sprite(5, [[0, '#FFF1CC'], [0.45, 'rgba(255,241,204,0.8)'], [1, 'rgba(255,241,204,0)']], dpr),
+    // Wisps and ends of the same family, in silver
+    sibHalo: sprite(18, [[0, 'rgba(201,210,238,0.2)'], [0.45, 'rgba(201,210,238,0.15)'], [1, 'rgba(201,210,238,0)']], dpr),
+    sibCore: sprite(16, [[0, '#F1F4FF'], [0.15, '#F1F4FF'], [0.22, 'rgba(201,210,238,0.85)'], [0.5, 'rgba(201,210,238,0.25)'], [1, 'rgba(201,210,238,0)']], dpr),
+    sibEnd: sprite(3.6, [[0, '#E4E9FA'], [0.45, 'rgba(228,233,250,0.75)'], [1, 'rgba(228,233,250,0)']], dpr),
   };
 }
 
@@ -216,14 +221,15 @@ const draw = (ctx, img, x, y, scale) => {
 // Breathing: 0..1, smooth, on the wisp's own period.
 const breath = (t, w) => 0.5 - 0.5 * Math.cos(TAU * ((t + w.delay) / w.dur));
 
-// wisps: [{ x, y, alpha, state: '' | 'kin' | 'on', dur, delay }]
+// wisps: [{ x, y, alpha, state: '' | 'sib' | 'kin' | 'on', dur, delay }]
 export function drawWisps(ctx, sprites, wisps, t) {
   for (const w of wisps) {
     const b = breath(t, w);
     const on = w.state === 'on';
     const kin = w.state === 'kin';
+    const sib = w.state === 'sib';
     ctx.globalAlpha = w.alpha * (0.25 + 0.75 * b) * (on ? 1.6 : 1);
-    draw(ctx, sprites.halo, w.x, w.y, (on ? 1.5 : 1) * (0.7 + 0.55 * b));
+    draw(ctx, sib ? sprites.sibHalo : sprites.halo, w.x, w.y, (on ? 1.5 : 1) * (0.7 + 0.55 * b));
 
     const ray = on ? 13 : 8;
     ctx.globalAlpha = w.alpha * 0.45;
@@ -232,7 +238,7 @@ export function drawWisps(ctx, sprites, wisps, t) {
     ctx.fillRect(w.x - 0.5, w.y - ray, 1, ray * 2);
 
     ctx.globalAlpha = w.alpha * (on ? 1 : 0.5 + 0.5 * b);
-    draw(ctx, sprites.core, w.x, w.y, (on ? 1.9 : kin ? 1.35 : 1) * (on ? 1 : 0.8 + 0.38 * b));
+    draw(ctx, sib ? sprites.sibCore : sprites.core, w.x, w.y, (on ? 1.9 : kin ? 1.35 : sib ? 1.15 : 1) * (on ? 1 : 0.8 + 0.38 * b));
 
     if (on) {
       const k = (t % 2.6) / 2.6;
@@ -248,22 +254,33 @@ export function drawWisps(ctx, sprites, wisps, t) {
 }
 
 // The constellation: a glow and a flowing dotted line along every arc, and a spark at its end.
+// Silver arcs (the same family) are fainter and drawn first; gold ones (the same tale) over them.
+const ARCS = {
+  silver: { glow: 'rgba(201,210,238,0.07)', glowWidth: 5, line: 'rgba(213,220,245,0.32)', width: 0.8, dash: [1.5, 6], period: 7, end: 'sibEnd' },
+  gold: { glow: 'rgba(244,213,141,0.1)', glowWidth: 6, line: 'rgba(248,222,156,0.55)', width: 1, dash: [2, 5], period: 5, end: 'end' },
+};
+
+// arcs: { silver: { path, ends }, gold: { path, ends } }
 export function drawConstellation(ctx, sprites, arcs, t) {
   if (!arcs) return;
   ctx.lineCap = 'round';
-  ctx.strokeStyle = 'rgba(244,213,141,0.1)';
-  ctx.lineWidth = 6;
-  ctx.stroke(arcs.path);
-  ctx.strokeStyle = 'rgba(248,222,156,0.55)';
-  ctx.lineWidth = 1;
-  ctx.setLineDash([2, 5]);
-  ctx.lineDashOffset = -((t * 56) / 5) % 56;
-  ctx.stroke(arcs.path);
-  ctx.setLineDash([]);
-  ctx.lineCap = 'butt';
-  for (const e of arcs.ends) {
-    ctx.globalAlpha = e.alpha;
-    draw(ctx, sprites.end, e.x, e.y, 1);
+  for (const kind of ['silver', 'gold']) {
+    const { path, ends } = arcs[kind];
+    const st = ARCS[kind];
+    ctx.strokeStyle = st.glow;
+    ctx.lineWidth = st.glowWidth;
+    ctx.stroke(path);
+    ctx.strokeStyle = st.line;
+    ctx.lineWidth = st.width;
+    ctx.setLineDash(st.dash);
+    ctx.lineDashOffset = -((t * 56) / st.period) % 56;
+    ctx.stroke(path);
+    ctx.setLineDash([]);
+    for (const e of ends) {
+      ctx.globalAlpha = e.alpha;
+      draw(ctx, sprites[st.end], e.x, e.y, 1);
+    }
+    ctx.globalAlpha = 1;
   }
-  ctx.globalAlpha = 1;
+  ctx.lineCap = 'butt';
 }
