@@ -187,7 +187,6 @@ input:focus-visible,
   align-items: center;
   justify-content: center;
   pointer-events: auto;
-  transition: opacity 0.4s;
   will-change: transform;
 }
 .wisp:focus-visible {

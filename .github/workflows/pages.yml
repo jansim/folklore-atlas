@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Build, test and deploy to GitHub Pages
 
 on:
   push:
@@ -24,14 +24,35 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
 
-      # Generates docs/data/ (land outlines + tale data from the trilogy submodule).
+      - run: npm ci
+
+      # Generates dist/: the site bundle plus its data (land outlines + tales from the trilogy submodule).
       - run: npm run build
+
+      # Unit tests and checks of the built data.
+      - run: npm test
+
+      - name: Install Chromium for Playwright
+        run: npx playwright install --with-deps chromium
+
+      # Smoke tests of the built site on a desktop and a phone viewport.
+      - run: npm run test:e2e
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
 
       - uses: actions/upload-pages-artifact@v3
         if: github.event_name != 'pull_request'
         with:
-          path: docs
+          path: dist
 
   deploy:
     if: github.event_name != 'pull_request'

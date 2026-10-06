@@ -1,20 +1,18 @@
 #!/usr/bin/env node
 // Builds the map data from the trilogy submodule (vendor/trilogy):
 //   - vendor/trilogy/data/aft.csv     Annotated Folktales: tale text, provenance, ATU tale type
-//   - vendor/trilogy/data/atu_df.csv  ATU tale type index: names and chapters
+//   - vendor/trilogy/data/atu_df.csv  ATU tale type index: type names and families
 //   - data/places.json                our gazetteer: provenance -> map position
-//   - docs/data/world.json            country outlines (scripts/build-world.js), to find each place's country
-// Writes docs/data/map.json (places, tale list, tale types) and one
-// docs/data/tales/<id>.json per tale with its full text.
+//   - data/atu-kinds.json             the kinds of tale by ATU number, and family names atu_df.csv lacks
+//   - dist/data/world.json            country outlines (scripts/build-world.js), to find each place's country
+// Writes dist/data/map.json (places, tale list, tale types) and one
+// dist/data/tales/<id>.json per tale with its full text.
 //
 // Usage: node scripts/build-data.js
 
-const fs = require('node:fs');
-const path = require('node:path');
-
-const ROOT = path.join(__dirname, '..');
-const TRILOGY = path.join(ROOT, 'vendor/trilogy/data');
-const OUT = path.join(ROOT, 'docs/data');
+import fs from 'node:fs';
+import path from 'node:path';
+import { DATA_OUT as OUT, ROOT, TRILOGY } from './paths.js';
 const EXCERPT_LENGTH = 240;
 const PARAGRAPH_LENGTH = 520;
 
@@ -23,7 +21,7 @@ if (!fs.existsSync(path.join(TRILOGY, 'aft.csv'))) {
   process.exit(1);
 }
 if (!fs.existsSync(path.join(OUT, 'world.json'))) {
-  console.error('docs/data/world.json is missing. Run: npm run build:world');
+  console.error('dist/data/world.json is missing. Run: npm run build:world');
   process.exit(1);
 }
 
@@ -71,6 +69,12 @@ function paragraphs(s) {
   }
   return out.map((p) => p.trim()).filter(Boolean);
 }
+
+const titleCase = (s) =>
+  s
+    .toLowerCase()
+    .replace(/\b\w/g, (c) => c.toUpperCase())
+    .replace(/(?<!^)\b(Of|The|And|A|An|To|In|Or|By|From|Between|About)\b/g, (w) => w.toLowerCase());
 
 const excerpt = (s) => (s.length <= EXCERPT_LENGTH ? s : s.slice(0, s.lastIndexOf(' ', EXCERPT_LENGTH)) + '…');
 
@@ -145,26 +149,27 @@ function countryAt(lng, lat) {
 
 // ---------- Tale types ----------
 
-// The kinds and families of tale follow the number ranges of the ATU index (Uther 2004);
-// trilogy's own chapter column lumps some of them together.
-const KINDS = [
-  ['Animal Tales', 1, [[1, 'Wild Animals'], [100, 'Wild Animals and Domestic Animals'], [150, 'Wild Animals and Humans'], [200, 'Domestic Animals'], [220, 'Other Animals and Objects']]],
-  ['Tales of Magic', 300, [[300, 'Supernatural Adversaries'], [400, 'Supernatural or Enchanted Relatives'], [460, 'Supernatural Tasks'], [500, 'Supernatural Helpers'], [560, 'Magic Objects'], [650, 'Supernatural Power or Knowledge'], [700, 'Other Tales of the Supernatural']]],
-  ['Religious Tales', 750, [[750, 'God Repays and Punishes'], [780, 'The Truth Comes to Light'], [800, 'Heaven'], [810, 'The Devil'], [827, 'Other Religious Tales']]],
-  ['Realistic Tales', 850, [[850, 'The Man Marries the Princess'], [870, 'The Woman Marries the Prince'], [880, 'Proofs of Fidelity and Innocence'], [900, 'The Obstinate Wife Learns to Obey'], [910, 'Good Precepts'], [920, 'Clever Acts and Words'], [930, 'Tales of Fate'], [950, 'Robbers and Murderers'], [970, 'Other Realistic Tales']]],
-  ['Tales of the Stupid Ogre', 1000, [[1000, 'Labor Contract'], [1030, 'Partnership between Man and Ogre'], [1060, 'Contest between Man and Ogre'], [1115, 'Man Kills or Injures Ogre'], [1145, 'Ogre Frightened by Man'], [1155, 'Man Outwits the Devil'], [1170, 'Souls Saved from the Devil']]],
-  ['Anecdotes and Jokes', 1200, [[1200, 'Stories about a Fool'], [1350, 'Stories about Married Couples'], [1440, 'Stories about a Woman'], [1525, 'Stories about a Man'], [1725, 'Jokes about Clergymen and Religious Figures'], [1850, 'Anecdotes about Other Groups of People'], [1875, 'Tall Tales']]],
-  ['Formula Tales', 2000, [[2000, 'Cumulative Tales'], [2200, 'Catch Tales'], [2300, 'Other Formula Tales']]],
-];
-const kinds = KINDS.map(([name]) => name);
-const families = KINDS.flatMap(([, , fams], kind) => fams.map(([from, name]) => ({ from, name, kind })));
-const familyOf = (atu) => {
-  const n = parseInt(atu, 10);
-  return families.reduce((found, f, i) => (n >= f.from ? i : found), -1);
-};
+// Families come from atu_df.csv's divisions ("Supernatural Helpers 500-559"), completed by
+// data/atu-kinds.json; kinds come from data/atu-kinds.json (atu_df.csv's chapters are wrong for 850-1199).
+const atuKinds = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/atu-kinds.json'), 'utf8'));
+const atuRows = readCsv('atu_df.csv');
+const atuNumber = (atu) => parseInt(atu, 10);
+const kindOf = (n) => atuKinds.kinds.findIndex((k) => n >= k.from && n <= k.to);
+
+const familyRanges = new Map();
+for (const row of atuRows) {
+  const m = clean(row.division)?.match(/^(.*) (\d+)-(\d+)$/);
+  if (m) familyRanges.set(`${m[2]}-${m[3]}`, { name: titleCase(m[1]), from: Number(m[2]), to: Number(m[3]) });
+}
+for (const f of atuKinds.families) familyRanges.set(`${f.from}-${f.to}`, f);
+const families = [...familyRanges.values()].sort((a, b) => a.from - b.from).map((f) => ({ ...f, kind: kindOf(f.from) }));
+for (const f of families) {
+  if (f.kind < 0 || kindOf(f.to) !== f.kind) throw new Error(`Family ${f.name} (${f.from}-${f.to}) is not within one kind of tale`);
+}
+const familyOf = (atu) => families.findIndex((f) => atuNumber(atu) >= f.from && atuNumber(atu) <= f.to);
 
 const types = {};
-for (const t of readCsv('atu_df.csv')) {
+for (const t of atuRows) {
   types[t.atu_id] = [clean(t.tale_name).replace(/\s*\(previously [^)]*\)\s*/i, ' ').trim(), familyOf(t.atu_id)];
 }
 
@@ -197,7 +202,7 @@ tales.forEach((t, i) => {
 const usedTypes = new Set([...placed.values()].flat().map((t) => t[2]));
 const out = {
   source: 'https://github.com/j-hagedorn/trilogy',
-  kinds,
+  kinds: atuKinds.kinds.map((k) => k.name),
   // [family name, kind index]
   families: families.map((f) => [f.name, f.kind]),
   // atu id -> [type name, family index]
@@ -209,7 +214,8 @@ const out = {
 fs.writeFileSync(path.join(OUT, 'map.json'), JSON.stringify(out));
 
 const total = [...placed.values()].reduce((n, l) => n + l.length, 0);
-console.log(`Placed ${total} of ${tales.length} tales at ${out.places.length} places (${usedTypes.size} tale types) → docs/data/`);
+console.log(`Placed ${total} of ${tales.length} tales at ${out.places.length} places (${usedTypes.size} tale types) → dist/data/`);
 for (const [p, n] of unplaced) console.log(`  not placed: ${JSON.stringify(p)} (${n})`);
 for (const p of gazetteer.places) if (!placed.has(p.id)) console.log(`  unused place: ${p.id}`);
-for (const p of out.places) if (!p.country) console.log(`  not in a country: ${p.id}`);
+for (const [atu, [, family]] of Object.entries(out.types)) if (family < 0) console.log(`  no family for ATU ${atu}`);
+for (const p of out.places) if (!p.country && !placeById.get(p.id).generic) console.log(`  not in a country: ${p.id}`);
