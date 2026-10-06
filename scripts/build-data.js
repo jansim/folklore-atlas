@@ -5,7 +5,7 @@
 //   - data/places.json                our gazetteer: provenance -> map position
 //   - data/atu-kinds.json             the kinds of tale by ATU number, and family names atu_df.csv lacks
 //   - dist/data/world.json            country outlines (scripts/build-world.js), to find each place's country
-// Writes dist/data/map.json (places, tale list, tale types) and one
+// Writes dist/data/map.json (places, tale list, tale types), dist/data/types.json (descriptions of the tale types) and one
 // dist/data/tales/<id>.json per tale with its full text.
 //
 // Usage: node scripts/build-data.js
@@ -169,8 +169,15 @@ for (const f of families) {
 const familyOf = (atu) => families.findIndex((f) => atuNumber(atu) >= f.from && atuNumber(atu) <= f.to);
 
 const types = {};
+const summaries = {};
 for (const t of atuRows) {
   types[t.atu_id] = [clean(t.tale_name).replace(/\s*\(previously [^)]*\)\s*/i, ' ').trim(), familyOf(t.atu_id)];
+  // The type's description, without motif numbers ("[K1511]") and notes on merged types.
+  const summary = clean(t.tale_type)
+    ?.replace(/\s*\[[^\]]*\]/g, '')
+    .replace(/^\((Including|Formerly|Previously)[^)]*\)\s*/i, '')
+    .trim();
+  if (summary) summaries[t.atu_id] = summary;
 }
 
 // ---------- Tales ----------
@@ -203,8 +210,10 @@ const usedTypes = new Set([...placed.values()].flat().map((t) => t[2]));
 const out = {
   source: 'https://github.com/j-hagedorn/trilogy',
   kinds: atuKinds.kinds.map((k) => k.name),
-  // [family name, kind index]
-  families: families.map((f) => [f.name, f.kind]),
+  // [first, last] ATU number of each kind
+  kindRanges: atuKinds.kinds.map((k) => [k.from, k.to]),
+  // [family name, kind index, first ATU number, last ATU number]
+  families: families.map((f) => [f.name, f.kind, f.from, f.to]),
   // atu id -> [type name, family index]
   types: Object.fromEntries(Object.entries(types).filter(([id]) => usedTypes.has(id))),
   places: gazetteer.places
@@ -212,6 +221,8 @@ const out = {
     .map((p) => ({ id: p.id, name: p.name, lat: p.lat, lng: p.lng, country: p.generic ? null : countryAt(p.lng, p.lat), tales: placed.get(p.id) })),
 };
 fs.writeFileSync(path.join(OUT, 'map.json'), JSON.stringify(out));
+// atu id -> description of the type, loaded when the site first shows one
+fs.writeFileSync(path.join(OUT, 'types.json'), JSON.stringify(Object.fromEntries(Object.keys(out.types).filter((id) => summaries[id]).map((id) => [id, summaries[id]]))));
 
 const total = [...placed.values()].reduce((n, l) => n + l.length, 0);
 console.log(`Placed ${total} of ${tales.length} tales at ${out.places.length} places (${usedTypes.size} tale types) → dist/data/`);

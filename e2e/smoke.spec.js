@@ -38,7 +38,8 @@ test('zooming in shows more of the tales of a place', async ({ page }) => {
   await expect(page.locator('#loading')).toBeHidden();
   await page.waitForTimeout(1500);
   const onGlobe = await german();
-  for (let i = 0; i < 6; i++) {
+  // In to the closest zoom: tales stay inside their country, which is small on a phone.
+  for (let i = 0; i < 8; i++) {
     await page.locator('#zoom-in').click();
     await page.waitForTimeout(550);
   }
@@ -109,5 +110,48 @@ test('the reader opens kindred tales and closes with Escape', async ({ page }) =
   expect(title).not.toBe(before);
   await page.keyboard.press('Escape');
   await expect(page.locator('#reader')).toBeHidden();
+  await expect(page.locator('#tale-title')).toHaveText(title);
+});
+
+test('lists all the tales of a place and goes back to the list', async ({ page }) => {
+  await page.goto('/#germany');
+  const all = page.locator('#others-list .more.all');
+  await expect(all).toHaveText(/^All \d+ tales from Germany$/);
+  const count = Number((await all.textContent()).match(/\d+/)[0]);
+  await all.click();
+  await expect(page).toHaveURL(/#germany\/all$/);
+  await expect(page.locator('#tale-title')).toHaveText('Germany');
+  await expect(page.locator('#list .more')).toHaveCount(count);
+  await expect(page.locator('#to-list')).toBeHidden();
+  const row = page.locator('#list .more').nth(2);
+  const title = await row.textContent();
+  await row.click();
+  await expect(page.locator('#tale-title')).toHaveText(title);
+  await page.locator('#to-list').click();
+  await expect(page.locator('#tale-title')).toHaveText('Germany');
+  await page.locator('#close').click();
+  await expect(page.locator('#panel')).toBeHidden();
+  expect(new URL(page.url()).hash).toBe('');
+});
+
+test('the tale type opens the index of types, kinds and families', async ({ page }) => {
+  await page.goto('/#germany');
+  const type = page.locator('#tale-type .tt-name');
+  await expect(type).toHaveText(/^.+ \(ATU \w+\)$/);
+  await type.locator('.atu-link').click();
+  await expect(page.locator('#atu')).toBeVisible();
+  await expect(page.locator('#atu-sub')).toContainText(/ATU \w+ · \d+ tales? in \d+ places?/);
+  await expect(page.locator('#atu-body .atu-summary')).not.toHaveText('…');
+  await page.locator('#atu-crumbs .crumb').first().click();
+  await expect(page.locator('#atu-title')).toHaveText('The kinds of tale');
+  await expect(page.locator('#atu-body .more')).toHaveCount(7);
+  await page.locator('#atu-body .more').nth(1).click();
+  await expect(page.locator('#atu-title')).toHaveText('Tales of Magic');
+  await page.locator('#atu-body .more').first().click();
+  await page.locator('#atu-body .more').first().click();
+  const tale = page.locator('#atu-body .more').first();
+  const title = await tale.evaluate((b) => b.firstChild.textContent);
+  await tale.click();
+  await expect(page.locator('#atu')).toBeHidden();
   await expect(page.locator('#tale-title')).toHaveText(title);
 });

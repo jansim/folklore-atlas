@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { angle, rankBySpread, random, sunflower } from '../src/lib/wisps.js';
+import { angle, distanceToRings, rankBySpread, random, spotsWithin, sunflower } from '../src/lib/wisps.js';
 
 const rnd = random(3);
 // Clustered points, like the tales: many around a few places.
@@ -44,4 +44,20 @@ test('sunflower spots start at the place and stay apart', () => {
   const spots = sunflower(50, 50);
   assert.deepEqual(spots[0], [0, 0]);
   for (let i = 1; i < spots.length; i++) assert.ok(angle([10, 50], [10 + spots[i][0], 50 + spots[i][1]]) > 0);
+});
+
+test('spots within a shape stay inside it, nearest the place first', () => {
+  // A 4° by 3° box around [10, 50].
+  const inBox = (lon, lat) => lon > 8 && lon < 12 && lat > 48.5 && lat < 51.5;
+  const spots = spotsWithin(120, [10, 50], inBox);
+  assert.equal(spots.length, 120);
+  assert.deepEqual(spots[0], [0, 0]);
+  for (const [dLon, dLat] of spots) assert.ok(inBox(10 + dLon, 50 + dLat));
+  assert.equal(spotsWithin(10, [10, 50], () => false), null);
+});
+
+test('distance to rings is the distance to the nearest edge', () => {
+  const square = [[[0, -1], [2, -1], [2, 1], [0, 1], [0, -1]]];
+  assert.ok(Math.abs(distanceToRings(square, [0.5, 0]) - 0.5) < 1e-9);
+  assert.ok(Math.abs(distanceToRings(square, [1, 0.25]) - 0.75) < 1e-9);
 });
