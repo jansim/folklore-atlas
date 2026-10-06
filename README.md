@@ -1,6 +1,6 @@
-# folklore-map
+# folklore-atlas
 
-**Folk Atlas**: folktales from around the world as wisps of light drifting over a globe. Zoom in and the globe
+**Folklore Atlas**: folktales from around the world as wisps of light drifting over a globe. Zoom in and the globe
 unrolls into a flat map; open a tale and the places where the same tale (or a tale of the same family) was told
 light up, joined to it by a constellation.
 
