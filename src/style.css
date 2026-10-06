@@ -223,10 +223,14 @@ input:focus-visible,
 
 /* ---------- The tale panel ---------- */
 
+/* Centred between the header and the controls, or filling that space when it is taller. */
 #panel {
   position: fixed;
   right: var(--gutter);
   top: 100px;
+  bottom: 96px;
+  height: fit-content;
+  margin: auto 0;
   width: var(--panel-w);
   max-height: calc(100% - 100px - 96px);
   overflow-y: auto;
@@ -283,8 +287,43 @@ input:focus-visible,
   background: #18204a;
   color: var(--gold-pale);
 }
-#panel > .eyebrow {
+#panel > .p-head {
   padding-right: 40px;
+}
+.p-head {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 20px;
+}
+.to-list {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  margin: -4px 2px -4px -8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--gold);
+  cursor: pointer;
+}
+.to-list:hover {
+  background: #18204a;
+  color: var(--gold-pale);
+}
+#panel.listing .tv,
+#panel:not(.listing) .lv {
+  display: none;
+}
+.list {
+  display: flex;
+  flex-direction: column;
+  padding-top: 4px;
+  border-top: 1px solid var(--line-soft);
 }
 #panel h1 {
   padding-right: 20px;
@@ -311,12 +350,38 @@ input:focus-visible,
   flex-direction: column;
   gap: 3px;
   font-size: 13px;
+  line-height: 1.45;
 }
-#tale-atu {
+.tt-name {
   color: #e9ddb8;
 }
-#tale-family {
+.tt-path {
   color: var(--muted);
+}
+.tt-path .sep {
+  margin: 0 6px;
+}
+.atu-link {
+  display: inline;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: inherit;
+  text-decoration: underline dotted rgba(201, 185, 140, 0.55);
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.atu-link:hover {
+  color: var(--gold-pale);
+  text-decoration-color: var(--gold);
+}
+.tt-name .atu-link {
+  color: var(--gold-muted);
+}
+.tt-name .atu-link:hover {
+  color: var(--gold-pale);
 }
 .excerpt {
   margin: 0;
@@ -344,6 +409,44 @@ input:focus-visible,
 .kh.gold {
   color: var(--gold);
 }
+/* The "?" next to "Same tale" and "Same family", and what it explains on hover or focus. */
+.q {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-size: 10px;
+  letter-spacing: 0;
+  opacity: 0.7;
+  cursor: help;
+}
+.q:hover,
+.q:focus-visible {
+  opacity: 1;
+  outline: none;
+}
+.tip {
+  display: none;
+  position: fixed;
+  width: 300px;
+  z-index: 8;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #0d1438;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+  color: var(--ink);
+  font: 400 12.5px/1.5 var(--sans);
+  letter-spacing: 0;
+  text-transform: none;
+}
+.q:hover + .tip,
+.q:focus + .tip {
+  display: block;
+}
 .kh.silver {
   color: var(--silver);
 }
@@ -365,14 +468,6 @@ input:focus-visible,
   font: 500 12px var(--sans);
   cursor: pointer;
 }
-.kc::before {
-  content: '';
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--gold);
-  box-shadow: 0 0 6px rgba(244, 213, 141, 0.8);
-}
 .kc:hover {
   border-color: var(--gold);
   color: var(--gold-pale);
@@ -380,10 +475,6 @@ input:focus-visible,
 .kc.silver {
   border-color: #4a5476;
   color: #d5daee;
-}
-.kc.silver::before {
-  background: var(--silver);
-  box-shadow: 0 0 6px rgba(201, 210, 238, 0.7);
 }
 .kc.silver:hover {
   border-color: var(--silver);
@@ -393,9 +484,6 @@ input:focus-visible,
   border: 0;
   padding: 0 4px;
   color: var(--muted);
-}
-.kc.more-kin::before {
-  display: none;
 }
 .kc.more-kin:hover {
   color: var(--gold-pale);
@@ -494,6 +582,7 @@ body.reading .controls {
   gap: 24px;
 }
 .r-head {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -514,8 +603,28 @@ body.reading .controls {
   overflow-wrap: break-word;
 }
 .r-type {
+  align-items: center;
   font-size: 14px;
-  color: var(--muted);
+}
+/* A plain golden X at the right edge of the text, level with the place above the title. */
+.r-close {
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--gold);
+  cursor: pointer;
+}
+.r-close:hover {
+  color: var(--gold-pale);
+  filter: drop-shadow(0 0 6px rgba(244, 213, 141, 0.6));
 }
 .r-rule {
   display: flex;
@@ -548,6 +657,7 @@ body.reading .controls {
   font-size: var(--fs);
   line-height: 1.75;
   color: #e6e3f0;
+  text-align: justify;
   hyphens: auto;
 }
 .cap {
@@ -649,7 +759,7 @@ body.reading .controls {
 }
 .r-back {
   align-self: center;
-  margin-top: 36px;
+  margin-top: 8px;
   height: 46px;
   padding: 0 24px;
   display: flex;
@@ -732,8 +842,7 @@ body.reading .controls {
 .tb.big {
   font-size: 16px;
 }
-.tb:hover,
-.r-close:hover {
+.tb:hover {
   border-color: var(--gold);
   color: var(--gold-pale);
 }
@@ -743,19 +852,94 @@ body.reading .controls {
   border-color: var(--line);
   color: #c9cde8;
 }
-.r-close {
-  width: 32px;
-  height: 32px;
-  margin-left: 6px;
+
+/* ---------- The index of tale types ---------- */
+
+#atu {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 7;
+  width: 380px;
+  max-height: min(560px, 100% - 32px);
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px 18px 12px;
+  background: #0d1438;
+  border: 1px solid #34407a;
+  border-radius: 14px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+}
+.atu-crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 6px;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.crumb {
   padding: 0;
-  border-radius: 50%;
-  border: 1px solid var(--line);
-  background: var(--deep);
-  color: #c9cde8;
+  border: 0;
+  background: none;
+  color: var(--gold-muted);
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
   cursor: pointer;
+}
+.crumb:hover {
+  color: var(--gold-pale);
+}
+.crumb.here {
+  color: var(--gold);
+  cursor: default;
+}
+#atu h2 {
+  margin: 4px 0 0;
+  font: 600 24px/1.1 var(--serif);
+  color: var(--ink-bright);
+  outline: none;
+}
+.atu-sub {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.atu-body {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: auto;
+  margin: 4px -6px 0 0;
+  padding-right: 6px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+}
+.atu-body > * {
+  flex: none;
+}
+.atu-body .kh {
+  padding: 10px 0 2px;
+}
+.atu-summary {
+  margin: 4px 0 6px;
+  font: 400 16px/1.5 var(--serif);
+  color: #dcddee;
+}
+.atu-note {
+  margin: 8px 0 4px;
+  font-size: 12px;
+  color: var(--faint);
+}
+.atu-body .more {
+  font-size: 16px;
+}
+.more[aria-current='true'] {
+  color: var(--gold);
 }
 
 /* ---------- Loading, hint and view controls ---------- */
@@ -930,6 +1114,7 @@ body.reading .controls {
     right: 0;
     top: auto;
     bottom: 0;
+    margin: 0;
     width: auto;
     max-height: 46%;
     border-radius: 18px 18px 0 0;
@@ -962,7 +1147,7 @@ body.reading .controls {
     border-radius: 4px;
     background: var(--line);
   }
-  #panel.collapsed > :not(.sheet-toggle, .close, .eyebrow, h1) {
+  #panel.collapsed > :not(.sheet-toggle, .close, .p-head, h1) {
     display: none;
   }
   #panel h1 {
@@ -982,5 +1167,13 @@ body.reading .controls {
   }
   .cap {
     margin-right: 14px;
+  }
+  #atu {
+    left: 8px;
+    right: 8px;
+    top: auto;
+    bottom: 8px;
+    width: auto;
+    max-height: 70%;
   }
 }

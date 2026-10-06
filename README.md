@@ -30,8 +30,8 @@ trilogy is included as a git submodule in `vendor/trilogy`, pinned to a specific
 > The map outlines are from [Natural Earth](https://www.naturalearthdata.com/) (public domain). This repository's
 > own code does not have a license yet.
 
-`scripts/build-data.js` (`npm run build:data`) turns trilogy into `dist/data/map.json` and one
-`dist/data/tales/<id>.json` per tale, and reports provenances it could not place:
+`scripts/build-data.js` (`npm run build:data`) turns trilogy into `dist/data/map.json`, `dist/data/types.json` (the
+index's description of each tale type) and one `dist/data/tales/<id>.json` per tale, and reports provenances it could not place:
 
 - `vendor/trilogy/data/aft.csv`: 1,518 tales with full text, provenance and ATU tale type. The texts come without
   paragraph breaks, so the build splits them every few sentences.
@@ -59,16 +59,23 @@ The site's source is in `src/`; `scripts/build-site.js` (`npm run build:site`) b
 
 - the world starts as a slowly turning globe in an astrolabe ring; zoom out to the globe, in to the flat map and
   beyond (scroll, pinch, the zoom buttons or + and −), drag or use the arrow keys to turn and pan it
-- every tale is a wisp near its place. Which wisps show depends on the zoom: they are ranked so that the wisps shown
-  at any zoom are spread evenly over the map and never closer than a few dozen pixels (`src/lib/wisps.js`), so
-  zooming in reveals more of them, and wisps at the edge of showing slowly fade in and out
+- every tale is a wisp near its place, inside the place's country (and drifting no farther than its border).
+  Which wisps show depends on the zoom: they are ranked so that the wisps shown at any zoom are spread evenly over
+  the map and never closer than a few dozen pixels (`src/lib/wisps.js`), so zooming in reveals more of them, and
+  wisps at the edge of showing slowly fade in and out
 - hover a wisp to see the tale's name, click it to open it. The panel shows the tale's type, kind and family, an
   excerpt, the places where the same tale was told (in gold) and where a tale of the same family was told (in silver),
-  each joined to it on the map by its own constellation, and more tales from the same place
-- "Read the tale" opens a full-page reading view with a framed initial, a text size setting and the tale's kin;
+  each joined to it on the map by its own constellation, and more tales from the same place. "Same tale" means the
+  same ATU tale type; "same family" another type in the same ATU family (a "?" next to each explains it)
+- the type, kind and family open the index of tale types: kinds, their families, the families' types (with the
+  index's description of each, from `dist/data/types.json`) and the tales of each type
+- "All 229 tales from Germany" lists a place's tales in the panel and zooms the map to them; a tale opened from the
+  list has a chevron back to it
+- "Read the tale" opens a full-page reading view with a framed initial, a text size setting, the tale's type and kin;
   search finds tales by title, type, ATU number or place, ignoring accents (`src/lib/search.js`)
 - on phones the panel becomes a bottom sheet
-- links: `#germany`, `#germany/238` (a place with a tale open), `#read/238` (reading a tale)
+- links: `#germany`, `#germany/238` (a place with a tale open), `#germany/all` (all of a place's tales),
+  `#read/238` (reading a tale)
 
 ## Tests
 

@@ -68,3 +68,37 @@ export function angle([lon1, lat1], [lon2, lat2]) {
 
 // 0 below 0, 1 above 1, smooth in between.
 export const smoothstep = (x) => (x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x));
+
+// Spots for `count` wisps around a place at [lng, lat]: the sunflower spiral, keeping only the spots
+// `fits(lon, lat, step)` accepts (e.g. inside the place's country), nearest the place first. If too few
+// fit, the spiral is drawn tighter and tried again. Returns [dLon, dLat] offsets, or null.
+export function spotsWithin(count, [lng, lat], fits, step = 0.4) {
+  for (let tries = 0; tries < 6; tries++, step *= 0.7) {
+    const out = [];
+    for (const [dLon, dLat] of sunflower(count * 16, lat, step)) {
+      if (fits(lng + dLon, lat + dLat, step)) out.push([dLon, dLat]);
+      if (out.length === count) return out;
+    }
+  }
+  return null;
+}
+
+// Distance in degrees (of latitude) from [lon, lat] to the nearest edge of `rings` ([[lon, lat], ...]),
+// measured on a local flat map: enough for the short distances between a wisp and its country's border.
+export function distanceToRings(rings, [lon, lat]) {
+  const cl = Math.cos(lat * RAD);
+  let best = Infinity;
+  for (const ring of rings) {
+    for (let i = 1; i < ring.length; i++) {
+      const ax = (ring[i - 1][0] - lon) * cl;
+      const ay = ring[i - 1][1] - lat;
+      const bx = (ring[i][0] - lon) * cl;
+      const by = ring[i][1] - lat;
+      const dx = bx - ax;
+      const dy = by - ay;
+      const t = Math.max(0, Math.min(1, -(ax * dx + ay * dy) / (dx * dx + dy * dy || 1)));
+      best = Math.min(best, Math.hypot(ax + t * dx, ay + t * dy));
+    }
+  }
+  return best;
+}
