@@ -4,12 +4,26 @@
   "private": true,
   "description": "Folk Atlas: folktales from the trilogy Annotated Folktales as wisps over a globe that unrolls into a flat map",
   "scripts": {
-    "build": "npm run build:world && npm run build:data",
+    "build": "npm run build:world && npm run build:data && npm run build:site",
     "build:world": "node scripts/build-world.js",
     "build:data": "node scripts/build-data.js",
-    "serve": "python3 -m http.server 8000 -d docs"
+    "build:site": "node scripts/build-site.js",
+    "dev": "node scripts/build-site.js --watch --serve",
+    "serve": "node scripts/build-site.js --serve",
+    "test": "node --test",
+    "test:e2e": "playwright test"
   },
   "engines": {
-    "node": ">=18"
-  }
+    "node": ">=20.11"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.56.1",
+    "esbuild": "0.28.2"
+  },
+  "dependencies": {
+    "d3-geo": "3.1.1",
+    "topojson-client": "3.1.0",
+    "world-atlas": "2.0.2"
+  },
+  "type": "module"
 }

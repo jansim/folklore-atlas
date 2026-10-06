@@ -1,0 +1,17 @@
+{
+  "_comment": "The seven kinds of tale of the ATU index (Uther 2004) by number range. trilogy's atu_df.csv has each type's family (its 'division', e.g. 'Supernatural Helpers 500-559'), but its 'chapter' column files Realistic Tales and Tales of the Stupid Ogre under Religious Tales, so kinds are taken from here. 'families' fills the ranges atu_df.csv leaves without a division name and renames divisions whose name it cut short.",
+  "kinds": [
+    { "name": "Animal Tales", "from": 1, "to": 299 },
+    { "name": "Tales of Magic", "from": 300, "to": 749 },
+    { "name": "Religious Tales", "from": 750, "to": 849 },
+    { "name": "Realistic Tales", "from": 850, "to": 999 },
+    { "name": "Tales of the Stupid Ogre", "from": 1000, "to": 1199 },
+    { "name": "Anecdotes and Jokes", "from": 1200, "to": 1999 },
+    { "name": "Formula Tales", "from": 2000, "to": 2399 }
+  ],
+  "families": [
+    { "name": "Supernatural or Enchanted Wife (Husband) or Other Relative", "from": 400, "to": 459 },
+    { "name": "Other Tales of the Supernatural", "from": 700, "to": 749 },
+    { "name": "God Repays and Punishes", "from": 750, "to": 779 }
+  ]
+}
