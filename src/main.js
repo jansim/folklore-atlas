@@ -1185,6 +1185,7 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
   }
   $('#back').addEventListener('click', closeReader);
   $('#r-close').addEventListener('click', closeReader);
+  $('#r-bar-close').addEventListener('click', closeReader);
   readerScroll.addEventListener(
     'scroll',
     () => {
