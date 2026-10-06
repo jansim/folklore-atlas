@@ -77,16 +77,37 @@ test('search ignores accents and opens a tale', async ({ page }) => {
 
 test('reads a tale and links to it', async ({ page }) => {
   await page.goto('/#read/100');
-  await expect(page.locator('#tale-title')).toHaveText("The Emperor's Daughter and the Swineherd");
-  await expect(page.locator('#reading p').first()).not.toBeEmpty();
-  expect(await page.locator('#reading p').count()).toBeGreaterThan(3);
-  await expect(page.locator('#reading .source')).toContainText('Source:');
+  await expect(page.locator('#reader')).toBeVisible();
+  await expect(page.locator('#r-title')).toHaveText("The Emperor's Daughter and the Swineherd");
+  await expect.poll(() => page.locator('#reading p').count()).toBeGreaterThan(3);
+  await expect(page.locator('#reading .cap')).toHaveCount(1);
+  await expect(page.locator('#r-source')).toContainText('Folktexts');
   await page.locator('#back').click();
+  await expect(page.locator('#reader')).toBeHidden();
   await expect(page).toHaveURL(/#[a-z-]+\/100$/);
-  await page.locator('#mode-family').click();
-  await expect(page.locator('#kin-head')).toContainText('Kindred tales in');
-  const chip = page.locator('.kc:not(.more-kin)').first();
+  await expect(page.locator('#panel')).toBeVisible();
+  await expect(page.locator('#kin-head')).toContainText('Same tale');
+  await expect(page.locator('#fam-head')).toHaveText('Same family · no other places yet');
+  const chip = page.locator('#kin-chips .kc:not(.more-kin)').first();
   const place = await chip.textContent();
   await chip.click();
   await expect(page.locator('#tale-place')).toHaveText(place);
+});
+
+test('the reader opens kindred tales and closes with Escape', async ({ page }) => {
+  await page.goto('/#germany');
+  await page.locator('#read').click();
+  await expect(page.locator('#reader')).toBeVisible();
+  await expect(page).toHaveURL(/#read\/\d+$/);
+  const before = await page.locator('#r-title').textContent();
+  await page.locator('#fs-up').click();
+  await expect(page.locator('#reading')).toHaveAttribute('style', /--fs: 25px/);
+  const other = page.locator('#r-others-list .more').first();
+  const title = (await other.evaluate((b) => b.firstChild.textContent)).trim();
+  await other.click();
+  await expect(page.locator('#r-title')).toHaveText(title);
+  expect(title).not.toBe(before);
+  await page.keyboard.press('Escape');
+  await expect(page.locator('#reader')).toBeHidden();
+  await expect(page.locator('#tale-title')).toHaveText(title);
 });

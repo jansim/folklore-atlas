@@ -63,10 +63,10 @@ The site's source is in `src/`; `scripts/build-site.js` (`npm run build:site`) b
   at any zoom are spread evenly over the map and never closer than a few dozen pixels (`src/lib/wisps.js`), so
   zooming in reveals more of them, and wisps at the edge of showing slowly fade in and out
 - hover a wisp to see the tale's name, click it to open it. The panel shows the tale's type, kind and family, an
-  excerpt, the places where the same tale ("Same tale") or a tale of the same family ("Same family") was told, joined
-  to it on the map, and more tales from the same place
-- "Read the tale" shows the full text in the panel; search finds tales by title, type, ATU number or place, ignoring
-  accents (`src/lib/search.js`)
+  excerpt, the places where the same tale was told (in gold) and where a tale of the same family was told (in silver),
+  each joined to it on the map by its own constellation, and more tales from the same place
+- "Read the tale" opens a full-page reading view with a framed initial, a text size setting and the tale's kin;
+  search finds tales by title, type, ATU number or place, ignoring accents (`src/lib/search.js`)
 - on phones the panel becomes a bottom sheet
 - links: `#germany`, `#germany/238` (a place with a tale open), `#read/238` (reading a tale)
 

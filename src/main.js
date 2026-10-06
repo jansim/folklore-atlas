@@ -14,8 +14,10 @@ import { random, rankBySpread, smoothstep, sunflower } from './lib/wisps.js';
   const ZMAX = 4.5;
   // Wisps show when they are at least this many pixels from every brighter wisp.
   const WISP_SPACING = 26;
-  const KIN_SHOWN = 9;
+  const KIN_SHOWN = 10;
+  const FAM_SHOWN = 8;
   const OTHERS_SHOWN = 4;
+  const FONT_SIZES = [18, 20, 22, 25, 28];
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
@@ -84,10 +86,13 @@ import { random, rankBySpread, smoothstep, sunflower } from './lib/wisps.js';
   };
   const byType = group((t) => t.atu);
   const byFamily = group((t) => t.famIdx);
-  const kinOf = (tale, mode) => {
-    const byPlace = (mode === 'type' ? byType.get(tale.atu) : byFamily.get(tale.famIdx)) ?? new Map();
+  // The other places that tell the same tale (by type) or a tale of the same family, most tellings first.
+  // Places in skip (those that tell the same tale) are left out of the same family.
+  const kinOf = (tale, by, skip = []) => {
+    const byPlace = (by === 'type' ? byType.get(tale.atu) : byFamily.get(tale.famIdx)) ?? new Map();
+    const skipped = new Set(skip.map((k) => k.place));
     return [...byPlace]
-      .filter(([place]) => place !== tale.place)
+      .filter(([place]) => place !== tale.place && !skipped.has(place))
       .sort((a, b) => b[1].length - a[1].length || a[0].name.localeCompare(b[0].name))
       .map(([place, list]) => ({ place, tales: list }));
   };
@@ -213,21 +218,24 @@ import { random, rankBySpread, smoothstep, sunflower } from './lib/wisps.js';
   const visibility = (vw, lonLat) =>
     vw.clip === null ? 1 : clamp((vw.clip - geoDistance(lonLat, [vw.lon, vw.rotLat]) / RAD) / 5, 0, 1);
 
-  // Constellation: arcs from the chosen tale to a kindred tale in every place that has one,
-  // kept as one Path2D until the view or the choice changes.
+  // Constellation: arcs from the chosen tale to a kindred tale in every place that has one, gold to
+  // the same tale and silver to the same family, kept as Path2Ds until the view or the choice changes.
   function constellation(vw, p) {
-    const path2d = new Path2D();
-    const path = geoPath(p, path2d);
     const from = [state.sel.lon, state.sel.lat];
-    const ends = [];
-    for (const k of state.kin) {
-      const to = [k.tales[0].lon, k.tales[0].lat];
-      path({ type: 'LineString', coordinates: [from, to] });
-      const alpha = visibility(vw, to);
-      const xy = alpha > 0 ? p(to) : null;
-      if (xy) ends.push({ x: xy[0], y: xy[1], alpha });
-    }
-    return { path: path2d, ends };
+    const arcsTo = (kin) => {
+      const path2d = new Path2D();
+      const path = geoPath(p, path2d);
+      const ends = [];
+      for (const k of kin) {
+        const to = [k.tales[0].lon, k.tales[0].lat];
+        path({ type: 'LineString', coordinates: [from, to] });
+        const alpha = visibility(vw, to);
+        const xy = alpha > 0 ? p(to) : null;
+        if (xy) ends.push({ x: xy[0], y: xy[1], alpha });
+      }
+      return { path: path2d, ends };
+    };
+    return { gold: arcsTo(state.kin), silver: arcsTo(state.fam) };
   }
 
   // ---------- Wisps: every tale is one, shown as zoom makes room ----------
@@ -252,8 +260,9 @@ import { random, rankBySpread, smoothstep, sunflower } from './lib/wisps.js';
     tale.tide = { f: (2 * Math.PI) / (25 + rnd() * 35), ph: rnd() * Math.PI * 2 };
   }
 
-  let forced = new Set(); // the chosen tale and its kin always show
-  const wispState = (tale) => (tale === state.sel ? 'on' : forced.has(tale) ? 'kin' : '');
+  // The chosen tale and its kin always show: tale -> 'on' | 'kin' (same tale) | 'sib' (same family)
+  let forced = new Map();
+  const wispState = (tale) => forced.get(tale) ?? '';
   for (const tale of tales) {
     tale.dur = 4 + ((tale.id * 1.37) % 3.5);
     tale.delay = (tale.id * 1.91) % 7;
@@ -338,8 +347,7 @@ import { random, rankBySpread, smoothstep, sunflower } from './lib/wisps.js';
   }
   function markWisps() {
     for (const [tale, b] of wispButtons) {
-      b.classList.toggle('on', tale === state.sel);
-      b.classList.toggle('kin', tale !== state.sel && forced.has(tale));
+      for (const cls of ['on', 'kin', 'sib']) b.classList.toggle(cls, forced.get(tale) === cls);
     }
   }
 
@@ -362,30 +370,35 @@ import { random, rankBySpread, smoothstep, sunflower } from './lib/wisps.js';
   }
 
   // Country highlights fade in and out over half a second.
-  const highlights = new Map(); // feature -> { kin, own, toKin, toOwn }
-  function setHighlights(own, kin) {
-    for (const h of highlights.values()) h.toKin = h.toOwn = 0;
+  const LEVELS = [['sib', 'toSib'], ['kin', 'toKin'], ['own', 'toOwn']];
+  const highlights = new Map(); // feature -> { sib, kin, own, toSib, toKin, toOwn }
+  function setHighlights(own, kin, sib) {
+    for (const h of highlights.values()) h.toSib = h.toKin = h.toOwn = 0;
+    // A country lights up once, in the brightest way it is kin.
+    const lit = new Set();
     const mark = (name, key) => {
       const f = countryByName.get(name);
-      if (!f) return;
-      if (!highlights.has(f)) highlights.set(f, { kin: 0, own: 0, toKin: 0, toOwn: 0 });
+      if (!f || lit.has(f)) return;
+      lit.add(f);
+      if (!highlights.has(f)) highlights.set(f, { sib: 0, kin: 0, own: 0, toSib: 0, toKin: 0, toOwn: 0 });
       highlights.get(f)[key] = 1;
     };
-    for (const name of kin) if (name !== own) mark(name, 'toKin');
     mark(own, 'toOwn');
+    for (const name of kin) mark(name, 'toKin');
+    for (const name of sib) mark(name, 'toSib');
     mapDirty = true;
   }
   function stepHighlights(dt) {
     let moving = false;
     const k = Math.min(1, dt / 500);
     for (const [f, h] of highlights) {
-      for (const [key, to] of [['kin', 'toKin'], ['own', 'toOwn']]) {
+      for (const [key, to] of LEVELS) {
         const d = h[to] - h[key];
         if (d === 0) continue;
         h[key] = Math.abs(d) <= k ? h[to] : h[key] + Math.sign(d) * k;
         moving = true;
       }
-      if (!h.kin && !h.own && !h.toKin && !h.toOwn) highlights.delete(f);
+      if (LEVELS.every(([key, to]) => !h[key] && !h[to])) highlights.delete(f);
     }
     return moving;
   }
@@ -430,6 +443,8 @@ import { random, rankBySpread, smoothstep, sunflower } from './lib/wisps.js';
   const frameTimes = new URLSearchParams(location.search).has('perf') ? (window.frameTimes = []) : null;
   function loop(now) {
     requestAnimationFrame(loop);
+    // The reading view covers the map: leave it be until the view closes.
+    if (state.reading) return;
     const busy = anim || drag || pinch || now < activeUntil;
     if (now - prev < 1000 / (busy ? 60 : 30) - 4) return;
     const started = performance.now();
@@ -454,8 +469,8 @@ import { random, rankBySpread, smoothstep, sunflower } from './lib/wisps.js';
       drawMap(mapLayer, { vw, projection: p, frame: fr, land, borders, coast, graticule, highlights });
     }
     if (!state.sel) arcs = null;
-    else if (arcsKey !== `${key}|${state.sel.id}|${state.mode}`) {
-      arcsKey = `${key}|${state.sel.id}|${state.mode}`;
+    else if (arcsKey !== `${key}|${state.sel.id}`) {
+      arcsKey = `${key}|${state.sel.id}`;
       arcs = constellation(vw, p);
     }
 
@@ -598,7 +613,7 @@ import { random, rankBySpread, smoothstep, sunflower } from './lib/wisps.js';
 
   // ---------- The chosen tale ----------
 
-  const state = { sel: null, mode: 'type', kin: [], reading: false, allKin: false, allOthers: false, collapsed: false };
+  const state = { sel: null, kin: [], fam: [], reading: false, allKin: false, allFam: false, allOthers: false, collapsed: false };
   const taleCache = new Map();
   const loadTale = (id) => {
     if (!taleCache.has(id)) taleCache.set(id, json(`data/tales/${id}.json`).catch((err) => (taleCache.delete(id), Promise.reject(err))));
@@ -609,11 +624,14 @@ import { random, rankBySpread, smoothstep, sunflower } from './lib/wisps.js';
     const tale = taleById.get(Number(id));
     if (!tale) return false;
     const same = state.sel === tale;
+    const wasReading = state.reading;
     state.sel = tale;
     state.reading = reading;
-    if (!same) state.allKin = state.allOthers = false;
+    if (!same) state.allKin = state.allFam = state.allOthers = false;
     state.collapsed = false;
     select();
+    if (reading && (!same || !wasReading)) renderReader(tale);
+    if (!reading && wasReading) closeReaderView();
     if (fly) {
       idleSince = performance.now();
       const { lon, lat } = tale;
@@ -626,14 +644,16 @@ import { random, rankBySpread, smoothstep, sunflower } from './lib/wisps.js';
   // Let go of the chosen tale: the panel closes and the globe may turn on its own again.
   function deselect() {
     if (!state.sel) return;
-    const wasIn = panel.contains(document.activeElement);
+    const wasIn = state.reading || panel.contains(document.activeElement);
+    if (state.reading) closeReaderView();
     state.sel = null;
     state.reading = false;
     state.kin = [];
+    state.fam = [];
     arcsKey = '';
-    forced = new Set();
+    forced = new Map();
     markWisps();
-    setHighlights(null, []);
+    setHighlights(null, [], []);
     panel.hidden = true;
     idleSince = performance.now();
     if (location.hash) history.replaceState(null, '', location.pathname + location.search);
@@ -643,22 +663,26 @@ import { random, rankBySpread, smoothstep, sunflower } from './lib/wisps.js';
   // Light up the chosen tale, its kin and their countries, then fill in the panel.
   function select() {
     const sel = state.sel;
-    state.kin = kinOf(sel, state.mode);
-    forced = new Set([sel, ...state.kin.map((k) => k.tales[0])]);
+    state.kin = kinOf(sel, 'type');
+    state.fam = kinOf(sel, 'family', state.kin);
+    forced = new Map([...state.fam.map((k) => [k.tales[0], 'sib']), ...state.kin.map((k) => [k.tales[0], 'kin']), [sel, 'on']]);
     markWisps();
     setHighlights(
       sel.place.country,
       state.kin.map((k) => k.place.country),
+      state.fam.map((k) => k.place.country),
     );
     renderPanel();
     const hash = state.reading ? `#read/${sel.id}` : `#${sel.place.id}/${sel.id}`;
     if (location.hash !== hash) history.replaceState(null, '', hash);
   }
 
+  const typeLabel = (t) => `ATU ${t.atu}${t.typeName ? ` · ${t.typeName}` : ''}`;
+  const nPlaces = (n) => `${n} ${n === 1 ? 'place' : 'places'}`;
+
   function renderPanel() {
     const sel = state.sel;
     panel.hidden = false;
-    panel.classList.toggle('reading-mode', state.reading);
     panel.classList.toggle('collapsed', state.collapsed);
     const toggle = $('#sheet-toggle');
     toggle.setAttribute('aria-expanded', !state.collapsed);
@@ -666,45 +690,39 @@ import { random, rankBySpread, smoothstep, sunflower } from './lib/wisps.js';
 
     $('#tale-place').textContent = sel.place.name;
     $('#tale-title').textContent = sel.title;
-    $('#tale-atu').textContent = `ATU ${sel.atu}${sel.typeName ? ` · ${sel.typeName}` : ''}`;
+    $('#tale-atu').textContent = typeLabel(sel);
     $('#tale-family').textContent = [sel.kind, sel.family].filter(Boolean).join(' › ');
-    $('#tale-summary').hidden = state.reading;
-    $('#tale-reading').hidden = !state.reading;
+    $('#tale-excerpt').textContent = sel.excerpt;
+    const nKin = state.kin.length;
+    const nFam = state.fam.length;
+    $('#kin-head').textContent = nKin ? `Same tale · told in ${nPlaces(nKin)}` : 'Same tale · not recorded elsewhere yet';
+    $('#fam-head').textContent = nFam ? `Same family · ${nPlaces(nFam)}` : 'Same family · no other places yet';
+    renderChips($('#kin-chips'), state.kin, '', state.allKin ? Infinity : KIN_SHOWN, () => ((state.allKin = true), renderPanel()));
+    renderChips($('#fam-chips'), state.fam, 'silver', state.allFam ? Infinity : FAM_SHOWN, () => ((state.allFam = true), renderPanel()));
+    renderOthers(sel);
+  }
 
-    if (state.reading) renderReading(sel);
-    else {
-      $('#tale-excerpt').textContent = sel.excerpt;
-      renderKin(sel);
-      renderOthers(sel);
+  // A chip for every place in kin, up to max, and a "+ n more" chip that shows the rest.
+  function renderChips(box, kin, cls, max, showAll, opts) {
+    box.replaceChildren();
+    for (const { place, tales: list } of kin.slice(0, max)) {
+      const b = el('button', `kc ${cls}`.trim(), place.name);
+      b.title = list.length === 1 ? `Open “${list[0].title}”` : `${list.length} tales; open “${list[0].title}”`;
+      b.addEventListener('click', () => pick(list[0].id, opts));
+      box.append(b);
+    }
+    if (kin.length > max) {
+      const more = el('button', 'kc more-kin', `+ ${kin.length - max} more`);
+      more.addEventListener('click', showAll);
+      box.append(more);
     }
   }
 
-  function renderKin(sel) {
-    const n = state.kin.length;
-    $('#kin-head').textContent = !n
-      ? 'No other tellings here yet'
-      : state.mode === 'type'
-        ? `Also told in ${n} ${n === 1 ? 'place' : 'places'}`
-        : `Kindred tales in ${n} ${n === 1 ? 'place' : 'places'}`;
-    $('#mode-type').setAttribute('aria-pressed', state.mode === 'type');
-    $('#mode-family').setAttribute('aria-pressed', state.mode === 'family');
-    const chips = $('#kin-chips');
-    chips.replaceChildren();
-    const shown = state.allKin ? state.kin : state.kin.slice(0, KIN_SHOWN);
-    for (const { place, tales: list } of shown) {
-      const b = el('button', 'kc', place.name);
-      b.title = list.length === 1 ? `Open “${list[0].title}”` : `${list.length} tales; open “${list[0].title}”`;
-      b.addEventListener('click', () => pick(list[0].id));
-      chips.append(b);
-    }
-    if (shown.length < n) {
-      const more = el('button', 'kc more-kin', `+ ${n - shown.length} more`);
-      more.addEventListener('click', () => {
-        state.allKin = true;
-        renderKin(sel);
-      });
-      chips.append(more);
-    }
+  function otherRow(t, opts) {
+    const b = el('button', 'more', t.title);
+    b.append(el('span', '', `ATU ${t.atu}`));
+    b.addEventListener('click', () => pick(t.id, opts));
+    return b;
   }
 
   function renderOthers(sel) {
@@ -712,13 +730,7 @@ import { random, rankBySpread, smoothstep, sunflower } from './lib/wisps.js';
     $('#others').hidden = !others.length;
     $('#others-head').textContent = `More tales from ${sel.place.name}`;
     const list = $('#others-list');
-    list.replaceChildren();
-    for (const t of state.allOthers ? others : others.slice(0, OTHERS_SHOWN)) {
-      const b = el('button', 'more', t.title);
-      b.append(el('span', '', `ATU ${t.atu}`));
-      b.addEventListener('click', () => pick(t.id));
-      list.append(b);
-    }
+    list.replaceChildren(...(state.allOthers ? others : others.slice(0, OTHERS_SHOWN)).map((t) => otherRow(t)));
     if (!state.allOthers && others.length > OTHERS_SHOWN) {
       const all = el('button', 'more all', `All ${others.length + 1} tales from ${sel.place.name}`);
       all.addEventListener('click', () => {
@@ -729,48 +741,115 @@ import { random, rankBySpread, smoothstep, sunflower } from './lib/wisps.js';
     }
   }
 
-  async function renderReading(sel) {
-    const reading = $('#reading');
-    reading.replaceChildren(el('p', '', sel.excerpt));
-    reading.scrollTop = 0;
-    let tale;
-    try {
-      tale = await loadTale(sel.id);
-    } catch {
-      reading.append(el('p', 'source', 'The full tale could not be loaded. Try again later.'));
-      return;
-    }
-    if (state.sel !== sel || !state.reading) return;
-    reading.replaceChildren(...tale.paragraphs.map((p) => el('p', '', p)));
-    const source = el('p', 'source', `Source: ${tale.source ?? 'unknown'} · via D. L. Ashliman’s Folktexts, in the trilogy Annotated Folktales.`);
-    reading.append(source);
-  }
-
-  $('#read').addEventListener('click', () => {
-    state.reading = true;
-    select();
-    $('#reading').focus({ preventScroll: true });
-  });
-  $('#back').addEventListener('click', () => {
-    state.reading = false;
-    select();
-    $('#read').focus({ preventScroll: true });
-  });
-  for (const mode of ['type', 'family']) {
-    $(`#mode-${mode}`).addEventListener('click', () => {
-      state.mode = mode;
-      state.allKin = false;
-      select();
-    });
-  }
+  $('#read').addEventListener('click', () => pick(state.sel.id, { fly: false, reading: true }));
   $('#close').addEventListener('click', deselect);
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && state.sel && e.target !== search) deselect();
+    if (e.key !== 'Escape' || !state.sel || e.target === search) return;
+    if (state.reading) closeReader();
+    else deselect();
   });
   $('#sheet-toggle').addEventListener('click', () => {
     state.collapsed = !state.collapsed;
     renderPanel();
   });
+
+  // ---------- The reading view ----------
+
+  const reader = $('#reader');
+  const readerScroll = $('#r-scroll');
+  const readerBar = $('#r-bar');
+  const readingEl = $('#reading');
+
+  async function renderReader(sel) {
+    document.body.classList.add('reading');
+    reader.hidden = false;
+    readerScroll.scrollTop = 0;
+    readerBar.classList.remove('shown');
+    $('#r-place').textContent = sel.place.name;
+    $('#r-title').textContent = sel.title;
+    $('#r-mini-title').textContent = sel.title;
+    $('#r-mini-place').textContent = sel.place.name;
+    $('#r-type').textContent = [typeLabel(sel), sel.family].filter(Boolean).join(' · ');
+    $('#r-source').replaceChildren();
+    $('#r-kin').hidden = !state.kin.length;
+    renderChips($('#r-kin-chips'), state.kin, '', Infinity, null, { reading: true });
+    const others = sel.place.tales.filter((t) => t !== sel);
+    $('#r-others').hidden = !others.length;
+    $('#r-others-head').textContent = `More tales from ${sel.place.name}`;
+    $('#r-others-list').replaceChildren(...others.slice(0, OTHERS_SHOWN).map((t) => otherRow(t, { reading: true })));
+    readingEl.replaceChildren(firstParagraph(sel.excerpt));
+    readingEl.focus({ preventScroll: true });
+
+    let tale;
+    try {
+      tale = await loadTale(sel.id);
+    } catch {
+      readingEl.append(el('p', 'r-source', 'The full tale could not be loaded. Try again later.'));
+      return;
+    }
+    if (state.sel !== sel || !state.reading) return;
+    const [first = '', ...rest] = tale.paragraphs;
+    readingEl.replaceChildren(firstParagraph(first), ...rest.map((p) => el('p', '', p)));
+    const link = (href, text) => Object.assign(el('a', '', text), { href, target: '_blank', rel: 'noopener' });
+    $('#r-source').replaceChildren(
+      ...(tale.source ? [`Source: ${tale.source}`, el('br')] : []),
+      'From D. L. Ashliman’s ',
+      link('https://sites.pitt.edu/~dash/folktexts.html', 'Folktexts'),
+      ', via the Annotated Folktales in ',
+      link('https://github.com/j-hagedorn/trilogy', 'trilogy'),
+      ' (CC BY-SA 4.0).',
+    );
+  }
+
+  // The first paragraph opens with its first letter as a framed initial (leading quotes dropped).
+  function firstParagraph(text) {
+    const p = el('p');
+    const lead = text.match(/^["'‘“(]*/)[0].length;
+    const letter = text.charAt(lead).toUpperCase();
+    if (!letter) return p;
+    const cap = el('span', 'cap');
+    cap.setAttribute('aria-hidden', 'true');
+    cap.append(el('i'), el('i'), el('i'), el('i'), el('b', '', letter));
+    p.append(cap, el('span', 'sr-only', letter), text.slice(lead + 1));
+    return p;
+  }
+
+  function closeReaderView() {
+    document.body.classList.remove('reading');
+    reader.hidden = true;
+    mapDirty = true;
+  }
+  // Back to the atlas, with the tale still chosen.
+  function closeReader() {
+    if (!state.reading) return;
+    pick(state.sel.id, { fly: false });
+    $('#read').focus({ preventScroll: true });
+  }
+  $('#back').addEventListener('click', closeReader);
+  $('#r-close').addEventListener('click', closeReader);
+  readerScroll.addEventListener('scroll', () => readerBar.classList.toggle('shown', readerScroll.scrollTop > 280), { passive: true });
+
+  // Text size, remembered on this device.
+  let fontStep = 2;
+  try {
+    const saved = localStorage.getItem('folk-atlas:text-size');
+    if (saved !== null && Number(saved) in FONT_SIZES) fontStep = Number(saved);
+  } catch {}
+  function setFontStep(step) {
+    fontStep = clamp(step, 0, FONT_SIZES.length - 1);
+    readingEl.style.setProperty('--fs', `${FONT_SIZES[fontStep]}px`);
+    $('#fs-down').disabled = fontStep === 0;
+    $('#fs-up').disabled = fontStep === FONT_SIZES.length - 1;
+  }
+  const stepFont = (d) => {
+    setFontStep(fontStep + d);
+    try {
+      localStorage.setItem('folk-atlas:text-size', String(fontStep));
+    } catch {}
+  };
+  setFontStep(fontStep);
+  $('#fs-down').addEventListener('click', () => stepFont(-1));
+  $('#fs-up').addEventListener('click', () => stepFont(1));
 
   // ---------- Search ----------
 
