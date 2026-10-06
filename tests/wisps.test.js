@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { angle, distanceToRings, rankBySpread, random, spotsWithin, sunflower } from '../src/lib/wisps.js';
+import { angle, distanceToRings, rankBySpread, random, insideRings, spreadOver, sunflower } from '../src/lib/wisps.js';
 
 const rnd = random(3);
 // Clustered points, like the tales: many around a few places.
@@ -46,18 +46,42 @@ test('sunflower spots start at the place and stay apart', () => {
   for (let i = 1; i < spots.length; i++) assert.ok(angle([10, 50], [10 + spots[i][0], 50 + spots[i][1]]) > 0);
 });
 
-test('spots within a shape stay inside it, nearest the place first', () => {
-  // A 4° by 3° box around [10, 50].
+test('spots spread over a shape stay inside it and cover all of it', () => {
+  // A 4° by 3° box around [10, 50], about 7.7 square degrees on the ground.
   const inBox = (lon, lat) => lon > 8 && lon < 12 && lat > 48.5 && lat < 51.5;
-  const spots = spotsWithin(120, [10, 50], inBox);
+  const box = [[8, 48.5], [12, 51.5]];
+  const spots = spreadOver(120, [box], 4 * 3 * Math.cos(50 * Math.PI / 180), inBox);
   assert.equal(spots.length, 120);
-  assert.deepEqual(spots[0], [0, 0]);
-  for (const [dLon, dLat] of spots) assert.ok(inBox(10 + dLon, 50 + dLat));
-  assert.equal(spotsWithin(10, [10, 50], () => false), null);
+  for (const [lon, lat] of spots) assert.ok(inBox(lon, lat));
+  // Every quarter of the box gets about a quarter of the spots.
+  for (const [x, y] of [[0, 0], [0, 1], [1, 0], [1, 1]]) {
+    const n = spots.filter(([lon, lat]) => (lon > 10) === !!x && (lat > 50) === !!y).length;
+    assert.ok(n > 20 && n < 40, `${x}, ${y}: ${n}`);
+  }
+  // A single spot sits in the middle.
+  const [[lon, lat]] = spreadOver(1, [box], 7.7, inBox);
+  assert.ok(Math.abs(lon - 10) < 1 && Math.abs(lat - 50) < 1);
+  assert.deepEqual(spreadOver(5, [box], 7.7, inBox, 3), spreadOver(5, [box], 7.7, inBox, 3));
+  assert.equal(spreadOver(10, [box], 7.7, () => false), null);
+});
+
+test('spots spread across the antimeridian', () => {
+  const inBox = (lon, lat) => (lon > 178 || lon < -178) && Math.abs(lat) < 2;
+  const spots = spreadOver(20, [[[178, -2], [-178, 2]]], 16, inBox);
+  assert.equal(spots.length, 20);
+  assert.ok(spots.some(([lon]) => lon > 178) && spots.some(([lon]) => lon < -178));
 });
 
 test('distance to rings is the distance to the nearest edge', () => {
   const square = [[[0, -1], [2, -1], [2, 1], [0, 1], [0, -1]]];
   assert.ok(Math.abs(distanceToRings(square, [0.5, 0]) - 0.5) < 1e-9);
   assert.ok(Math.abs(distanceToRings(square, [1, 0.25]) - 0.75) < 1e-9);
+});
+
+test('inside rings: in the outer ring and out of its holes', () => {
+  const rings = [[[0, 0], [4, 0], [4, 4], [0, 4], [0, 0]], [[1, 1], [2, 1], [2, 2], [1, 2], [1, 1]], [[10, 0], [11, 0], [11, 1], [10, 0]]];
+  assert.ok(insideRings(rings, [3, 3]));
+  assert.ok(!insideRings(rings, [1.5, 1.5]));
+  assert.ok(!insideRings(rings, [5, 2]));
+  assert.ok(insideRings(rings, [10.8, 0.3]));
 });
