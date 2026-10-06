@@ -1,7 +1,8 @@
 # folklore-map
 
-**Wisp Atlas**: a night-sky map of folktales. Every place where tales were told is a star over a dotted-outline
-world, shining brighter the more tales it holds, and tales of the same type are joined in constellations.
+**Folk Atlas**: folktales from around the world as wisps of light drifting over a globe. Zoom in and the globe
+unrolls into a flat map; open a tale and the places where the same tale (or a tale of the same family) was told
+light up, joined to it by a constellation.
 
 ## Data
 
@@ -19,15 +20,17 @@ git submodule update --init
 The site's data files in `docs/data/` are generated and not tracked in git. Build them before serving:
 
 ```sh
-npm run build        # = build:land + build:data
+npm run build        # = build:world + build:data
 ```
 
 `scripts/build-data.js` turns trilogy into the files the site reads:
 
 - `vendor/trilogy/data/aft.csv`: 1,518 tales with full text, provenance and ATU tale type
-- `vendor/trilogy/data/atu_df.csv`: the ATU tale-type index (type names and chapters, used as "kinds" of tale)
+- `vendor/trilogy/data/atu_df.csv`: the ATU tale-type index (type names). Each type's kind (e.g. "Tales of Magic")
+  and family (e.g. "Supernatural Helpers") follow the number ranges of the ATU index.
 - `data/places.json`: our gazetteer that places each provenance on the map. It matches countries, peoples, authors
   and collections (e.g. "Aesop", "Jacob and Wilhelm Grimm", "The Panchatantra") to approximate coordinates.
+  The country each place lies in (lit up on the map) is found from its coordinates.
 
 ```sh
 npm run build:data   # writes docs/data/map.json and docs/data/tales/<id>.json, reports provenances it could not place
@@ -39,14 +42,16 @@ in `aft.csv`, so they stay stable as long as the submodule commit does. To updat
 
 ## The site
 
-`docs/` is a static [Leaflet](https://leafletjs.com/) site (no build tools) in the "Night Sky Atlas" design:
+`docs/` is a static site (no build tools) drawn with [d3-geo](https://d3js.org/d3-geo) in the "Wisp Atlas" design:
 
-- filter by kind of tale (ATU chapter), by tale type, or by text
-- open a tale to see its excerpt and its constellation: lines to every other place with a tale of the same type
-- "Read the tale" opens the full text in a reader with the place, tale type, source and kindred tales
-  (with text-size and read-aloud controls)
-- "Follow a falling star" picks a random tale; on phones the tale list becomes a bottom sheet
-- links: `#germany`, `#germany/238` (a place with a tale open), `#read/238` (the reader)
+- the world starts as a slowly turning globe in an astrolabe ring; zoom out to the globe, in to the flat map and
+  beyond (scroll, pinch, the zoom buttons or + and −), drag or use the arrow keys to turn and pan it
+- each place shows a few of its most widely told tales as drifting wisps; hover to see a tale's name, click to open it
+- the panel shows the tale's type, kind and family, an excerpt, the places where the same tale ("Same tale") or a tale
+  of the same family ("Same family") was told, joined to it on the map, and more tales from the same place
+- "Read the tale" shows the full text in the panel; search finds tales by title, type, ATU number or place
+- on phones the panel becomes a bottom sheet
+- links: `#germany`, `#germany/238` (a place with a tale open), `#read/238` (reading a tale)
 
 Serve it locally after `npm run build`:
 
@@ -59,6 +64,6 @@ on every push to `main` (or a manual run) it checks out the submodule, runs `npm
 to GitHub Pages; on pull requests it only runs the build as a check. One-time setup: in the repository's
 Settings → Pages, set **Source** to **GitHub Actions**.
 
-`docs/data/land.json` holds the land outlines from [Natural Earth](https://www.naturalearthdata.com/) 1:110m
-(public domain), built by `scripts/build-land.js` (`npm run build:land`), which downloads the
-[world-atlas](https://github.com/topojson/world-atlas) TopoJSON.
+`docs/data/world.json` holds the countries from [Natural Earth](https://www.naturalearthdata.com/) 1:110m
+(public domain) as TopoJSON, written by `scripts/build-world.js` (`npm run build:world`), which downloads it from
+[world-atlas](https://github.com/topojson/world-atlas).
