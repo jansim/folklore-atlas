@@ -95,7 +95,7 @@
           <header class="r-head">
             <div class="kh gold" id="r-place"></div>
             <button class="r-close" id="r-close" aria-label="Close the tale and return to the atlas">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
                 <path d="M6 6l12 12M18 6L6 18"></path>
               </svg>
             </button>
@@ -114,11 +114,11 @@
             Back to the atlas
           </button>
           <section class="r-kin" id="r-kin" hidden>
-            <div class="kh gold"><span>The same tale is also told in</span><span class="q" tabindex="0" aria-describedby="r-kin-tip">?</span><span class="tip" role="tooltip" id="r-kin-tip"></span></div>
+            <div class="kh gold"><span>Similar tales are also told in</span><span class="q" tabindex="0" aria-describedby="r-kin-tip">?</span><span class="tip" role="tooltip" id="r-kin-tip"></span></div>
             <div class="kin-chips" id="r-kin-chips"></div>
           </section>
           <section class="r-kin" id="r-fam" hidden>
-            <div class="kh silver"><span>Tales of the same family are told in</span><span class="q" tabindex="0" aria-describedby="r-fam-tip">?</span><span class="tip" role="tooltip" id="r-fam-tip"></span></div>
+            <div class="kh silver"><span>Tales of a similar family are told in</span><span class="q" tabindex="0" aria-describedby="r-fam-tip">?</span><span class="tip" role="tooltip" id="r-fam-tip"></span></div>
             <div class="kin-chips" id="r-fam-chips"></div>
           </section>
           <section class="r-others" id="r-others" hidden>
@@ -136,10 +136,18 @@
       </div>
     </div>
 
-    <div id="atu" role="dialog" aria-labelledby="atu-title" hidden>
-      <nav class="atu-crumbs" id="atu-crumbs" aria-label="Tale types"></nav>
-      <h2 id="atu-title" tabindex="-1"></h2>
-      <div class="atu-sub" id="atu-sub"></div>
+    <div id="atu-scrim" hidden></div>
+    <div id="atu" role="dialog" aria-modal="true" aria-labelledby="atu-title" hidden>
+      <button class="close" id="atu-close" aria-label="Close the index of tale types">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+          <path d="M6 6l12 12M18 6L6 18"></path>
+        </svg>
+      </button>
+      <header class="atu-head">
+        <nav class="atu-crumbs" id="atu-crumbs" aria-label="Tale types"></nav>
+        <h2 id="atu-title" tabindex="-1"></h2>
+        <div class="atu-sub" id="atu-sub"></div>
+      </header>
       <div class="atu-body" id="atu-body"></div>
     </div>
 
