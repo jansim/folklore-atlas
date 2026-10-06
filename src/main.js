@@ -158,6 +158,8 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
   let target = null;
   let lay = null;
   const sheetQuery = matchMedia('(max-width: 760px)');
+  // Phones, and anything held upright, skip the flat map in its ring for one that fills the screen.
+  const fillQuery = matchMedia('(max-width: 760px), (orientation: portrait)');
   function measure() {
     const W = innerWidth;
     const H = innerHeight;
@@ -211,15 +213,26 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
 
   function view() {
     const z = clamp(v.z, 0, ZMAX);
-    const a = ease(clamp(z, 0, 1));
-    const fade = ease(clamp((z - 1) / 0.7, 0, 1));
     // Once the ring has faded the map fills the screen, poles to the top and bottom edge, however far out.
     const cover = Math.max(lay.sf, lay.H / Math.PI, lay.W / (2 * Math.PI));
-    const s = z <= 1 ? lay.sg + (lay.sf - lay.sg) * a : Math.max(lay.sf * Math.pow(2, z - 1), lay.sf + (cover - lay.sf) * fade);
+    const fadeAt = (z) => ease(clamp((z - 1) / 0.7, 0, 1));
+    const scaleAt = (z, a) => (z <= 1 ? lay.sg + (lay.sf - lay.sg) * a : Math.max(lay.sf * Math.pow(2, z - 1), lay.sf + (cover - lay.sf) * fadeAt(z)));
+    let a = ease(clamp(z, 0, 1));
+    let fade = fadeAt(z);
+    let s = scaleAt(z, a);
+    let m = mercatorAt(z);
+    // There the flat map is past the one in the ring, so the globe unrolls straight into it,
+    // the scale, the fading ring and the turn into Mercator all keeping pace with the unrolling.
+    const flat = flatZ();
+    if (fillQuery.matches && z < flat) {
+      a = ease(z / flat);
+      fade = fadeAt(flat) * a;
+      s = lay.sg + (scaleAt(flat, 1) - lay.sg) * a;
+      m = mercatorAt(flat) * a;
+    }
     // Zoomed in, keep the map's edges beyond the edges of the screen (or, while it is shorter than the
     // screen, inside it). Nearer the flat map, draw it in to the centre of the ring.
     // All in y (degrees, see yOf), the y of the map's top edge less the screen above and below the centre.
-    const m = mercatorAt(z);
     const top = yOf(90, m);
     const maxN = top - lay.cy / s / RAD;
     const maxS = top - (lay.H - lay.cy) / s / RAD;
@@ -708,13 +721,17 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
     held = true;
   };
   // Unrolled by zooming, the map keeps the latitude in view for zooming in further.
-  // The flat map: z = 1, or on a phone a little closer in, where it fills the screen.
+  // The flat map: z = 1, or on a phone or a portrait screen a little closer in, where it fills the screen.
   const flatZ = () =>
-    sheetQuery.matches ? Math.max(1.7, 1 + Math.log2((1.15 * Math.max(target.H / Math.PI, target.W / (2 * Math.PI))) / target.sf)) : 1;
+    fillQuery.matches ? Math.max(1.7, 1 + Math.log2((1.15 * Math.max(target.H / Math.PI, target.W / (2 * Math.PI))) / target.sf)) : 1;
   const toFlat = (dur = 1100, lat) => {
     flyTo({ z: flatZ(), lat, morph: true }, dur);
     held = true;
   };
+  // Turned upright on the flat map, move on to the one that fills the screen rather than stay half unrolled.
+  fillQuery.addEventListener('change', () => {
+    if (fillQuery.matches && !anim && v.z >= 1 && v.z < flatZ()) toFlat(600);
+  });
   function zoomInput(dz) {
     const now = performance.now();
     const pause = now - pushAt > 250;
