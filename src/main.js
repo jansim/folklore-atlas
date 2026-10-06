@@ -117,15 +117,21 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
   const wispLayer = layer($('#sky-wisps'), 1);
   let sprites = null;
 
-  // Blends an orthographic globe (a = 0) into an equirectangular map (a = 1).
-  const projectionAt = geoProjectionMutator((a) => (x, y) => {
+  // Blends an orthographic globe (a = 0) into an equirectangular map (a = 1), narrowed by c.
+  const projectionAt = geoProjectionMutator((a, c) => (x, y) => {
     const p0 = geoOrthographicRaw(x, y);
     const p1 = geoEquirectangularRaw(x, y);
-    return [p0[0] + a * (p1[0] - p0[0]), p0[1] + a * (p1[1] - p0[1])];
+    return [p0[0] + a * (c * p1[0] - p0[0]), p0[1] + a * (p1[1] - p0[1])];
   });
 
   // z: 0 is the globe, 1 the flat world map, above 1 zoomed into the map.
   const v = { z: 0, lon: 20, lat: 22 };
+  // Zoomed into the flat map, it is narrowed by cos(refLat) so the countries there keep their true
+  // proportions. refLat follows the latitude in view, but holds still while a finger is down, so the
+  // map stays rigid under it, and settles once it lifts.
+  let refLat = v.lat;
+  // How far it is narrowed at a zoom: by degrees from the flat map (z = 1) to z = 2.5.
+  const narrowing = (z, lat) => 1 - ease(clamp((z - 1) / 1.5, 0, 1)) * (1 - Math.cos(lat * RAD));
   let anim = null;
   let drag = null;
   let pinch = null;
@@ -199,10 +205,13 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
     const maxN = 90 - lay.cy / s / RAD;
     const maxS = 90 - (lay.H - lay.cy) / s / RAD;
     const latF = clamp(v.lat, Math.min(-maxS, maxN) * fade, Math.max(-maxS, maxN) * fade);
+    // Never so narrow that the map no longer spans the screen.
+    const c = Math.min(1, Math.max(narrowing(z, refLat), lay.W / (2 * Math.PI * s)));
     return {
       z,
       a,
       s,
+      c,
       fade,
       cx: lay.cx + lay.shift * fade,
       cy: lay.cy,
@@ -221,7 +230,7 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
   };
 
   function project(vw) {
-    const p = projectionAt(vw.a);
+    const p = projectionAt(vw.a, vw.c);
     p.rotate([-vw.lon, -vw.rotLat])
       .scale(vw.s)
       .translate([vw.cx, vw.cy + vw.latF * RAD * vw.s * vw.a])
@@ -235,8 +244,9 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
   function flatAt(vw) {
     if (!detail || vw.z < DETAIL_Z) return null;
     const k = vw.s * RAD;
-    if (lay.W / k > 300) return null;
-    return flatView({ ox: vw.cx - k * vw.lon, oy: vw.cy + vw.latF * k, k, w: lay.W, h: lay.H });
+    const kx = k * vw.c;
+    if (lay.W / kx > 300) return null;
+    return flatView({ ox: vw.cx - kx * vw.lon, oy: vw.cy + vw.latF * k, kx, ky: k, w: lay.W, h: lay.H });
   }
 
   // The astrolabe ring around the globe (drawn in render.js); it grows away as the map unrolls.
@@ -245,7 +255,7 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
     return {
       cx: vw.cx,
       cy: vw.cy,
-      rx: vw.s * (1.18 + (2.95 - 1.18) * vw.a) * m,
+      rx: vw.s * (1.18 + (2.95 - 1.18) * vw.a) * m * vw.c,
       // Flat, the ring meets the map's top and bottom edges (half its height is pi / 2).
       ry: vw.s * (1.18 + (1.56 - 1.18) * vw.a) * m,
       op: 1 - vw.fade,
@@ -497,6 +507,13 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
     } else if (!state.sel && !state.list && !drag && !pinch && !reduceMotion && v.z < 0.4 && now - idleSince > 4000) {
       v.lon = wrap(v.lon + (3.5 * dt) / 1000);
     }
+    // Settle the narrowing on the latitude in view, in about 300 ms.
+    if (!drag && !pinch) {
+      const to = v.z > 1 ? view().latF : v.lat;
+      const d = to - refLat;
+      refLat = reduceMotion || Math.abs(d) < 0.01 ? to : refLat + d * Math.min(1, dt / 100);
+      if (refLat !== to) keepBusy(100);
+    }
   }
 
   function clampLat() {
@@ -532,9 +549,9 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
     const vw = view();
     const p = project(vw);
     const fr = frame(vw);
-    const key = [vw.z, v.lon, v.lat, lay.cx, lay.cy, lay.sg, lay.sf].map((n) => n.toFixed(3)).join();
+    const key = [vw.z, vw.c, v.lon, v.lat, lay.cx, lay.cy, lay.sg, lay.sf].map((n) => n.toFixed(3)).join();
     // The backdrop doesn't change as the globe turns: only the zoom, the layout (and, on the map, the latitude) move it.
-    const backKey = [vw.z, vw.a > 0 ? vw.latF : 0, lay.cx, lay.cy, lay.sg, lay.sf].map((n) => n.toFixed(3)).join();
+    const backKey = [vw.z, vw.c, vw.a > 0 ? vw.latF : 0, lay.cx, lay.cy, lay.sg, lay.sf].map((n) => n.toFixed(3)).join();
     if (backKey !== backdropKey || mapDirty) {
       backdropKey = backKey;
       drawBackdrop(backLayer, { vw, projection: p, frame: fr });
@@ -623,8 +640,9 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
     } else if (anim?.morph) {
       if (drag) startDrag(pointers.get(e.pointerId));
     } else if (drag) {
-      const k = 1 / (RAD * view().s);
-      v.lon = wrap(drag.lon - (e.clientX - drag.x) * k);
+      const vw = view();
+      const k = 1 / (RAD * vw.s);
+      v.lon = wrap(drag.lon - ((e.clientX - drag.x) * k) / vw.c);
       v.lat = drag.lat + (e.clientY - drag.y) * k;
       clampLat();
     }
@@ -724,7 +742,8 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
   };
   worldEl.addEventListener('keydown', (e) => {
     const step = 12 / Math.pow(2, Math.max(0, v.z - 1));
-    const moves = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, step], ArrowDown: [0, -step] };
+    const stepX = step / view().c;
+    const moves = { ArrowLeft: [-stepX, 0], ArrowRight: [stepX, 0], ArrowUp: [0, step], ArrowDown: [0, -step] };
     if (moves[e.key]) {
       idleSince = performance.now();
       flyTo({ lon: v.lon + moves[e.key][0], lat: clamp(v.lat + moves[e.key][1], -80, 80) }, 300);
@@ -818,9 +837,8 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
   }
 
   const nPlaces = (n) => `${n} ${n === 1 ? 'place' : 'places'}`;
-  const kinHead = (n) => (n ? `Similar tales told in ${nPlaces(n)}` : 'Similar tales are not recorded elsewhere yet');
-  const famHead = (n) =>
-    n ? `Tales from the same family told in ${nPlaces(n)}` : 'No other places have tales from the same family yet';
+  const kinHead = (n) => (n ? `Similar tales are told in ${nPlaces(n)}` : 'Similar tales are not recorded elsewhere yet');
+  const famHead = (n) => (n ? 'Tales from the same family' : 'No other places have tales from the same family yet');
   const nTales = (n) => `${n} ${n === 1 ? 'tale' : 'tales'}`;
   const range = ([from, to]) => `ATU ${from}–${to}`;
   const named = (t) => t.typeName && t.typeName !== 'Unnamed tale type';
@@ -867,13 +885,10 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
   // How "similar tale" and "similar family" are found, for the "?" next to each.
   function setTips(t, kinTip, famTip) {
     const type = named(t) ? `${t.typeName}, ATU ${t.atu}` : `ATU ${t.atu}`;
-    kinTip.textContent =
-      `Tales of the same tale type (${type}) in the Aarne–Thompson–Uther index of folktales: ` +
-      'versions of one story, told in other places.';
+    kinTip.textContent = `Tales of the same tale type (${type}) in the Aarne–Thompson–Uther index of folktales.`;
     const fam = data.families[t.famIdx];
     famTip.textContent = fam
-      ? `Tales of other types in the same family of the index (${fam[0]}, ${range(fam.slice(2))}): related stories, ` +
-        'not the same one. Places that also tell a similar tale are only listed under similar tale.'
+      ? `Tales of other types in the same family of the index (${fam[0]}, ${range(fam.slice(2))}).`
       : 'This tale type has no family in the index.';
   }
 
@@ -975,11 +990,13 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
     const sheet = sheetQuery.matches;
     const freeW = sheet ? lay.W : r.left;
     const freeH = sheet ? r.top - 120 : lay.H - 200;
-    const k = Math.min((freeW * 0.6) / (Math.max(8, x1 - x0) * RAD * lay.sf), (freeH * 0.6) / (Math.max(5, y1 - y0) * RAD * lay.sf));
+    // Fit as if narrowed all the way, then shift by how far it is narrowed at that zoom.
+    const k = Math.min((freeW * 0.6) / (Math.max(8, x1 - x0) * Math.cos(lat * RAD) * RAD * lay.sf), (freeH * 0.6) / (Math.max(5, y1 - y0) * RAD * lay.sf));
     const z = clamp(1 + Math.log2(k), Math.max(1.3, flatZ()), ZMAX);
     const s = lay.sf * Math.pow(2, z - 1);
+    const c = narrowing(z, lat);
     idleSince = performance.now();
-    flyTo({ z, lon: lon - (freeW / 2 - lay.cx) / (RAD * s), lat }, 1200);
+    flyTo({ z, lon: lon - (freeW / 2 - lay.cx) / (RAD * s * c), lat }, 1200);
   }
 
   $('#to-list').addEventListener('click', () => state.list && openList(state.list));
