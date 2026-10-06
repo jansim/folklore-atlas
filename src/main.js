@@ -519,7 +519,7 @@ import { distanceToRings, random, rankBySpread, smoothstep, spotsWithin, sunflow
     ctx.beginPath();
     ctx.ellipse(fr.cx, fr.cy, fr.rx, fr.ry, 0, 0, Math.PI * 2);
     ctx.clip();
-    drawConstellation(ctx, sprites, arcs, t);
+    drawConstellation(ctx, sprites, arcs);
     ctx.restore();
     drawWisps(ctx, sprites, onScreen, t);
     drawLabels();
@@ -747,8 +747,8 @@ import { distanceToRings, random, rankBySpread, smoothstep, spotsWithin, sunflow
     $('#tale-excerpt').textContent = sel.excerpt;
     const nKin = state.kin.length;
     const nFam = state.fam.length;
-    $('#kin-head').textContent = nKin ? `Same tale · told in ${nPlaces(nKin)}` : 'Same tale · not recorded elsewhere yet';
-    $('#fam-head').textContent = nFam ? `Same family · ${nPlaces(nFam)}` : 'Same family · no other places yet';
+    $('#kin-head').textContent = nKin ? `Similar tale · told in ${nPlaces(nKin)}` : 'Similar tale · not recorded elsewhere yet';
+    $('#fam-head').textContent = nFam ? `Similar family · ${nPlaces(nFam)}` : 'Similar family · no other places yet';
     setTips(sel, $('#kin-tip'), $('#fam-tip'));
     renderChips($('#kin-chips'), state.kin, '', state.allKin ? Infinity : KIN_SHOWN, () => ((state.allKin = true), renderPanel()));
     renderChips($('#fam-chips'), state.fam, 'silver', state.allFam ? Infinity : FAM_SHOWN, () => ((state.allFam = true), renderPanel()));
@@ -767,7 +767,7 @@ import { distanceToRings, random, rankBySpread, smoothstep, spotsWithin, sunflow
     box.replaceChildren(name, path);
   }
 
-  // How "same tale" and "same family" are found, for the "?" next to each.
+  // How "similar tale" and "similar family" are found, for the "?" next to each.
   function setTips(t, kinTip, famTip) {
     const type = named(t) ? `${t.typeName}, ATU ${t.atu}` : `ATU ${t.atu}`;
     kinTip.textContent =
@@ -776,7 +776,7 @@ import { distanceToRings, random, rankBySpread, smoothstep, spotsWithin, sunflow
     const fam = data.families[t.famIdx];
     famTip.textContent = fam
       ? `Tales of other types in the same family of the index (${fam[0]}, ${range(fam.slice(2))}): related stories, ` +
-        'not the same one. Places that also tell the same tale are only listed under the same tale.'
+        'not the same one. Places that also tell a similar tale are only listed under similar tale.'
       : 'This tale type has no family in the index.';
   }
 
@@ -890,6 +890,7 @@ import { distanceToRings, random, rankBySpread, smoothstep, spotsWithin, sunflow
   // ---------- The index of tale types: kinds, families, types and their tales ----------
 
   const atuPop = $('#atu');
+  const atuScrim = $('#atu-scrim');
   const typesOf = new Map(); // family index -> atu ids, by number
   for (const atu of Object.keys(data.types).sort((a, b) => parseInt(a, 10) - parseInt(b, 10) || a.localeCompare(b))) {
     const f = data.types[atu][1];
@@ -918,27 +919,16 @@ import { distanceToRings, random, rankBySpread, smoothstep, spotsWithin, sunflow
 
   function openAtu(node, anchor) {
     atuAnchor = anchor;
-    atuPop.hidden = false;
+    atuPop.hidden = atuScrim.hidden = false;
     renderAtu(node);
     $('#atu-title').focus({ preventScroll: true });
   }
 
   function closeAtu(refocus = false) {
     if (atuPop.hidden) return;
-    atuPop.hidden = true;
+    atuPop.hidden = atuScrim.hidden = true;
     if (refocus && atuAnchor?.isConnected) atuAnchor.focus({ preventScroll: true });
     atuAnchor = null;
-  }
-
-  // Below the link that opened it, or above it if there is no room below; a sheet on phones (in CSS).
-  function placeAtu() {
-    if (!atuAnchor || sheetQuery.matches) return atuPop.style.removeProperty('transform');
-    const a = atuAnchor.getBoundingClientRect();
-    const w = atuPop.offsetWidth;
-    const h = atuPop.offsetHeight;
-    const x = clamp(a.left - 12, 16, innerWidth - w - 16);
-    const y = a.bottom + 8 + h <= innerHeight - 16 ? a.bottom + 8 : Math.max(16, a.top - 8 - h);
-    atuPop.style.transform = `translate(${x}px, ${y}px)`;
   }
 
   // node: {} (all kinds), { kind }, { family } or { type }
@@ -1016,15 +1006,13 @@ import { distanceToRings, random, rankBySpread, smoothstep, spotsWithin, sunflow
     $('#atu-sub').textContent = sub;
     $('#atu-body').replaceChildren(...body);
     $('#atu-body').scrollTop = 0;
-    placeAtu();
   }
 
   atuPop.addEventListener('click', (e) => e.stopPropagation());
   document.addEventListener('pointerdown', (e) => {
     if (!atuPop.hidden && !atuPop.contains(e.target) && e.target !== atuAnchor) closeAtu();
   });
-  window.addEventListener('resize', placeAtu);
-  panel.addEventListener('scroll', () => closeAtu(), { passive: true });
+  $('#atu-close').addEventListener('click', () => closeAtu(true));
 
   $('#read').addEventListener('click', () => pick(state.sel.id, { fly: false, reading: true }));
   $('#close').addEventListener('click', deselect);

@@ -64,10 +64,10 @@ The site's source is in `src/`; `scripts/build-site.js` (`npm run build:site`) b
   the map and never closer than a few dozen pixels (`src/lib/wisps.js`), so zooming in reveals more of them, and
   wisps at the edge of showing slowly fade in and out
 - hover a wisp to see the tale's name, click it to open it. The panel shows the tale's type, kind and family, an
-  excerpt, the places where the same tale was told (in gold) and where a tale of the same family was told (in silver),
-  each joined to it on the map by its own constellation, and more tales from the same place. "Same tale" means the
-  same ATU tale type; "same family" another type in the same ATU family (a "?" next to each explains it)
-- the type, kind and family open the index of tale types: kinds, their families, the families' types (with the
+  excerpt, the places where a similar tale was told (in gold) and where a tale of a similar family was told (in silver),
+  each joined to it on the map by its own constellation, and more tales from the same place. "Similar tale" means the
+  same ATU tale type; "similar family" another type in the same ATU family (a "?" next to each explains it)
+- the type, kind and family open the index of tale types, centred over the map: kinds, their families, the families' types (with the
   index's description of each, from `dist/data/types.json`) and the tales of each type
 - "All 229 tales from Germany" lists a place's tales in the panel and zooms the map to them; a tale opened from the
   list has a chevron back to it

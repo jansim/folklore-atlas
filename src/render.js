@@ -253,15 +253,15 @@ export function drawWisps(ctx, sprites, wisps, t) {
   ctx.globalAlpha = 1;
 }
 
-// The constellation: a glow and a flowing dotted line along every arc, and a spark at its end.
-// Silver arcs (the same family) are fainter and drawn first; gold ones (the same tale) over them.
+// The constellation: a glow and a still dotted line along every arc, and a spark at its end.
+// Silver arcs (a similar family) are fainter and drawn first; gold ones (a similar tale) over them.
 const ARCS = {
-  silver: { glow: 'rgba(201,210,238,0.07)', glowWidth: 5, line: 'rgba(213,220,245,0.32)', width: 0.8, dash: [1.5, 6], period: 7, end: 'sibEnd' },
-  gold: { glow: 'rgba(244,213,141,0.1)', glowWidth: 6, line: 'rgba(248,222,156,0.55)', width: 1, dash: [2, 5], period: 5, end: 'end' },
+  silver: { glow: 'rgba(201,210,238,0.07)', glowWidth: 5, line: 'rgba(213,220,245,0.32)', width: 0.8, dash: [1.5, 6], end: 'sibEnd' },
+  gold: { glow: 'rgba(244,213,141,0.1)', glowWidth: 6, line: 'rgba(248,222,156,0.55)', width: 1, dash: [2, 5], end: 'end' },
 };
 
 // arcs: { silver: { path, ends }, gold: { path, ends } }
-export function drawConstellation(ctx, sprites, arcs, t) {
+export function drawConstellation(ctx, sprites, arcs) {
   if (!arcs) return;
   ctx.lineCap = 'round';
   for (const kind of ['silver', 'gold']) {
@@ -273,7 +273,6 @@ export function drawConstellation(ctx, sprites, arcs, t) {
     ctx.strokeStyle = st.line;
     ctx.lineWidth = st.width;
     ctx.setLineDash(st.dash);
-    ctx.lineDashOffset = -((t * 56) / st.period) % 56;
     ctx.stroke(path);
     ctx.setLineDash([]);
     for (const e of ends) {
