@@ -97,8 +97,7 @@ export function drawBackdrop(l, { vw, projection, frame }) {
 // highlights: Map country feature -> { sib: 0..1, kin: 0..1, own: 0..1 }
 // detail and flat (lib/detail-map.js): on the flat map zoomed in, the detailed outlines, drawn
 // straight through the flat transform instead of the coarse ones through the projection.
-// plain (on a phone): coasts as quieter unbroken lines, where the dots would only crowd a small map.
-export function drawMap(l, { projection, frame, land, borders, coast, graticule, highlights, detail, flat, plain }) {
+export function drawMap(l, { projection, frame, land, borders, coast, graticule, highlights, detail, flat }) {
   const { ctx } = l;
   l.clear();
   const path = geoPath(projection, ctx);
@@ -149,18 +148,9 @@ export function drawMap(l, { projection, frame, land, borders, coast, graticule,
 
   ctx.beginPath();
   trace.coast();
-  if (plain) {
-    ctx.strokeStyle = '#3A4788';
-    ctx.lineWidth = 0.7;
-  } else {
-    ctx.setLineDash([1.4, 2.8]);
-    ctx.lineCap = 'round';
-    ctx.strokeStyle = '#5363B8';
-    ctx.lineWidth = 0.8;
-  }
+  ctx.strokeStyle = '#3A4788';
+  ctx.lineWidth = 0.7;
   ctx.stroke();
-  ctx.setLineDash([]);
-  ctx.lineCap = 'butt';
   ctx.restore();
 }
 
