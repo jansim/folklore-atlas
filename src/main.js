@@ -606,7 +606,7 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
       mapKey = key;
       mapDirty = false;
       const flat = flatAt(vw);
-      drawMap(mapLayer, { vw, projection: p, frame: fr, land, borders, coast, graticule, highlights, detail: flat ? detail : null, flat, plain: sheetQuery.matches });
+      drawMap(mapLayer, { vw, projection: p, frame: fr, land, borders, coast, graticule, highlights, detail: flat ? detail : null, flat });
     }
     if (!state.sel) arcs = null;
     else if (arcsKey !== `${key}|${state.sel.id}`) {
