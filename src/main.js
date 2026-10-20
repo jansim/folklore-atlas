@@ -661,7 +661,6 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
     if (pointers.size === 1) startDrag(pointers.get(e.pointerId));
     else if (pointers.size === 2) {
       drag = null;
-      held = false;
       pinch = { d: spread() };
     }
     worldEl.classList.add('dragging');
@@ -730,17 +729,16 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
   );
 
   // There is no stopping between the globe (z = 0) and the flat map (z = 1): zoom in on the globe, or out
-  // past the flat map, and it unrolls or rolls up the whole way. Arriving at the flat map from further in,
-  // a scroll or pinch stops there first; the next one goes on to the globe.
+  // past the flat map, and it unrolls or rolls up the whole way. One scroll or pinch carries on through:
+  // zooming in on the globe unrolls it and then zooms into the map; zooming out of the map rolls it up
+  // into the globe. While it unrolls or rolls up, the scroll or pinch is let go.
   const MORPH_PUSH = 0.1;
   let push = 0;
   let pushAt = 0;
-  // After unrolling, rolling up or stopping at the flat map, the rest of the same scroll or pinch is let go.
-  let held = false;
   const toGlobe = (dur = 1100) => {
     idleSince = performance.now() - 3000;
     flyTo({ z: 0, lat: 22, morph: true }, dur);
-    held = true;
+    push = 0;
   };
   // Unrolled by zooming, the map keeps the latitude in view for zooming in further.
   // The flat map: z = 1, or on a phone or a portrait screen a little closer in, where it fills the screen.
@@ -748,7 +746,7 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
     fillQuery.matches ? Math.max(1.7, 1 + Math.log2((1.15 * Math.max(target.H / Math.PI, target.W / (2 * Math.PI))) / target.sf)) : 1;
   const toFlat = (dur = 1100, lat) => {
     flyTo({ z: flatZ(), lat, morph: true }, dur);
-    held = true;
+    push = 0;
   };
   // Turned upright on the flat map, move on to the one that fills the screen rather than stay half unrolled.
   fillQuery.addEventListener('change', () => {
@@ -759,8 +757,7 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
     const pause = now - pushAt > 250;
     pushAt = now;
     if (pause) push = 0;
-    if (anim?.morph || (held && !pause)) return;
-    held = false;
+    if (anim?.morph) return;
     anim = null;
     if (v.z < 1) {
       push = dz > 0 ? push + dz : 0;
@@ -773,9 +770,8 @@ import { distanceToRings, insideRings, random, rankBySpread, smoothstep, spreadO
       v.z = Math.min(z, ZMAX);
       push = 0;
     } else {
-      // Coming from further in, stop at the flat map for the rest of this scroll or pinch.
-      if (v.z > flat + 0.001) held = true;
-      else push += flat - z;
+      // Only what goes past the flat map pushes towards the globe.
+      push += Math.min(v.z, flat) - z;
       v.z = flat;
       if (push > MORPH_PUSH) return toGlobe();
     }
